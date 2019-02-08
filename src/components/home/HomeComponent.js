@@ -4,7 +4,8 @@ import { inject, observer } from 'mobx-react';
 import { Link, Router } from '../../routes/routes';
 import LoadComponent from '../general/LoadComponent';
 import ItemProductComponent from '../products/ItemProductComponent';
-import './products.scss';
+import '../products/products.scss';
+import './home.scss';
 
 @observer
 class Item extends React.Component {
@@ -15,18 +16,28 @@ class Item extends React.Component {
 
   render() {
     return (
-      <div className="col-4 product-item-home mb-4">
+      <div className="col-3 product-item-home mb-4">
         <div className="product-item-cover">
           <img src="../../static/images/bannerHome.jpg" />
         </div>
         <div className="row product-item-txt w-100 pr-4">
           <div className="col-8">
-            <h5 className="font-weight-bold colorWhite">name</h5>
+            <Link>
+              <a>
+                <h5 className="font-weight-bold colorWhite cursor">name</h5>
+              </a>
+            </Link>
+
             <p className="colorWhite">20000</p>
           </div>
           <div className="col-4 align-self-center text-right">
-            <button className="cursor py-2">
-              <small className="font-weight-bold">Thêm vào giỏ</small>
+            <button className="cursor">
+              <img
+                style={{ width: 25, height: 25 }}
+                src="../../static/images/icons-add-shopping-cart.png"
+                title="Thêm vào giỏ"
+              />
+              {/* <small className="">Thêm vào giỏ</small> */}
             </button>
           </div>
         </div>
@@ -105,7 +116,8 @@ export default class HomeComponent extends React.Component {
                     </div>
                     <div className="view-more mr-5 mb-4 text-right">
                       <Link
-                        href={{ pathname: item.query.pathname, query: { name: item.query.name } }}
+                        route={item.query.pathname + '/' + item.query.name}
+                        // href={{ pathname: item.query.pathname, query: { name: item.query.name } }}
                       >
                         <a>
                           <i className="colorDefault">Xem thêm</i>

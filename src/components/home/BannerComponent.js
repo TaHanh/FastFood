@@ -2,7 +2,7 @@ import React from 'react';
 import { observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { Link, Router } from '../../routes/routes';
-import './products.scss';
+import './home.scss';
 @inject('store')
 @observer
 export default class BannerComponent extends React.Component {
@@ -40,7 +40,12 @@ export default class BannerComponent extends React.Component {
               </h3>
             </div>
             <div className="col-6">
-              <input className="w-100 input borderR p-2" type="text" placeholder="Bạn tìm gì ?" style={{ height: 40 }} />
+              <input
+                className="w-100 input borderR p-2"
+                type="text"
+                placeholder="Bạn tìm gì ?"
+                style={{ height: 40 }}
+              />
             </div>
             <div className="col-2">
               <button

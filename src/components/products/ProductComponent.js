@@ -25,7 +25,7 @@ export default class ProductComponent extends React.Component {
                 return (
                   <Link route={e.directional}>
                     <li class="nav-item cursor">
-                      <a key={i} className={e.active ? 'nav-link active' : 'nav-link'}>
+                      <a key={i} className={e.active ? 'nav-link colorDefault' : 'nav-link'}>
                         {e.name}
                       </a>
                     </li>

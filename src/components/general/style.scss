@@ -1,5 +1,5 @@
 body {
-  background: #f4f2ee;
+  background: #fff;
   .limit {
     max-width: 1300px;
     margin: auto;
@@ -79,4 +79,30 @@ body {
     box-shadow: 2px -2px 5px rgb(27, 221, 108);
     animation: spin 4s linear infinite;
   }
+}
+
+@media (max-width: 575px) {
+  .font {
+    font-size: 13px;
+  }
+}
+@media (min-width: 576px) {
+  .font {
+    font-size: 13px;
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+  .font {
+    font-size: 15px;
+  }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
 }

@@ -50,7 +50,7 @@ class MyDocument extends Document {
           <link
             rel="shortcut icon"
             type="image/vnd.microsoft.icon"
-            href="https://hrc.com.vn/favicon/favicon-96x96.png"
+            href="../static/images/logo.png"
           />
           <link
             rel="apple-touch-icon"

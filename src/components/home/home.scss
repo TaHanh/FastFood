@@ -1,0 +1,34 @@
+.banner {
+  .btn-search {
+    &:hover {
+      background: #429c44;
+    }
+  }
+}
+.product-item-home {
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: all ease 1s;
+  .product-item-cover {
+    background: #000;
+    img {
+      transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      width: 100%;
+      height: 100%;
+      opacity: 0.8;
+    }
+  }
+  .product-item-txt {
+    position: absolute;
+    bottom: 0;
+    button {
+      background-color: transparent;
+    }
+  }
+  &:hover {
+    img {
+      transform: scale(1.1, 1.1);
+    }
+  }
+}

@@ -49,6 +49,25 @@ class Store {
     }
   ];
   @observable myCart = [];
+  // admin
+  @observable dataMenuDashboard = [
+    {
+      name: 'Sản phẩm',
+      icon: '',
+      key: 'SanPham',
+      active: false,
+      directional: '/admin/products',
+      children: []
+    },
+    {
+      name: 'Đơn hàng',
+      icon: '',
+      key: 'DonHang',
+      active: false,
+      directional: '/admin/orders'
+    }
+  ];
+
   constructor(obj) {
     const self = this;
   }

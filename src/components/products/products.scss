@@ -1,34 +1,17 @@
-.banner {
-  .btn-search {
-    &:hover {
-      background: #429c44;
-    }
-  }
-}
 .product {
   .menu {
     position: -webkit-sticky;
     position: sticky;
     top: 0;
-    // boxShadow: '0px 0px 3px #4ea950'
     a {
       color: #000;
       padding: 10px;
-      border: 0.5px solid gray;
-      // border-top: 0;
+      border: 0.5px solid #b9b9b9;
+      border-right: 0.5px solid #b9b9b9 !important;
+      border-left: 0.5px solid #b9b9b9 !important;
+      border-top: 0;
       border-radius: 0;
-      background-color: #fff;
-    }
-    .active {
-      // background-color: #d1ffd1 !important;
-      background-color: #fff;
-      color: #000 !important;
-      border-bottom: 0;
-      border-top: 0.5px solid gray;
-      // border-top-left-radius: 5px;
-      // border-top-right-radius: 5px;
-      // border-bottom-right-radius: 0;
-      // border-bottom-left-radius: 0;
+      background-color: #fff !important;
     }
   }
 }
@@ -66,6 +49,5 @@
     background-color: #429c44;
     color: #fff;
     border: 0.5px solid #cae8ca;
-    border-radius: 50px;
   }
 }

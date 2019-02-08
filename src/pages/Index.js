@@ -3,7 +3,7 @@ import React from 'react';
 import { observable } from 'mobx';
 
 import { inject, observer } from 'mobx-react';
-
+import { getPathName } from '../utils/RouterUtils';
 import { Link, Router } from '../routes/routes';
 import Config from '../config/env';
 import HeaderComponent from '../components/header/HeaderComponent';
@@ -15,9 +15,20 @@ export default class Index extends React.Component {
   @observable isRender = false;
   constructor(props) {
     super(props);
+  }
+  componentDidMount() {
+    let pathName = getPathName();
+    // if (pathName != '') {
+    this.props.store.dataMenu.map((item, index) => {
+      if (item.directional == pathName) {
+        item.active = true;
+      } else {
+        item.active = false;
+      }
+    });
+    // }
     this.isRender = true;
   }
-
   render() {
     return (
       <div>

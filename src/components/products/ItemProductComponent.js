@@ -3,7 +3,7 @@ import { observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { Link, Router } from '../../routes/routes';
 import LoadComponent from '../general/LoadComponent';
-import './products.scss';
+
 @inject('store')
 @observer
 export default class ItemProductComponent extends React.Component {
@@ -18,11 +18,13 @@ export default class ItemProductComponent extends React.Component {
         <div className="product-item-cover">
           <img src="../../static/images/bannerHome.jpg" />
         </div>
-        <div className="text-center pt-3 px-1">
-          <h5 className=" font-weight-bold">name</h5>
-          <p>20000</p>
+        <div className="text-center px-1">
+          <p className="my-2">5846u9jdfgj fdhgjkhdfkghk fdhgjkhdfkghk</p>
+          <p className="mb-1" style={{ color: 'red' }}>
+            20000đ
+          </p>
         </div>
-        <button className="cursor p-2 px-3 mb-2">
+        <button className="cursor py-2 w-100">
           <small>Thêm vào giỏ</small>
         </button>
       </div>

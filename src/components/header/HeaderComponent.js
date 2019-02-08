@@ -19,7 +19,11 @@ export default class HeaderComponent extends React.Component {
       <div className="row justify-content-between header w-100">
         <div className="col-10">
           <nav class="navbar navbar-expand-lg navbar-light">
-            <a class="navbar-brand colorWhite">Logo</a>
+            <Link route="/">
+              <a class="navbar-brand colorWhite">
+                <img style={{ width: 30, height: 30 }} src="../../static/images/logo.png" />
+              </a>
+            </Link>
             <button
               class="navbar-toggler"
               type="button"
