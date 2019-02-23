@@ -1,8 +1,8 @@
-import axios from 'axios';
-import Config from '../../config/env';
-import Promise from 'bluebird';
-import { Link, Router } from '../../routes/routes';
-import { inject } from 'mobx-react';
+import axios from 'axios'
+import Config from '../../config/env'
+import Promise from 'bluebird'
+import { Link, Router } from '../../routes/routes'
+import { inject } from 'mobx-react'
 /**
  *
  *
@@ -14,11 +14,11 @@ import { inject } from 'mobx-react';
  */
 
 export const request = (url, method = 'GET', body, headers = {}) => {
-  if (!Config.releaseVersion) {
-    ////console.log('URL: ' + url);
-    ////console.log('METHOD: ' + method);
-    ////console.log('BODY: ' + JSON.stringify(body));
-    ////console.log('Headers: ' + JSON.stringify(headers));
+  if (true) {
+    console.log('URL: ' + url)
+    console.log('METHOD: ' + method)
+    console.log('BODY: ' + JSON.stringify(body))
+    console.log('Headers: ' + JSON.stringify(headers))
   }
 
   return new Promise((resolve, reject) =>
@@ -34,24 +34,27 @@ export const request = (url, method = 'GET', body, headers = {}) => {
       // withCredentials: true
     })
       .then(res => {
-        return resolve(res.data);
+        return resolve(res.data)
       })
       .catch(error => {
         if (error.response) {
-          if (error.response.status === 401 && error.response.data.error_code !== 6) {
+          if (
+            error.response.status === 401 &&
+            error.response.data.error_code !== 6
+          ) {
             // lỗi token
 
-            global.errToken = true;
-            Router.pushRoute('/log-in');
+            global.errToken = true
+            Router.pushRoute('/log-in')
 
-            return reject('token het han');
+            return reject('token het han')
           }
         }
 
-        reject(error);
+        reject(error)
       })
-  );
-};
+  )
+}
 export const requestNoCheck = (url, method = 'GET', body, headers = {}) => {
   if (!Config.releaseVersion) {
     ////console.log('URL: ' + url);
@@ -73,10 +76,10 @@ export const requestNoCheck = (url, method = 'GET', body, headers = {}) => {
       // withCredentials: true
     })
       .then(res => {
-        return resolve(res.data);
+        return resolve(res.data)
       })
       .catch(error => {
-        reject(error);
+        reject(error)
       })
-  );
-};
+  )
+}

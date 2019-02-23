@@ -46,9 +46,9 @@ body {
     }
   }
   .container {
-    height: 100px;
-    width: 100px;
-    margin: 150px auto;
+    height: 60px;
+    width: 60px;
+    margin: 250px auto 0;
     position: relative;
   }
   .container,
@@ -62,33 +62,33 @@ body {
     position: absolute;
   }
   .item1 {
-    height: 90%;
-    width: 90%;
-    box-shadow: 2px 2px 5px rgb(255, 50, 50);
+    height: 100%;
+    width: 100%;
+    box-shadow: 3px 3px 10px #ff3232;
     animation: spin 2s linear infinite;
   }
   .item2 {
     height: 80%;
     width: 80%;
-    box-shadow: -2px 2px 5px rgb(141, 181, 255);
+    box-shadow: -3px 3px 5px #8db5ff;
     animation: spin 1s linear infinite reverse;
   }
   .item3 {
-    height: 70%;
-    width: 70%;
-    box-shadow: 2px -2px 5px rgb(27, 221, 108);
+    height: 60%;
+    width: 60%;
+    box-shadow: 3px -3px 5px rgb(27, 221, 108);
     animation: spin 4s linear infinite;
   }
 }
 
 @media (max-width: 575px) {
   .font {
-    font-size: 13px;
+    font-size: 13px !important;
   }
 }
 @media (min-width: 576px) {
   .font {
-    font-size: 13px;
+    font-size: 13px !important;
   }
 }
 
@@ -99,10 +99,34 @@ body {
 // Large devices (desktops, 992px and up)
 @media (min-width: 992px) {
   .font {
-    font-size: 15px;
+    font-size: 15px !important;
   }
 }
 
 // Extra large devices (large desktops, 1200px and up)
 @media (min-width: 1200px) {
+}
+
+.alert {
+  animation: topFadeOut 1s linear;
+}
+.alert-false {
+  color: red;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+@keyframes topFadeOut {
+  0% {
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

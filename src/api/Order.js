@@ -1,0 +1,156 @@
+import Promise from 'bluebird';
+import Alamofire from '../lib/Alamofire';
+import Config from '../config/env';
+/**
+ *Retrieve careers
+ *
+ * @param
+ * @returns
+ */
+export const getAllOrders = () => {
+  return new Promise((resolve, reject) => {
+    const url = `${Config.api.host.base}${Config.api.path.base.orders}`;
+
+    return Alamofire.request(url, 'GET', {}, {})
+      .then(response => {
+        // console.log('res getCategories' + response)
+        resolve(response);
+      })
+      .catch(err => {
+        // console.log('errr' + err)
+        reject(err);
+      });
+  });
+};
+
+export const getOrder = id => {
+  return new Promise((resolve, reject) => {
+    const url = `${Config.api.host.base}${Config.api.path.base.orders}${'/' + id}`;
+    return Alamofire.request(url, 'GET', {}, {})
+      .then(response => {
+        resolve(response);
+      })
+      .catch(err => {
+        // console.log('errr' + err)
+        reject(err);
+      });
+  });
+};
+
+export const queryCompany = ({ q, limit }) => {
+  return new Promise((resolve, reject) => {
+    const url =
+      `${Config.api.host.base}${Config.api.path.base.companies}` +
+      `${q ? '?q=' + q : ''} ` +
+      `${limit ? '?limit=' + limit : ''} `;
+
+    return Alamofire.request(
+      url,
+      'GET',
+      {},
+
+      {}
+    )
+      .then(response => {
+        resolve(response);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+};
+
+/**
+ * Tạo một công ty mới
+ *
+ * @param
+ * @returns
+ */
+export const createOrder = ({
+  name,
+  description,
+  statusOrder,
+  statusShip,
+  message,
+  products,
+  idUser
+}) => {
+  return new Promise((resolve, reject) => {
+    const url = `${Config.api.host.base}${Config.api.path.base.orders}`;
+
+    return Alamofire.request(
+      url,
+      'POST',
+      {
+        name,
+        description,
+        statusOrder,
+        statusShip,
+        message,
+        products,
+        idUser
+      },
+
+      {}
+    )
+      .then(response => {
+        console.log('res1111' + JSON.stringify(response));
+        resolve(response);
+      })
+      .catch(err => {
+        console.log('errr' + JSON.stringify(err));
+        reject(err);
+      });
+  });
+};
+
+export const updateOrder = ({
+  id,
+  name,
+  description,
+  statusOrder,
+  statusShip,
+  message,
+  products,
+  idUser
+}) => {
+  return new Promise((resolve, reject) => {
+    const url = `${Config.api.host.base}${Config.api.path.base.orders}` + '/' + id;
+
+    return Alamofire.request(
+      url,
+      'PUT',
+      {
+        name,
+        description,
+        statusOrder,
+        statusShip,
+        message,
+        products,
+        idUser
+      },
+
+      {}
+    )
+      .then(response => {
+        resolve(response);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+};
+
+export const deleteOrder = id => {
+  return new Promise((resolve, reject) => {
+    const url = `${Config.api.host.base}${Config.api.path.base.orders}${'/' + id}`;
+    return Alamofire.request(url, 'DELETE', {}, {})
+      .then(response => {
+        resolve(response);
+      })
+      .catch(err => {
+        // console.log('errr' + err)
+        reject(err);
+      });
+  });
+};

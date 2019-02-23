@@ -2,6 +2,7 @@ import React from 'react';
 import { observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { Link, Router } from '../../../routes/routes';
+import ReactHtmlParser from 'react-html-parser';
 @inject('store')
 @observer
 class Item extends React.Component {
@@ -9,7 +10,21 @@ class Item extends React.Component {
     const { index, item, callBack } = this.props;
     return (
       <tr>
-        <td>Mark</td>
+        <td>
+          <span
+            className="d-block"
+            style={{
+              maxWidth: '100px',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              height: '16px',
+              lineHeight: '16px'
+            }}
+            title={item.id || ''}
+          >
+            {item.id || ''}
+          </span>
+        </td>
         <td
           className=""
           // onClick={() => {
@@ -18,21 +33,66 @@ class Item extends React.Component {
         >
           <Link href={{ pathname: '/admin/detail-product', query: { id: item.id } }}>
             <a className="colorDefault cursor" style={{ textDecoration: 'none' }}>
-              Otto
+              {item.name || ''}
             </a>
           </Link>
         </td>
-        <td>@mdo</td>
-        <td>@mdo</td>
-        <td>@mdo</td>
-        <td>@mdo</td>
-        <td>@mdo</td>
-        <td>@mdo</td>
-        <td>@mdo</td>
+        <td> {item.highlight == 0 ? 'true' : 'false'} </td>
+        <td style={{}}>
+          {item.image.map(e => {
+            return (
+              <p
+                className="mb-1"
+                style={{
+                  maxWidth: '200px',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  height: '16px',
+                  lineHeight: '16px'
+                }}
+              >
+                {e}
+              </p>
+            );
+          })}
+        </td>
+        <td>{item.price}</td>
+        <td style={{}}>
+          {item.type.map(e => {
+            return (
+              <p className="mb-1" style={{}}>
+                {' '}
+                {e}{' '}
+              </p>
+            );
+          })}
+        </td>
+        <td>{item.status == 0 ? 'Còn hàng' : 'Hết hàng'}</td>
+        <td>
+          <p
+            className="mb-0"
+            style={{
+              maxWidth: '200px',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              height: '40px',
+              lineHeight: '16px'
+            }}
+          >
+            {ReactHtmlParser(item.description)}
+          </p>
+        </td>
+        <td>
+          {this.props.store.dataCategory.map((e, i) => {
+            if (e.key == item.category) return e.name;
+          })}
+        </td>
         <td>
           <img
+            data-toggle="modal"
+            data-target="#exampleModalCenter"
             onClick={() => {
-              callBack('DEL_ITEM', { index, item });
+              this.props.clickItem({ item, index });
             }}
             className="cursor"
             style={{ width: 25 }}
@@ -58,7 +118,7 @@ export default class ListProductComponent extends React.Component {
     return (
       <div>
         {this.isRender ? (
-          <div className="py-4">
+          <div className="py-4 font">
             <div className="px-5">
               <button className="bgDefault  p-2 px-3 rounded cursor">
                 <Link route="/admin/detail-product">
@@ -108,8 +168,8 @@ export default class ListProductComponent extends React.Component {
                 <button className="bgDefault colorWhite p-2 px-3 rounded cursor">Tìm kiếm</button>
               </div>
             </div>
-            <table class="table table-bordered text-center font">
-              <thead class="thead-light">
+            <table className="table table-bordered text-center font">
+              <thead className="thead-light">
                 <tr>
                   <th scope="col">id</th>
                   <th scope="col">Tên SP</th>
@@ -124,11 +184,63 @@ export default class ListProductComponent extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {['3', '4'].map((item, index) => {
-                  return <Item item={item} index={index} callBack={callBack} />;
+                {this.props.store.dataProducts.map((item, index) => {
+                  return (
+                    <Item
+                      item={item}
+                      index={index}
+                      callBack={callBack}
+                      clickItem={({ item, index }) => {
+                        this.clickItem = { item: item, index: index };
+                      }}
+                    />
+                  );
                 })}
+                {this.props.store.dataProducts.length == 0 ? (
+                  <td colspan="10">Không có dữ liệu</td>
+                ) : null}
               </tbody>
             </table>
+
+            {/* <!-- Modal --> */}
+            <div
+              ref="myModal"
+              class="modal fade"
+              id="exampleModalCenter"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="exampleModalCenterTitle"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">
+                      Modal title
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">Bạn có chắc chắn muốn xóa sản phẩm này !</div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                      Close
+                    </button>
+                    <button
+                      onClick={() => {
+                        this.props.callBack('DEL_ITEM', this.clickItem);
+                      }}
+                      data-dismiss="modal"
+                      type="button"
+                      class="btn btn-primary"
+                    >
+                      Xóa
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         ) : null}
       </div>

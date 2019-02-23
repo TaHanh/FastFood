@@ -26,3 +26,6 @@ export function formatTime(seconds) {
     return mm + ':' + formatTwoDigits(ss);
   }
 }
+export const unixToTime = time => {
+  return moment(new Date(time * 1000)).format('DD-MM-YYYY HH:mm:ss');
+};

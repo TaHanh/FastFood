@@ -17,6 +17,7 @@ export function intentPage(path, obj, store, data) {
 }
 export function intentPageString(path, obj, store, data) {
   if (obj == undefined) {
+    Router.pushRoute(path);
     return;
   }
 
@@ -24,6 +25,7 @@ export function intentPageString(path, obj, store, data) {
   const query = `?${objArray.map(o => `${o}=${obj[o]}`).join('&')}`;
   if (data && store) store.dataIntent = data;
   // history.push(path + query);
+  Router.pushRoute(path);
   return path + query;
 }
 export function getQuery(key) {

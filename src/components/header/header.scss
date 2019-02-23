@@ -20,6 +20,13 @@
     }
   }
 }
+.menu {
+  &:hover {
+    .dropdown-menu {
+      display: block;
+    }
+  }
+}
 .cart {
   .myCart {
     display: none;

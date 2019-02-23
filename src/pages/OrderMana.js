@@ -16,15 +16,9 @@ export default class OrderMana extends React.Component {
   }
   componentDidMount() {
     let pathName = getPathName();
-    // if (pathName != '') {
-    this.props.store.dataMenu.map((item, index) => {
-      if (item.directional == pathName) {
-        item.active = true;
-      } else {
-        item.active = false;
-      }
+    this.props.store.getOrdersAPI(res => {
+      console.log('getOrdersAPI page' + JSON.stringify(res));
     });
-    // }
     this.isRender = true;
   }
   callBack = (key, data) => {
