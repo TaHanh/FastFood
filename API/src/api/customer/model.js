@@ -1,36 +1,22 @@
 import mongoose, { Schema } from 'mongoose';
 
-const sanPhamSchema = new Schema(
+const customerSchema = new Schema(
   {
     name: {
       type: String
     },
-    hot: {
-      type: Number,
-      default: 1
-    },
-    image: {
-      type: []
-    },
-    price: {
-      type: Number
-    },
-    status: {
-      type: Number,
-      default: 0
-    },
-    description: {
+    email: {
       type: String
     },
-    category: {
-      type: Object
+    phone: {
+      type: String
     },
-    size: {
-      type: [
-        {
-          type: String
-        }
-      ]
+    address: {
+      type: String
+    },
+    type: {
+      type: String,
+      default: 1
     }
   },
   {
@@ -44,19 +30,16 @@ const sanPhamSchema = new Schema(
   }
 );
 
-sanPhamSchema.methods = {
+customerSchema.methods = {
   view(full) {
     const view = {
       // simple view
       id: this.id,
       name: this.name,
-      hot: this.hot,
-      image: this.image,
-      price: this.price,
-      status: this.status,
-      description: this.description,
+      email: this.email,
+      phone: this.phone,
+      address: this.address,
       type: this.type,
-      size: this.size,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
     };
@@ -70,7 +53,7 @@ sanPhamSchema.methods = {
   }
 };
 
-const model = mongoose.model('SanPham', sanPhamSchema);
+const model = mongoose.model('Customer', customerSchema);
 
 export const schema = model.schema;
 export default model;

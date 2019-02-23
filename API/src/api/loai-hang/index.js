@@ -6,7 +6,7 @@ import { schema } from './model'
 export LoaiHang, { schema } from './model'
 
 const router = new Router()
-const { name, description } = schema.tree
+const { name, key, description } = schema.tree
 
 /**
  * @api {post} /loai-hangs Create loai hang
@@ -18,9 +18,7 @@ const { name, description } = schema.tree
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Loai hang not found.
  */
-router.post('/',
-  body({ name, description }),
-  create)
+router.post('/', body({ name, key, description }), create)
 
 /**
  * @api {get} /loai-hangs Retrieve loai hangs
@@ -31,9 +29,7 @@ router.post('/',
  * @apiSuccess {Object[]} rows List of loai hangs.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
-router.get('/',
-  query(),
-  index)
+router.get('/', query(), index)
 
 /**
  * @api {get} /loai-hangs/:id Retrieve loai hang
@@ -43,8 +39,7 @@ router.get('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Loai hang not found.
  */
-router.get('/:id',
-  show)
+router.get('/:id', show)
 
 /**
  * @api {put} /loai-hangs/:id Update loai hang
@@ -56,9 +51,7 @@ router.get('/:id',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Loai hang not found.
  */
-router.put('/:id',
-  body({ name, description }),
-  update)
+router.put('/:id', body({ name, key, description }), update)
 
 /**
  * @api {delete} /loai-hangs/:id Delete loai hang
@@ -67,7 +60,6 @@ router.put('/:id',
  * @apiSuccess (Success 204) 204 No Content.
  * @apiError 404 Loai hang not found.
  */
-router.delete('/:id',
-  destroy)
+router.delete('/:id', destroy)
 
 export default router

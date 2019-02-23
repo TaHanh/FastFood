@@ -1,8 +1,11 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose'
 
 const loaiHangSchema = new Schema(
   {
     name: {
+      type: String
+    },
+    key: {
       type: String
     },
     description: {
@@ -14,11 +17,11 @@ const loaiHangSchema = new Schema(
     toJSON: {
       virtuals: true,
       transform: (obj, ret) => {
-        delete ret._id;
+        delete ret._id
       }
     }
   }
-);
+)
 
 loaiHangSchema.methods = {
   view(full) {
@@ -26,21 +29,22 @@ loaiHangSchema.methods = {
       // simple view
       id: this.id,
       name: this.name,
+      key: this.key,
       description: this.description,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
-    };
+    }
 
     return full
       ? {
           ...view
           // add properties for a full view
         }
-      : view;
+      : view
   }
-};
+}
 
-const model = mongoose.model('LoaiHang', loaiHangSchema);
+const model = mongoose.model('LoaiHang', loaiHangSchema)
 
-export const schema = model.schema;
-export default model;
+export const schema = model.schema
+export default model
