@@ -9,20 +9,30 @@ import './header.scss';
 export default class HeaderProductComponent extends React.Component {
   @observable isRender = false;
   @observable dataMenu = [];
+  @observable textSearch = '';
   constructor(props) {
     super(props);
-    this.dataMenu = this.props.store.dataMenu;
     this.isRender = true;
   }
-
+  delMyProduct = data => {
+    this.props.store.myCart.splice(data.index, 1);
+    localStorage['myCartFF'] = JSON.stringify(this.props.store.myCart);
+  };
   render() {
     return (
       <div className="row justify-content-between headerProduct w-100">
         <div className="col-8">
-          <nav class="navbar navbar-expand-lg navbar-light">
-            <a class="navbar-brand">Logo</a>
+          <nav className="navbar navbar-expand-lg navbar-light">
+            <Link route="/">
+              <a className="navbar-brand colorWhite p-0">
+                <img
+                  style={{ width: 40, height: 35, objectFit: 'contain' }}
+                  src="../../static/images/logo.png"
+                />
+              </a>
+            </Link>
             <button
-              class="navbar-toggler"
+              className="navbar-toggler"
               type="button"
               data-toggle="collapse"
               data-target="#navbarNav"
@@ -30,19 +40,55 @@ export default class HeaderProductComponent extends React.Component {
               aria-expanded="false"
               aria-label="Toggle navigation"
             >
-              <span class="navbar-toggler-icon" />
+              <span className="navbar-toggler-icon" />
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav">
-                {this.dataMenu.map((item, index) => {
+            <div className="collapse navbar-collapse" id="navbarNav">
+              <ul className="navbar-nav">
+                {this.props.store.dataMenu.map((item, index) => {
+                  if (item.children && item.children.length > 0) {
+                    return (
+                      <li className="menu" style={{ position: 'relative' }}>
+                        <Link href={item.directional}>
+                          <a
+                            key={index}
+                            className={
+                              item.active
+                                ? 'nav-link cursor colorDefault dropdown-toggle'
+                                : 'nav-link cursor colorBlack dropdown-toggle'
+                            }
+                            id="navbarDropdown"
+                            role="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                          >
+                            {item.name}
+                          </a>
+                        </Link>
+                        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                          {item.children.map((e, i) => {
+                            return (
+                              <Link
+                                href={{
+                                  pathname: '/products/' + e.key
+                                }}
+                              >
+                                <a className="dropdown-item">{e.name}</a>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </li>
+                    );
+                  }
                   return (
-                    <Link route={item.directional}>
+                    <Link href={item.directional}>
                       <a
                         key={index}
                         className={
                           item.active
-                            ? 'nav-link cursor colorDefault'
-                            : 'nav-link cursor colorBlack'
+                            ? 'nav-link cursor colorDefault '
+                            : 'nav-link cursor colorBlack '
                         }
                       >
                         {item.name}
@@ -61,6 +107,14 @@ export default class HeaderProductComponent extends React.Component {
               type="text"
               placeholder="Bạn tìm gì ?"
               style={{ height: 30, border: '1px solid #b4b4b4' }}
+              onChange={e => {
+                this.textSearch = e.target.value;
+              }}
+              onKeyPress={({ charCode }) => {
+                if (charCode === 13) {
+                  this.props.callBack('SEARCH', this.textSearch);
+                }
+              }}
             />
             <img
               className="cursor"
@@ -73,6 +127,9 @@ export default class HeaderProductComponent extends React.Component {
                 zIndex: 1
               }}
               src="../../static/images/icon-search.png"
+              onClick={() => {
+                this.props.callBack('SEARCH', this.textSearch);
+              }}
             />
           </div>
           <div className="cart float-left" style={{ width: 30, position: 'relative' }}>
@@ -82,7 +139,7 @@ export default class HeaderProductComponent extends React.Component {
               style={{ width: '100%', filter: 'contrast(160%)' }}
             />
             <span
-              class="badge rounded-circle"
+              className="badge rounded-circle"
               style={{
                 backgroundColor: 'red',
                 color: '#fff',
@@ -93,72 +150,106 @@ export default class HeaderProductComponent extends React.Component {
             >
               <small>{this.props.store.myCart ? this.props.store.myCart.length : 0}</small>
             </span>
-            <div className="myCart">
-              <img
-                style={{ width: 30, height: 30, position: 'absolute', right: '28px', top: '-20px' }}
-                src="../../static/images/icons-sort-up.png"
-              />
-              <div
-                style={{
-                  maxHeight: '200px',
-                  overflowY: 'scroll',
-                  padding: '16px',
-                  paddingBottom: 0
-                }}
-              >
-                {['1', '3', '4', '3', '4'].map((item, index) => {
-                  return (
-                    <div className="row">
-                      <div className="col-2 px-0 mb-2">
-                        <img
-                          className="cursor"
-                          style={{ width: '100%' }}
-                          src="https://datvietmedia.com/wp-content/uploads/2018/08/4-1.jpg"
-                        />
-                      </div>
-                      <div className="col-7">
-                        <span
-                          className="cursor"
-                          style={{
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            maxWidth: '100%',
-                            whiteSpace: 'nowrap',
-                            display: 'inline-block'
-                          }}
-                        >
-                          name name namename name
-                        </span>
-                        <br />
-                        <small>Số lượng : 0</small>
-                      </div>
-                      <div className="col-3 px-0 mb-2">
-                        <span>120000</span>
-                        <button
-                          className="cursor colorWhite mt-1"
-                          style={{ backgroundColor: 'red' }}
-                        >
-                          <small>Xoá</small>
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="row justify-content-between mx-3 my-2">
-                <p className="mb-0">
-                  <small className="mb-1 d-block">Tổng thành tiền</small>
-                  <span style={{ color: 'red' }}>2.000.000đ</span>
-                </p>
-
-                <button
-                  className="cursor colorWhite px-3  d-block bgDefault float-right"
-                  style={{ height: '35px' }}
+            {this.props.store.myCart.length > 0 ? (
+              <div className="myCart font">
+                <img
+                  style={{
+                    width: 30,
+                    height: 30,
+                    position: 'absolute',
+                    right: '28px',
+                    top: '-20px'
+                  }}
+                  src="../../static/images/icons-sort-up.png"
+                />
+                <div
+                  style={{
+                    maxHeight: '200px',
+                    overflowY: 'scroll',
+                    padding: '16px',
+                    paddingBottom: 0
+                  }}
                 >
-                  Xem giỏ hàng
-                </button>
+                  {this.props.store.myCart.map((item, index) => {
+                    return (
+                      <div className="row">
+                        <div className="col-2 px-0 mb-2">
+                          <img
+                            className="cursor"
+                            style={{ width: '100%', height: '35px', objectFit: 'cover' }}
+                            src={item.image[0] || '../../static/images/logo.png'}
+                          />
+                        </div>
+                        <div className="col-7">
+                          <span
+                            className="cursor"
+                            style={{
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              maxWidth: '100%',
+                              whiteSpace: 'nowrap',
+                              display: 'inline-block'
+                            }}
+                          >
+                            {item.name}
+                          </span>
+                          <br />
+                          <small>
+                            {item.typeSize ? item.typeSize.find(e => e.status == true).name : null}
+                          </small>
+                        </div>
+                        <div className="col-3 px-0 mb-2">
+                          <p className="mb-0">
+                            {item.price} <small> x {item.amount || 1}</small>
+                          </p>
+                          <button
+                            onClick={() => {
+                              this.delMyProduct({ item, index });
+                            }}
+                            className="cursor colorWhite mt-1"
+                            style={{ backgroundColor: 'red' }}
+                          >
+                            <small>Xoá</small>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="row justify-content-end mx-3 my-2">
+                  <Link route="/order">
+                    <button
+                      className="cursor colorWhite px-3  d-block bgDefault float-right"
+                      style={{ height: '35px' }}
+                    >
+                      Xem giỏ hàng
+                    </button>
+                  </Link>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="myCart">
+                <div
+                  style={{
+                    height: '150px',
+
+                    border: '1px solid #b5b5b5'
+                  }}
+                >
+                  <img
+                    className=""
+                    style={{
+                      width: 100,
+                      height: 100,
+                      marginTop: 10,
+                      marginLeft: 150
+                    }}
+                    src="../../static/images/bag.png"
+                  />
+                  <p className="text-center my-2">Chưa có sản phẩm nào</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

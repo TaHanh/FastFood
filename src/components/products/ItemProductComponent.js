@@ -1,33 +1,47 @@
-import React from 'react';
-import { observable } from 'mobx';
-import { inject, observer } from 'mobx-react';
-import { Link, Router } from '../../routes/routes';
-import LoadComponent from '../general/LoadComponent';
-
+import React from 'react'
+import { observable } from 'mobx'
+import { inject, observer } from 'mobx-react'
+import { Link, Router } from '../../routes/routes'
+import LoadComponent from '../general/LoadComponent'
+import { intentPageString, intentPage } from '../../utils/RouterUtils'
 @inject('store')
 @observer
 export default class ItemProductComponent extends React.Component {
-  @observable isRender = false;
+  @observable isRender = false
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
+    const { item, index } = this.props
     return (
       <div className="product-item w-100 m-auto text-center">
         <div className="product-item-cover">
-          <img src="../../static/images/bannerHome.jpg" />
+          <Link href={{ pathname: '/detail-products', query: { id: item.id } }}>
+            <img src={item.image[0] || '../../static/images/logo.png'} />
+          </Link>
         </div>
         <div className="text-center px-1">
-          <p className="my-2">5846u9jdfgj fdhgjkhdfkghk fdhgjkhdfkghk</p>
+          <Link href={{ pathname: '/detail-products', query: { id: item.id } }}>
+            <p className="my-2">{item.name}</p>
+          </Link>
           <p className="mb-1" style={{ color: 'red' }}>
-            20000đ
+            {item.price}
           </p>
         </div>
-        <button className="cursor py-2 w-100">
+        <button
+          className="cursor py-2 w-100"
+          onClick={() => {
+            if (item.type && item.type.length > 0) {
+              intentPageString('/detail-products?id=' + item.id)
+            } else {
+              this.props.callBack('ADD_CART', { item, index })
+            }
+          }}
+        >
           <small>Thêm vào giỏ</small>
         </button>
       </div>
-    );
+    )
   }
 }

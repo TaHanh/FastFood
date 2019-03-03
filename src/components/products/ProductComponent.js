@@ -9,9 +9,11 @@ import './products.scss';
 @observer
 export default class ProductComponent extends React.Component {
   @observable isRender = false;
+  @observable data = [];
 
   constructor(props) {
     super(props);
+    this.data = this.props.data;
     this.isRender = true;
   }
 
@@ -20,29 +22,36 @@ export default class ProductComponent extends React.Component {
       <div className="product w-100">
         {this.isRender ? (
           <div className="">
-            <ul class="menu w-100 m-auto nav nav-pills nav-fill" style={{ zIndex: 1 }}>
+            {/* <ul className="menu w-100 m-auto nav nav-pills nav-fill" style={{ zIndex: 1 }}>
               {this.props.store.dataCategory.map((e, i) => {
                 return (
-                  <Link route={e.directional}>
-                    <li class="nav-item cursor">
-                      <a key={i} className={e.active ? 'nav-link colorDefault' : 'nav-link'}>
-                        {e.name}
-                      </a>
-                    </li>
-                  </Link>
+                  <li
+                    className="nav-item cursor"
+                    onClick={() => {
+                      this.props.callBack('DIREC', '/products/' + e.key);
+                    }}
+                  >
+                    <a key={i} className={e.active ? 'nav-link colorDefault' : 'nav-link'}>
+                      {e.name}
+                    </a>
+                  </li>
                 );
               })}
-            </ul>
+            </ul> */}
             <div className="limit">
-              <div className="row py-3">
-                {['1', '2', '1', '2', '1', '2', '1', '2'].map((e, i) => {
-                  return (
-                    <div className="p-3" style={{ width: '20%' }}>
-                      <ItemProductComponent />
-                    </div>
-                  );
-                })}
-              </div>
+              {this.data && this.data.length > 0 ? (
+                <div className="row py-3">
+                  {this.data.map((e, i) => {
+                    return (
+                      <div className="p-3" style={{ width: '20%' }}>
+                        <ItemProductComponent item={e} index={i} callBack={this.props.callBack} />
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <h5 className="pt-5 text-center">Không có dữ liệu</h5>
+              )}
             </div>
           </div>
         ) : (

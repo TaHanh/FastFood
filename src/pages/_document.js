@@ -55,9 +55,9 @@ class MyDocument extends Document {
           <link
             rel="apple-touch-icon"
             type="image/png"
-            href="https://hrc.com.vn/favicon/favicon-96x96.png"
+            href="../static/images/logo.png"
           />
-          <meta name="description" content="HRC" />
+          {/* <meta name="description" content="HRC" />
           <meta name="keywords" content="" />
           <link rel="canonical" href="https://hrcvn.tk/" />
           <meta property="og:url" content="https://hrcvn.tk/" />
@@ -67,9 +67,9 @@ class MyDocument extends Document {
           <meta property="og:type" content="website" />
           <meta property="fb:app_id" content="329967930705976" />
           <meta name="popads-verification-1412279" value="ed115e5aaae12215765c6b4286d3a4da" />
-          <meta name="referrer" content="always" />
+          <meta name="referrer" content="always" /> */}
 
-          <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126717852-1" />
+          {/* <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126717852-1" /> */}
 
           {cssFiles.map((c, i) => (
             <link key={i} href={c} rel="stylesheet" />
@@ -87,12 +87,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <body style={{ position: 'relative' }}>
           {/* <!-- Google Tag Manager (noscript) --> */}
           <noscript>
-            <iframe
+            {/* <iframe
               src="https://www.googletagmanager.com/ns.html?id=GTM-KT4LJ4N"
               height="0"
               width="0"
               style={{ display: 'none', visibility: 'hidden' }}
-            />
+            /> */}
           </noscript>
           {/* <!-- End Google Tag Manager (noscript) --> */}
           <Main />

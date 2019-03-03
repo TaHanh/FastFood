@@ -1,16 +1,25 @@
-import { action, observable, observe } from 'mobx';
-
-import Config from '../config/env';
-
-import { Link, Router } from '../routes/routes';
-
-let store = null;
+import { action, observable, observe } from 'mobx'
+import Promise from 'bluebird'
+// var join = Promise.join
+// var fs = Promise.promisifyAll(require('fs'))
+// import { fs } from 'fs'
+// const fs = require('fs')
+import Config from '../config/env'
+import { getPathName, getQuery } from '../utils/RouterUtils'
+import { Link, Router } from '../routes/routes'
+import { getCategories } from '../api/Category'
+import { getAllProducts } from '../api/Product'
+import { getAllCustomers, getCustomer, createCustomer } from '../api/Customer'
+import { getAllOrders } from '../api/Order'
+let store = null
 
 class Store {
-  @observable isServer = false;
-  @observable token = '';
-  @observable user = {};
-
+  @observable isServer = false
+  @observable isRender = false
+  @observable token = ''
+  @observable user = {}
+  @observable dataProducts = []
+  @observable dataProductLimit = []
   @observable dataMenu = [
     {
       name: 'Trang chủ',
@@ -27,28 +36,10 @@ class Store {
       directional: '/products',
       children: this.dataCategory
     }
-  ];
-  @observable dataCategory = [
-    {
-      name: 'Đồ ăn',
-      key: 'food',
-      active: true,
-      directional: '/products'
-    },
-    {
-      name: 'Đồ uống',
-      key: 'drink',
-      active: false,
-      directional: '/products'
-    },
-    {
-      name: 'Combo',
-      key: 'combo',
-      active: false,
-      directional: '/products'
-    }
-  ];
-  @observable myCart = [];
+  ]
+  @observable dataCategory = []
+  @observable myCart = []
+
   // admin
   @observable dataMenuDashboard = [
     {
@@ -66,10 +57,11 @@ class Store {
       active: false,
       directional: '/admin/orders'
     }
-  ];
-
+  ]
+  @observable dataOrdersDashboard = []
+  @observable dataCustomersDashboard = []
   constructor(obj) {
-    const self = this;
+    const self = this
   }
 
   // @action
@@ -104,48 +96,118 @@ class Store {
   //   Router.pushRoute('/log-in')
   // }
 
-  // @action
-  // initApp = async () => {
-  //   await this.getFooter(() => {})
-  //   if (process.browser) {
-  //     if (this.token) {
-  //       const user = getData(Config.asyncStorage.user)
-  //       if (user != undefined) {
-  //         this.user = JSON.parse(user)
-  //       }
-  //       retrieveCurrentUser(this).then(res => {
-  //         if (res.code == 1) {
-  //           this.user = res.data
-  //           ////console.log('USSSER' + JSON.stringify(this.user));
-  //         } else {
-  //         }
-  //       })
-  //     }
-  //   }
+  @action
+  getCategoriesAPI(callBack) {
+    getCategories().then(res => {
+      if (res) {
+        this.dataCategory = res.rows.map((item, index) => {
+          return { ...item, active: false }
+        })
+        this.dataMenu[1].children = this.dataCategory
+        callBack(this.dataCategory)
+        console.log('getCategories ' + JSON.stringify(this.dataCategory))
+      } else {
+        console.log(res)
+      }
+    })
+  }
 
-  //   await retrieveCareers().then(data => {
-  //     this.careers = data.data.rows
-  //   })
-  //   await getAllField().then(res => {
-  //     this.fields = res.data
-  //   })
-  //   await getAllTag().then(res => {
-  //     this.tags = res.data
-  //   })
-  //   await getAllCategory().then(res => {
-  //     this.categories = res.data
-  //   })
+  @action
+  getAllProductsAPI(callBack) {
+    getAllProducts().then(res => {
+      if (res) {
+        this.dataProducts = res.rows
+        callBack(this.dataProducts)
+      } else {
+        console.log(res)
+      }
+    })
+  }
 
-  // }
+  @action
+  getOrdersAPI = async () => {
+    const dataOrders = await getAllOrders()
+    Promise.all(
+      dataOrders.rows.map(async order => {
+        const user = await getCustomer(order.idUser)
+        order = { ...order, customer: user }
+        this.dataOrdersDashboard.push(order)
+        // console.log('idUser' + JSON.stringify(order))
+      })
+    ).then(res => {
+      console.log('dataOrders' + JSON.stringify(this.dataOrdersDashboard))
+    })
+  }
+  @action
+  checkStatusMenu = () => {
+    let pathName = getPathName()
+
+    this.dataMenu.map((item, index) => {
+      if (pathName == '' || '/') {
+        this.dataMenu[0].active = true
+      } else if (pathName.slice(9) == '/products') {
+        this.dataMenu[1].active = true
+      } else {
+        item.active = false
+      }
+    })
+  }
+  @action
+  initApp = async () => {
+    await getCategories().then(res => {
+      if (res) {
+        this.dataCategory = res.rows.map((item, index) => {
+          return { ...item, active: false }
+        })
+        this.dataMenu[1].children = this.dataCategory
+        // this.isRender = true;
+        console.log('dataCategory ' + JSON.stringify(this.dataCategory))
+      } else {
+        console.log(res)
+      }
+    })
+    //   if (process.browser) {
+    //     if (this.token) {
+    //       const user = getData(Config.asyncStorage.user)
+    //       if (user != undefined) {
+    //         this.user = JSON.parse(user)
+    //       }
+    //       retrieveCurrentUser(this).then(res => {
+    //         if (res.code == 1) {
+    //           this.user = res.data
+    //           ////console.log('USSSER' + JSON.stringify(this.user));
+    //         } else {
+    //         }
+    //       })
+    //     }
+    //   }
+
+    //   await retrieveCareers().then(data => {
+    //     this.careers = data.data.rows
+    //   })
+    //   await getAllField().then(res => {
+    //     this.fields = res.data
+    //   })
+    //   await getAllTag().then(res => {
+    //     this.tags = res.data
+    //   })
+    await getAllProducts().then(res => {
+      if (res) {
+        this.dataProducts = res.rows
+      } else {
+        console.log(res)
+      }
+    })
+  }
 }
 
 export function initializeStore(obj) {
   if (obj.isServer) {
-    return new Store(obj);
+    return new Store(obj)
   } else {
     if (store === null) {
-      store = new Store(obj);
+      store = new Store(obj)
     }
-    return store;
+    return store
   }
 }
