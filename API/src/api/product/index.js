@@ -1,12 +1,12 @@
-import { Router } from 'express'
-import { middleware as query } from 'querymen'
-import { middleware as body } from 'bodymen'
-import { create, index, show, update, destroy } from './controller'
-import { schema } from './model'
-export Product, { schema } from './model'
+import { Router } from 'express';
+import { middleware as query } from 'querymen';
+import { middleware as body } from 'bodymen';
+import { create, index, show, update, destroy } from './controller';
+import { schema } from './model';
+export Product, { schema } from './model';
 
-const router = new Router()
-const { name, type, image, price, status, description, category, highlight } = schema.tree
+const router = new Router();
+const { name, type, image, price, status, description, category, highlight } = schema.tree;
 
 /**
  * @api {post} /products Create product
@@ -24,9 +24,11 @@ const { name, type, image, price, status, description, category, highlight } = s
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Product not found.
  */
-router.post('/',
+router.post(
+  '/',
   body({ name, type, image, price, status, description, category, highlight }),
-  create)
+  create
+);
 
 /**
  * @api {get} /products Retrieve products
@@ -37,9 +39,15 @@ router.post('/',
  * @apiSuccess {Object[]} rows List of products.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
-router.get('/',
-  query(),
-  index)
+router.get(
+  '/',
+  query({
+    category,
+    name,
+    status
+  }),
+  index
+);
 
 /**
  * @api {get} /products/:id Retrieve product
@@ -49,8 +57,7 @@ router.get('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Product not found.
  */
-router.get('/:id',
-  show)
+router.get('/:id', show);
 
 /**
  * @api {put} /products/:id Update product
@@ -68,9 +75,11 @@ router.get('/:id',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Product not found.
  */
-router.put('/:id',
+router.put(
+  '/:id',
   body({ name, type, image, price, status, description, category, highlight }),
-  update)
+  update
+);
 
 /**
  * @api {delete} /products/:id Delete product
@@ -79,7 +88,6 @@ router.put('/:id',
  * @apiSuccess (Success 204) 204 No Content.
  * @apiError 404 Product not found.
  */
-router.delete('/:id',
-  destroy)
+router.delete('/:id', destroy);
 
-export default router
+export default router;

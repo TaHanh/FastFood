@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
-
+mongoose.set('useCreateIndex', true);
+// import mongooseKeywords from 'mongoose-keywords';
 const productSchema = new Schema(
   {
     name: {
@@ -66,7 +67,11 @@ productSchema.methods = {
   }
 };
 
-const model = mongoose.model('Product', productSchema);
+productSchema.plugin(require('mongoose-keywords'), {
+  paths: ['name', 'category', 'status']
+});
 
-export const schema = model.schema;
-export default model;
+const Model = mongoose.model('Product', productSchema);
+
+export const schema = Model.schema;
+export default Model;

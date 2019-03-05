@@ -1,22 +1,14 @@
-import { Router } from 'express';
-import sanPham from './san-pham';
-import khachHang from './khach-hang';
-import donHang from './don-hang';
-import loaiHang from './loai-hang';
-import product from './product';
-import category from './category';
+import { Router } from 'express'
+import product from './product'
+import category from './category'
 import upload from './upload'
 import customer from './customer'
 import order from './order'
 
-const router = new Router();
+const router = new Router()
 
-router.use('/san-phams', sanPham);
-router.use('/khach-hangs', khachHang);
-router.use('/don-hangs', donHang);
-router.use('/loai-hangs', loaiHang);
-router.use('/products', product);
-router.use('/categories', category);
+router.use('/products', product)
+router.use('/categories', category)
 router.use('/uploads', upload)
 router.use('/customers', customer)
 router.use('/orders', order)
@@ -45,4 +37,4 @@ router.use('/orders', order)
  * @apiParam {String[]} [fields] Fields to be returned.
  */
 
-export default router;
+export default router
