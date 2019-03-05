@@ -9,6 +9,7 @@ import './header.scss';
 export default class HeaderProductComponent extends React.Component {
   @observable isRender = false;
   @observable dataMenu = [];
+  @observable textSearch = '';
   constructor(props) {
     super(props);
     this.isRender = true;
@@ -47,21 +48,23 @@ export default class HeaderProductComponent extends React.Component {
                   if (item.children && item.children.length > 0) {
                     return (
                       <li className="menu" style={{ position: 'relative' }}>
-                        <a
-                          key={index}
-                          className={
-                            item.active
-                              ? 'nav-link cursor colorDefault dropdown-toggle'
-                              : 'nav-link cursor colorBlack dropdown-toggle'
-                          }
-                          id="navbarDropdown"
-                          role="button"
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                        >
-                          {item.name}
-                        </a>
+                        <Link href={item.directional}>
+                          <a
+                            key={index}
+                            className={
+                              item.active
+                                ? 'nav-link cursor colorDefault dropdown-toggle'
+                                : 'nav-link cursor colorBlack dropdown-toggle'
+                            }
+                            id="navbarDropdown"
+                            role="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                          >
+                            {item.name}
+                          </a>
+                        </Link>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                           {item.children.map((e, i) => {
                             return (
@@ -104,6 +107,14 @@ export default class HeaderProductComponent extends React.Component {
               type="text"
               placeholder="Bạn tìm gì ?"
               style={{ height: 30, border: '1px solid #b4b4b4' }}
+              onChange={e => {
+                this.textSearch = e.target.value;
+              }}
+              onKeyPress={({ charCode }) => {
+                if (charCode === 13) {
+                  this.props.callBack('SEARCH', this.textSearch);
+                }
+              }}
             />
             <img
               className="cursor"
@@ -116,6 +127,9 @@ export default class HeaderProductComponent extends React.Component {
                 zIndex: 1
               }}
               src="../../static/images/icon-search.png"
+              onClick={() => {
+                this.props.callBack('SEARCH', this.textSearch);
+              }}
             />
           </div>
           <div className="cart float-left" style={{ width: 30, position: 'relative' }}>
@@ -137,7 +151,7 @@ export default class HeaderProductComponent extends React.Component {
               <small>{this.props.store.myCart ? this.props.store.myCart.length : 0}</small>
             </span>
             {this.props.store.myCart.length > 0 ? (
-              <div className="myCart">
+              <div className="myCart font">
                 <img
                   style={{
                     width: 30,
@@ -160,7 +174,11 @@ export default class HeaderProductComponent extends React.Component {
                     return (
                       <div className="row">
                         <div className="col-2 px-0 mb-2">
-                          <img className="cursor" style={{ width: '100%' }} src={item.image[0]} />
+                          <img
+                            className="cursor"
+                            style={{ width: '100%', height: '35px', objectFit: 'cover' }}
+                            src={item.image[0] || '../../static/images/logo.png'}
+                          />
                         </div>
                         <div className="col-7">
                           <span
@@ -176,7 +194,9 @@ export default class HeaderProductComponent extends React.Component {
                             {item.name}
                           </span>
                           <br />
-                          {/* <small>{item.typeSize}</small> */}
+                          <small>
+                            {item.typeSize ? item.typeSize.find(e => e.status == true).name : null}
+                          </small>
                         </div>
                         <div className="col-3 px-0 mb-2">
                           <p className="mb-0">
@@ -196,16 +216,7 @@ export default class HeaderProductComponent extends React.Component {
                     );
                   })}
                 </div>
-                <div className="row justify-content-between mx-3 my-2">
-                  <p className="mb-0">
-                    <small className="mb-1 d-block">Tổng thành tiền</small>
-                    <span style={{ color: 'red' }}>
-                      {this.props.store.myCart.map((item, index) => {
-                        let total = total + item.price * item.amount;
-                        return total;
-                      })}
-                    </span>
-                  </p>
+                <div className="row justify-content-end mx-3 my-2">
                   <Link route="/order">
                     <button
                       className="cursor colorWhite px-3  d-block bgDefault float-right"

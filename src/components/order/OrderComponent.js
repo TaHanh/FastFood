@@ -1,30 +1,38 @@
-import React from 'react';
-import { observable } from 'mobx';
-import { inject, observer } from 'mobx-react';
-import { Link, Router } from '../../routes/routes';
-import LoadComponent from '../general/LoadComponent';
-import ItemProductComponent from '../products/ItemProductComponent';
-import './order.scss';
+import React from 'react'
+import { observable } from 'mobx'
+import { inject, observer } from 'mobx-react'
+import { Link, Router } from '../../routes/routes'
+import LoadComponent from '../general/LoadComponent'
+import ItemProductComponent from '../products/ItemProductComponent'
+import './order.scss'
 
 @inject('store')
 @observer
 export default class OrderComponent extends React.Component {
-  @observable isRender = false;
-  @observable data = [];
-  @observable user = {};
+  @observable isRender = false
+  @observable data = []
+  @observable user = {}
+  @observable total = 0
 
   constructor(props) {
-    super(props);
-    this.isRender = true;
-    this.data = this.props.data;
-    this.user = this.props.user;
-    console.log(this.user);
+    super(props)
+    this.isRender = true
+    this.data = this.props.data
+    this.user = this.props.user
+  }
+  componentDidMount() {}
+  totalPrice = () => {
+    let total = 0
+    this.data.map((item, index) => {
+      total += item.price * item.amount
+    })
+    return total
   }
   changeInput = data => {
-    const { value, name } = data.target;
+    const { value, name } = data.target
     // alert(JSON.stringify(this.data));
-    this.user[name] = value;
-  };
+    this.user[name] = value
+  }
   render() {
     return (
       <div className="product w-100">
@@ -34,7 +42,7 @@ export default class OrderComponent extends React.Component {
               <h5>Thông tin sản phẩm</h5>
               <hr className="my-1" />
             </div>
-            <table class="table table-bordered">
+            <table className="table table-bordered">
               <thead className="text-center">
                 <tr>
                   <th scope="col">Sản phẩm</th>
@@ -50,48 +58,81 @@ export default class OrderComponent extends React.Component {
                     <tr>
                       <th scope="row">
                         <div className="row">
-                          <img
-                            className="float-left mr-3"
-                            src=""
-                            style={{
-                              width: '100%',
-                              maxWidth: 60,
-                              height: 45,
-                              objectFit: 'contain'
+                          <Link
+                            href={{
+                              pathname: '/detail-products',
+                              query: { id: item.id }
                             }}
-                            src={item.image[0]}
-                          />
-                          <div className="">
-                            <span
-                              className="cursor"
+                          >
+                            <img
+                              className="float-left mr-3 cursor"
+                              src=""
                               style={{
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                maxWidth: '100%',
-                                whiteSpace: 'nowrap',
-                                display: 'inline-block'
+                                width: '100%',
+                                maxWidth: 60,
+                                height: 45,
+                                objectFit: 'contain'
+                              }}
+                              src={
+                                item.image[0] || '../../static/images/logo.png'
+                              }
+                            />
+                          </Link>
+                          <div className="">
+                            <Link
+                              href={{
+                                pathname: '/detail-products',
+                                query: { id: item.id }
                               }}
                             >
-                              {item.name}
-                            </span>
+                              <a
+                                className="cursor colorDefault"
+                                style={{
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  maxWidth: '100%',
+                                  whiteSpace: 'nowrap',
+                                  display: 'inline-block',
+                                  textDecoration: 'none'
+                                }}
+                              >
+                                {item.name}
+                              </a>
+                            </Link>
                             <br />
                             <small>Đơn gía : {item.price}</small>
                           </div>
                         </div>
                       </th>
                       <td className="text-center">
-                        <input
-                          type="number"
-                          min={0}
-                          value={item.amount}
-                          className="p-1"
-                          onChange={data => {
-                            // this.changeInput(e);
-                            const { value, name } = data.target;
-                            this.data[index].amount = value;
-                          }}
-                          style={{ width: '100px', border: '1px solid rgb(180, 180, 180)' }}
-                        />
+                        {item.typeSize ? (
+                          <select
+                            type="text"
+                            className="w-75  font"
+                            name="status"
+                            onChange={e => {
+                              const { value, name } = e.target
+                              item.typeSize.forEach(element => {
+                                if (value == element.name) {
+                                  element.status = true
+                                } else {
+                                  element.status = false
+                                }
+                              })
+                            }}
+                          >
+                            {item.typeSize.map(e => {
+                              return (
+                                <option
+                                  selected={e.status ? true : false}
+                                  value={e.name}
+                                >
+                                  {e.name}
+                                </option>
+                              )
+                            })}
+                          </select>
+                        ) : null}{' '}
                       </td>
                       <td className="text-center">
                         <input
@@ -101,39 +142,43 @@ export default class OrderComponent extends React.Component {
                           className="p-1"
                           onChange={data => {
                             // this.changeInput(e);
-                            const { value, name } = data.target;
-                            this.data[index].amount = value;
+                            const { value, name } = data.target
+                            this.data[index].amount = value
+                            this.totalPrice()
                           }}
-                          style={{ width: '100px', border: '1px solid rgb(180, 180, 180)' }}
+                          style={{
+                            width: '100px',
+                            border: '1px solid rgb(180, 180, 180)'
+                          }}
                         />
                       </td>
                       <td className="text-center">
-                        <span style={{ color: 'red' }}>{item.price * item.amount}</span>
+                        <span style={{ color: 'red' }}>
+                          {item.price * item.amount}
+                        </span>
                       </td>
                       <td className="text-center">
                         <button
                           className="cursor colorWhite mt-1"
                           style={{ backgroundColor: 'red' }}
                           onClick={() => {
-                            this.props.callBack('DEL_CART', { item, index });
+                            this.props.callBack('DEL_CART', { item, index })
                           }}
                         >
                           <small>Xoá</small>
                         </button>
                       </td>
                     </tr>
-                  );
+                  )
                 })}
               </tbody>
             </table>
-            <b>
-              Tổng thành tiền:{' '}
-              {this.data.map((item, index) => {
-                let total = 0;
-                total += item.price * item.amount;
-                return total;
-              })}
-            </b>
+            <h5>
+              <b>
+                Tổng thành tiền:{' '}
+                <span style={{ color: 'red' }}>{this.totalPrice()}</span>
+              </b>
+            </h5>
             <div className=" pt-5">
               <div>
                 <h5>Thông tin thanh toán</h5>
@@ -148,7 +193,7 @@ export default class OrderComponent extends React.Component {
                         name="name"
                         value={this.user.name}
                         onChange={e => {
-                          this.changeInput(e);
+                          this.changeInput(e)
                         }}
                         type="text"
                         className="w-75 p-1"
@@ -166,7 +211,7 @@ export default class OrderComponent extends React.Component {
                         name="phone"
                         value={this.user.phone}
                         onChange={e => {
-                          this.changeInput(e);
+                          this.changeInput(e)
                         }}
                         type="text"
                         className="w-75 p-1"
@@ -184,7 +229,7 @@ export default class OrderComponent extends React.Component {
                         name="address"
                         value={this.user.address}
                         onChange={e => {
-                          this.changeInput(e);
+                          this.changeInput(e)
                         }}
                         type="text"
                         className="w-100 p-1"
@@ -202,7 +247,7 @@ export default class OrderComponent extends React.Component {
                         name="email"
                         value={this.user.email}
                         onChange={e => {
-                          this.changeInput(e);
+                          this.changeInput(e)
                         }}
                         type="text"
                         className="w-75 p-1"
@@ -221,7 +266,7 @@ export default class OrderComponent extends React.Component {
                         name="message"
                         value={this.user.message}
                         onChange={e => {
-                          this.changeInput(e);
+                          this.changeInput(e)
                         }}
                         className="w-100 p-1"
                         style={{
@@ -234,12 +279,15 @@ export default class OrderComponent extends React.Component {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row mb-5">
               {/* <Link route="/order"> */}
               <button
-                className="cursor p-2 bgDefault rounded"
+                className="cursor py-2 px-4 bgDefault rounded"
                 onClick={() => {
-                  this.props.callBack('BUY_PRODUCTS', { user: this.user, product: this.data });
+                  this.props.callBack('BUY_PRODUCTS', {
+                    user: this.user,
+                    product: this.data
+                  })
                 }}
               >
                 <span className="colorWhite">Mua ngay</span>
@@ -251,6 +299,6 @@ export default class OrderComponent extends React.Component {
           <LoadComponent />
         )}
       </div>
-    );
+    )
   }
 }

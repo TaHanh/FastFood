@@ -6,6 +6,8 @@ import { intentPageString } from '../../utils/RouterUtils';
 import LoadComponent from '../general/LoadComponent';
 import ItemProductComponent from './ItemProductComponent';
 import ReactHtmlParser from 'react-html-parser';
+import $ from 'jquery';
+
 import './products.scss';
 @inject('store')
 @observer
@@ -15,6 +17,8 @@ export default class DetailProductComponent extends React.Component {
   @observable data = [];
   @observable checkSize = false;
   @observable typeSize = '';
+  @observable image = '';
+
   constructor(props) {
     super(props);
     this.data = this.props.data;
@@ -23,7 +27,9 @@ export default class DetailProductComponent extends React.Component {
         return { name: e, status: false };
       });
     }
-
+    this.image = this.data.image[0] || '../../static/images/bannerHome.jpg';
+  }
+  componentDidMount() {
     this.isRender = true;
   }
   changeInput = data => {
@@ -45,11 +51,41 @@ export default class DetailProductComponent extends React.Component {
           <div className="limit">
             <div className="detail-product-content  py-5 px-3">
               <div className="row">
-                <div className="col-lg-6">
+                <div className="col-lg-6 text-center">
                   <img
-                    src={this.data.image[0] || '../../static/images/bannerHome.jpg'}
-                    style={{ objectFit: 'contain', height: 200, maxWidth: '100%' }}
+                    src={this.image}
+                    style={{
+                      objectFit: 'contain',
+                      height: 300,
+                      maxWidth: '100%'
+                    }}
                   />
+                  <div
+                    className="my-3 justify-content-center"
+                    style={{
+                      height: '90px',
+                      overflowX: 'auto',
+                      overflowY: 'hidden',
+                      display: 'inline-flex',
+                      width: '100%'
+                    }}
+                  >
+                    {this.data.image.map((e, i) => {
+                      return (
+                        <img
+                          src={e}
+                          className="mr-2 cursor"
+                          style={{
+                            objectFit: 'contain',
+                            height: 70
+                          }}
+                          onClick={() => {
+                            this.image = this.data.image[i];
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
                 <div className="col-lg-6">
                   <h3 className="mb-4">{this.data.name}</h3>
@@ -84,14 +120,12 @@ export default class DetailProductComponent extends React.Component {
                                 {item.name}
                               </label>
                               <input
-                                style={
-                                  {
-                                    // position: 'absolute',
-                                    // top: 0,
-                                    // left: 0,
-                                    // zIndex: -1
-                                  }
-                                }
+                                style={{
+                                  position: 'absolute',
+                                  top: 0,
+                                  left: 0,
+                                  zIndex: -1
+                                }}
                                 onChange={e => {
                                   const { value, name } = e.target;
                                   this.typeSize.map((e1, i1) => {
@@ -175,12 +209,32 @@ export default class DetailProductComponent extends React.Component {
                     <button
                       className="cursor px-3 py-2  bgDefault"
                       onClick={() => {
-                        this.props.callBack('ADD_CART', {
-                          ...this.data,
-                          amount: this.numberProduct,
-                          typeSelect: this.typeSize
-                        });
-                        intentPageString('/order');
+                        if (this.typeSize == '') {
+                          this.checkSize = false;
+                          if (this.numberProduct != 0) {
+                            this.props.callBack('ADD_CART', {
+                              ...this.data,
+                              amount: this.numberProduct
+                            });
+                            intentPageString('/order');
+                          } else {
+                            alert('Bạn chưa chọn số lượng !');
+                          }
+                        } else if (this.typeSize.find(e => e.status == true) !== undefined) {
+                          this.checkSize = false;
+                          if (this.numberProduct != 0) {
+                            this.props.callBack('ADD_CART', {
+                              ...this.data,
+                              amount: this.numberProduct,
+                              typeSize: this.typeSize
+                            });
+                            intentPageString('/order');
+                          } else {
+                            alert('Bạn chưa chọn số lượng !');
+                          }
+                        } else {
+                          this.checkSize = true;
+                        }
                       }}
                     >
                       <span className="colorWhite">Mua ngay</span>
@@ -188,7 +242,9 @@ export default class DetailProductComponent extends React.Component {
                   </div>
                 </div>
               </div>
-              <p className="my-3">{ReactHtmlParser(this.data.description)}</p>
+              <pre className="my-3 font" style={{ lineHeight: '20px' }}>
+                {ReactHtmlParser(this.data.description)}
+              </pre>
             </div>
             <div className="product-more">
               <div className="mx-4">
@@ -200,13 +256,19 @@ export default class DetailProductComponent extends React.Component {
                 {this.props.dataLike.map((e, i) => {
                   return (
                     <div className="p-3" style={{ width: '20%' }}>
-                      <ItemProductComponent item={e} index={i} callBack={this.props.callBack} />
+                      <ItemProductComponent
+                        item={e}
+                        index={i}
+                        callBack={(key, data) => {
+                          this.props.callBack(key, data.item);
+                        }}
+                      />
                     </div>
                   );
                 })}
               </div>
             </div>
-            <div className="product-more">
+            {/* <div className="product-more">
               <div className="mx-4">
                 <h4>Sản phẩm tương tự</h4>
                 <hr className="my-1" />
@@ -216,9 +278,13 @@ export default class DetailProductComponent extends React.Component {
                 {this.props.dataMore.map((e, i) => {
                   return (
                     <div className="p-3" style={{ width: '20%' }}>
-                      <ItemProductComponent item={e} index={i} callBack={this.props.callBack} />
+                      <ItemProductComponent
+                        item={e}
+                        index={i}
+                        callBack={this.props.callBack}
+                      />
                     </div>
-                  );
+                  )
                 })}
               </div>
 
@@ -232,7 +298,7 @@ export default class DetailProductComponent extends React.Component {
                   </a>
                 </Link>
               </div>
-            </div>
+            </div> */}
           </div>
         ) : (
           <LoadComponent />

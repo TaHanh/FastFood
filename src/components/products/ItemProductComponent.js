@@ -1,19 +1,19 @@
-import React from 'react';
-import { observable } from 'mobx';
-import { inject, observer } from 'mobx-react';
-import { Link, Router } from '../../routes/routes';
-import LoadComponent from '../general/LoadComponent';
-import { intentPageString } from '../../utils/RouterUtils';
+import React from 'react'
+import { observable } from 'mobx'
+import { inject, observer } from 'mobx-react'
+import { Link, Router } from '../../routes/routes'
+import LoadComponent from '../general/LoadComponent'
+import { intentPageString, intentPage } from '../../utils/RouterUtils'
 @inject('store')
 @observer
 export default class ItemProductComponent extends React.Component {
-  @observable isRender = false;
+  @observable isRender = false
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
-    const { item, index } = this.props;
+    const { item, index } = this.props
     return (
       <div className="product-item w-100 m-auto text-center">
         <div className="product-item-cover">
@@ -33,15 +33,15 @@ export default class ItemProductComponent extends React.Component {
           className="cursor py-2 w-100"
           onClick={() => {
             if (item.type && item.type.length > 0) {
-              intentPageString('/detail-products?id=' + item.id);
+              intentPageString('/detail-products?id=' + item.id)
             } else {
-              this.props.callBack('ADD_CART', { item, index });
+              this.props.callBack('ADD_CART', { item, index })
             }
           }}
         >
           <small>Thêm vào giỏ</small>
         </button>
       </div>
-    );
+    )
   }
 }

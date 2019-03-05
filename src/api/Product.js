@@ -36,13 +36,15 @@ export const getProduct = id => {
       });
   });
 };
-
-export const queryCompany = ({ q, limit }) => {
+// https://github.com/diegohaz/rest/blob/master/generators/app/templates/api/user/model.js#L129
+// params -> localhost:9000/products?page=1&limit=1
+export const queryProduct = ({ page, limit, query }) => {
   return new Promise((resolve, reject) => {
     const url =
-      `${Config.api.host.base}${Config.api.path.base.companies}` +
-      `${q ? '?q=' + q : ''} ` +
-      `${limit ? '?limit=' + limit : ''} `;
+      `${Config.api.host.base}${Config.api.path.base.products}` +
+      `${page ? '?page=' + page : ''}` +
+      `${limit ? '&limit=' + limit : ''}` +
+      `${query ? query : ''}`;
 
     return Alamofire.request(
       url,

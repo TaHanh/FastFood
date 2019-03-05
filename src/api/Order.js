@@ -37,12 +37,13 @@ export const getOrder = id => {
   });
 };
 
-export const queryCompany = ({ q, limit }) => {
+export const queryOrder = ({ page, limit,query  }) => {
   return new Promise((resolve, reject) => {
     const url =
-      `${Config.api.host.base}${Config.api.path.base.companies}` +
-      `${q ? '?q=' + q : ''} ` +
-      `${limit ? '?limit=' + limit : ''} `;
+      `${Config.api.host.base}${Config.api.path.base.orders}` +
+      `${page ? '?page=' + page : ''}` +
+      `${limit ? '&limit=' + limit : ''}`+
+      `${query ? query : ''}`;;
 
     return Alamofire.request(
       url,

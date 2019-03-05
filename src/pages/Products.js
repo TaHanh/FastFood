@@ -3,8 +3,8 @@ import React from 'react';
 import { observable } from 'mobx';
 
 import { inject, observer } from 'mobx-react';
-import { getPathName, getQuery, intentPageString } from '../utils/RouterUtils';
-
+import { getPathName, getQuery, intentPageString, intentPage } from '../utils/RouterUtils';
+import FooterComponent from '../components/general/FooterComponent';
 import { Link, Router } from '../routes/routes';
 import Config from '../config/env';
 import HeaderProductComponent from '../components/header/HeaderProductComponent';
@@ -20,28 +20,44 @@ export default class Products extends React.Component {
   constructor(props) {
     super(props);
     if (this.props.store.dataCategory && this.props.store.dataCategory.length == 0) {
-      this.props.store.getCategoriesAPI();
+      this.props.store.getCategoriesAPI(() => {});
     }
   }
   componentDidMount() {
-    this.props.store.getProductsAPI(res => {
+    this.props.store.getAllProductsAPI(res => {
+      let query = getQuery('search');
       let pathName = getPathName();
-      console.log('bfjhfgsdj ' + JSON.stringify(this.props.store.dataProducts));
-
-      if (pathName == '/products/food') {
-        this.data = this.props.store.dataProducts.filter(e => e.category == 'food');
-      } else if (pathName == '/products/drink') {
-        this.data = this.props.store.dataProducts.filter(e => e.category == 'drink');
-      } else if (pathName == '/products/combo') {
-        this.data = this.props.store.dataProducts.filter(e => e.category == 'combo');
+      if (query && query != '') {
+        this.data = this.search(query);
       } else {
-        this.data = this.props.store.dataProducts;
+        if (pathName == '/products/food') {
+          this.data = this.props.store.dataProducts.filter(e => e.category == 'food');
+        } else if (pathName == '/products/drink') {
+          this.data = this.props.store.dataProducts.filter(e => e.category == 'drink');
+        } else if (pathName == '/products/combo') {
+          this.data = this.props.store.dataProducts.filter(e => e.category == 'combo');
+        } else {
+          this.data = this.props.store.dataProducts;
+        }
       }
+
       this.isRender = true;
     });
     if (localStorage.getItem('myCartFF'))
       this.props.store.myCart = JSON.parse(localStorage.myCartFF);
   }
+  search = query => {
+    let text = query.toLowerCase();
+    let arr = [];
+    this.props.store.dataProducts.map(function(item) {
+      let nana = item.name.toLowerCase();
+      if (nana.indexOf(text) != -1) {
+        arr.push(item);
+        console.log('search' + JSON.stringify(arr));
+      }
+    });
+    return arr;
+  };
   callBack = (key, data) => {
     switch (key) {
       case 'ADD_CART':
@@ -68,6 +84,15 @@ export default class Products extends React.Component {
       case 'DIREC':
         intentPageString(data);
         break;
+      case 'SEARCH':
+        intentPage('/products', { search: data });
+        let query = getQuery('search');
+        if (query && query != '') {
+          this.data = this.search(query);
+        } else {
+          this.data = this.props.store.dataProducts;
+        }
+        break;
       default:
         break;
     }
@@ -77,8 +102,9 @@ export default class Products extends React.Component {
       <div>
         {this.isRender ? (
           <div>
-            <HeaderProductComponent />
+            <HeaderProductComponent callBack={this.callBack} />
             <ProductComponent data={this.data} callBack={this.callBack} />
+            <FooterComponent />
             {this.statusAddCart ? (
               <div
                 className={this.titleAddCart == 0 ? 'alert alert-success' : 'alert alert-false'}

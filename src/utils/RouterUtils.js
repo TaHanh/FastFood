@@ -37,6 +37,17 @@ export function getPathName() {
 export function getDataIntent(store) {
   return store.dataIntent;
 }
+export function intentPageParams(path, obj, store, data) {
+  if (obj == undefined) {
+    Router.pushRoute(path);
+    // history.push(path);
+    return;
+  }
+
+  const objArray = Object.keys(obj);
+  const query = `?${objArray.map(o => `${o}=${obj[o]}`).join('&')}`;
+  Router.pushRoute(path + query);
+}
 export function getAllUrlParams(url) {
   // get query string from url (optional) or window
   var queryString = url ? url.split('?')[1] : window.location.search.slice(1);

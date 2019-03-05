@@ -3,6 +3,7 @@ import { observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { Link, Router } from '../../../routes/routes';
 import ReactHtmlParser from 'react-html-parser';
+import './product.scss';
 @inject('store')
 @observer
 class Item extends React.Component {
@@ -44,7 +45,7 @@ class Item extends React.Component {
               <p
                 className="mb-1"
                 style={{
-                  maxWidth: '200px',
+                  maxWidth: '150px',
                   textOverflow: 'ellipsis',
                   overflow: 'hidden',
                   height: '16px',
@@ -67,16 +68,18 @@ class Item extends React.Component {
             );
           })}
         </td>
-        <td>{item.status == 0 ? 'Còn hàng' : 'Hết hàng'}</td>
+        <td>
+          {item.status == 0 ? (
+            <span style={{ color: 'darkblue' }}>Còn hàng</span>
+          ) : (
+            <span style={{ color: 'red' }}>Hết hàng</span>
+          )}
+        </td>
         <td>
           <p
-            className="mb-0"
+            className="mb-0 description"
             style={{
-              maxWidth: '200px',
-              textOverflow: 'ellipsis',
-              overflow: 'hidden',
-              height: '40px',
-              lineHeight: '16px'
+              maxWidth: '200px'
             }}
           >
             {ReactHtmlParser(item.description)}
@@ -108,11 +111,38 @@ class Item extends React.Component {
 @observer
 export default class ListProductComponent extends React.Component {
   @observable isRender = false;
+  @observable data = [];
+  @observable search = ''
   constructor(props) {
     super(props);
+    this.data = this.props.data;
+    this.search = this.props.search;
+    console.log(JSON.stringify(this.search))
     this.isRender = true;
   }
   componentDidMount() {}
+  pagination = () => {
+    let pagi = [];
+    for (let index = 0; index < this.props.totalPage; index++) {
+      if (this.props.page == index + 1) {
+        pagi.push(
+          <span className="border bgDefault colorWhite rounded py-1 px-2 mx-1">{index + 1}</span>
+        );
+      } else {
+        pagi.push(
+          <span
+            className="border border-dark rounded p-1 py-1 px-2 mx-1 cursor"
+            onClick={() => {
+              this.props.callBack('NEXT_PAGE', index + 1);
+            }}
+          >
+            {index + 1}
+          </span>
+        );
+      }
+    }
+    return pagi;
+  };
   render() {
     const { callBack } = this.props;
     return (
@@ -134,7 +164,16 @@ export default class ListProductComponent extends React.Component {
                       <span className="font">Tên sản phẩm</span>
                     </div>
                     <div className="col-9">
-                      <input type="text" className="w-75 form-control font" style={{}} />
+                      <input
+                        type="text"
+                        className="w-75 form-control font"
+                        style={{}}
+                        value={this.search.name}
+                        onChange={e => {
+
+                          this.search.name = e.target.value;
+                        }}
+                      />
                     </div>
                   </div>
                   <div className="row  align-items-center">
@@ -142,9 +181,17 @@ export default class ListProductComponent extends React.Component {
                       <span className="font">Trạng thái</span>
                     </div>
                     <div className="col-9">
-                      <select type="text" className="w-75 custom-select font">
-                        <option value="exist ">Còn hàng</option>
-                        <option value="over ">Hết hàng</option>
+                      <select
+                        type="text"
+                        className="w-75 custom-select font"
+
+                        onChange={e => {
+                          this.search.status = e.target.value;
+                        }}
+                      >
+                        <option value=""  selected={this.search.status == '' ? true : false}>----</option>
+                        <option value="0" selected={this.search.status == '0' ? true : false}>Còn hàng</option>
+                        <option value="1" selected={this.search.status == '1' ? true : false}>Hết hàng</option>
                       </select>
                     </div>
                   </div>
@@ -152,12 +199,19 @@ export default class ListProductComponent extends React.Component {
                 <div className="col-6">
                   <div className="row  align-items-center">
                     <div className="col-4">
-                      <span className="font">Loại hàng</span>
+                      <span className="font">Danh mục</span>
                     </div>
                     <div className="col-8">
-                      <select type="text" className="w-75 custom-select font">
+                      <select
+                        type="text"
+                        className="w-75 custom-select font"
+                        onChange={e => {
+                          this.search.category = e.target.value;
+                        }}
+                      >
+                        <option value=""  selected={this.search.category == "" ? true : false} >----</option>
                         {this.props.store.dataCategory.map((item, index) => {
-                          return <option value={item.key}>{item.name}</option>;
+                          return <option value={item.key}  selected={this.search.category == item.key ? true : false}>{item.name}</option>;
                         })}
                       </select>
                     </div>
@@ -165,7 +219,23 @@ export default class ListProductComponent extends React.Component {
                 </div>
               </div>
               <div className="row justify-content-end mb-4 pr-5">
-                <button className="bgDefault colorWhite p-2 px-3 rounded cursor">Tìm kiếm</button>
+                <button
+                  onClick={() => {
+                    callBack('SEARCH', this.search);
+                  }}
+                  className="bgDefault colorWhite p-2 px-3 mr-3 rounded cursor"
+                >
+                  Tìm kiếm
+                </button>
+                {this.props.isSearch ?
+                 <button
+                  onClick={() => {
+                    callBack('BACK_ALL');
+                  }}
+                  className="bgDefault colorWhite p-2 px-3 rounded cursor"
+                >
+                  Tất cả sản phẩm
+                </button> : null }
               </div>
             </div>
             <table className="table table-bordered text-center font">
@@ -184,7 +254,7 @@ export default class ListProductComponent extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.props.store.dataProducts.map((item, index) => {
+                {this.data.map((item, index) => {
                   return (
                     <Item
                       item={item}
@@ -196,35 +266,37 @@ export default class ListProductComponent extends React.Component {
                     />
                   );
                 })}
-                {this.props.store.dataProducts.length == 0 ? (
-                  <td colspan="10">Không có dữ liệu</td>
+
+                {this.data.length == 0 ? (
+                  <td colSpan="10">Không có sản phẩm nào</td>
                 ) : null}
               </tbody>
             </table>
+            <div className="float-right mb-3 mr-3">{this.pagination()}</div>
 
             {/* <!-- Modal --> */}
             <div
               ref="myModal"
-              class="modal fade"
+              className="modal fade"
               id="exampleModalCenter"
-              tabindex="-1"
+              tabIndex="-1"
               role="dialog"
               aria-labelledby="exampleModalCenterTitle"
               aria-hidden="true"
             >
-              <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">
+              <div className="modal-dialog modal-dialog-centered" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title" id="exampleModalLongTitle">
                       Modal title
                     </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div class="modal-body">Bạn có chắc chắn muốn xóa sản phẩm này !</div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  <div className="modal-body">Bạn có chắc chắn muốn xóa sản phẩm này !</div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" data-dismiss="modal">
                       Close
                     </button>
                     <button
@@ -233,7 +305,7 @@ export default class ListProductComponent extends React.Component {
                       }}
                       data-dismiss="modal"
                       type="button"
-                      class="btn btn-primary"
+                      className="btn btn-primary"
                     >
                       Xóa
                     </button>

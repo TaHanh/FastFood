@@ -1,21 +1,25 @@
-import { action, observable, observe } from 'mobx';
-import Promise from 'bluebird';
-import fs from 'fs';
-import Config from '../config/env';
-import { getPathName, getQuery } from '../utils/RouterUtils';
-import { Link, Router } from '../routes/routes';
-import { getCategories } from '../api/Category';
-import { getAllProducts } from '../api/Product';
-import { getAllCustomers, getCustomer, createCustomer } from '../api/Customer';
-import { getAllOrders } from '../api/Order';
-let store = null;
+import { action, observable, observe } from 'mobx'
+import Promise from 'bluebird'
+// var join = Promise.join
+// var fs = Promise.promisifyAll(require('fs'))
+// import { fs } from 'fs'
+// const fs = require('fs')
+import Config from '../config/env'
+import { getPathName, getQuery } from '../utils/RouterUtils'
+import { Link, Router } from '../routes/routes'
+import { getCategories } from '../api/Category'
+import { getAllProducts } from '../api/Product'
+import { getAllCustomers, getCustomer, createCustomer } from '../api/Customer'
+import { getAllOrders } from '../api/Order'
+let store = null
 
 class Store {
-  @observable isServer = false;
-  @observable isRender = false;
-  @observable token = '';
-  @observable user = {};
-  @observable dataProducts = [];
+  @observable isServer = false
+  @observable isRender = false
+  @observable token = ''
+  @observable user = {}
+  @observable dataProducts = []
+  @observable dataProductLimit = []
   @observable dataMenu = [
     {
       name: 'Trang chủ',
@@ -32,9 +36,9 @@ class Store {
       directional: '/products',
       children: this.dataCategory
     }
-  ];
-  @observable dataCategory = [];
-  @observable myCart = [];
+  ]
+  @observable dataCategory = []
+  @observable myCart = []
 
   // admin
   @observable dataMenuDashboard = [
@@ -53,11 +57,11 @@ class Store {
       active: false,
       directional: '/admin/orders'
     }
-  ];
-  @observable dataOrdersDashboard = [];
-  @observable dataCustomersDashboard = [];
+  ]
+  @observable dataOrdersDashboard = []
+  @observable dataCustomersDashboard = []
   constructor(obj) {
-    const self = this;
+    const self = this
   }
 
   // @action
@@ -97,84 +101,71 @@ class Store {
     getCategories().then(res => {
       if (res) {
         this.dataCategory = res.rows.map((item, index) => {
-          return { ...item, active: false };
-        });
-        this.dataMenu[1].children = this.dataCategory;
-        callBack(this.dataCategory);
-        console.log('getCategories ' + JSON.stringify(this.dataCategory));
+          return { ...item, active: false }
+        })
+        this.dataMenu[1].children = this.dataCategory
+        callBack(this.dataCategory)
+        console.log('getCategories ' + JSON.stringify(this.dataCategory))
       } else {
-        console.log(res);
+        console.log(res)
       }
-    });
+    })
   }
 
   @action
-  getProductsAPI(callBack) {
+  getAllProductsAPI(callBack) {
     getAllProducts().then(res => {
       if (res) {
-        this.dataProducts = res.rows;
-        callBack(this.dataProducts);
-        console.log('getAllProducts ' + JSON.stringify(this.dataProducts));
+        this.dataProducts = res.rows
+        callBack(this.dataProducts)
       } else {
-        console.log(res);
+        console.log(res)
       }
-    });
+    })
   }
 
   @action
-  getOrdersAPI(callBack) {
-    let seft = this;
-    getAllOrders().then(res => {
-      if (res) {
-        this.dataOrdersDashboard = res.rows;
-        Promise.map(seft.dataOrdersDashboard, function(element) {
-          getCustomer(element.idUser).then(e => {
-            element = { ...element, customer: e };
-          });
-          return fs.readFileSync(element);
-        }).then(function() {
-          callBack(seft.dataOrdersDashboard);
-        });
-
-        // this.dataOrdersDashboard.forEach((element, index) => {
-        //   getCustomer(element.idUser).then(e => {
-        //     element = { ...element, customer: e };
-        //   });
-        // });
-        // console.log('getOrdersAPI' + JSON.stringify(this.dataOrdersDashboard));
-      } else {
-        console.log(res);
-      }
-    });
+  getOrdersAPI = async () => {
+    const dataOrders = await getAllOrders()
+    Promise.all(
+      dataOrders.rows.map(async order => {
+        const user = await getCustomer(order.idUser)
+        order = { ...order, customer: user }
+        this.dataOrdersDashboard.push(order)
+        // console.log('idUser' + JSON.stringify(order))
+      })
+    ).then(res => {
+      console.log('dataOrders' + JSON.stringify(this.dataOrdersDashboard))
+    })
   }
   @action
   checkStatusMenu = () => {
-    let pathName = getPathName();
+    let pathName = getPathName()
 
     this.dataMenu.map((item, index) => {
       if (pathName == '' || '/') {
-        this.dataMenu[0].active = true;
+        this.dataMenu[0].active = true
       } else if (pathName.slice(9) == '/products') {
-        this.dataMenu[1].active = true;
+        this.dataMenu[1].active = true
       } else {
-        item.active = false;
+        item.active = false
       }
-    });
-  };
+    })
+  }
   @action
   initApp = async () => {
     await getCategories().then(res => {
       if (res) {
         this.dataCategory = res.rows.map((item, index) => {
-          return { ...item, active: false };
-        });
-        this.dataMenu[1].children = this.dataCategory;
+          return { ...item, active: false }
+        })
+        this.dataMenu[1].children = this.dataCategory
         // this.isRender = true;
-        console.log('dataCategory ' + JSON.stringify(this.dataCategory));
+        console.log('dataCategory ' + JSON.stringify(this.dataCategory))
       } else {
-        console.log(res);
+        console.log(res)
       }
-    });
+    })
     //   if (process.browser) {
     //     if (this.token) {
     //       const user = getData(Config.asyncStorage.user)
@@ -202,22 +193,21 @@ class Store {
     //   })
     await getAllProducts().then(res => {
       if (res) {
-        this.dataProducts = res.rows;
-        console.log('getAllProducts ' + JSON.stringify(this.dataProducts));
+        this.dataProducts = res.rows
       } else {
-        console.log(res);
+        console.log(res)
       }
-    });
-  };
+    })
+  }
 }
 
 export function initializeStore(obj) {
   if (obj.isServer) {
-    return new Store(obj);
+    return new Store(obj)
   } else {
     if (store === null) {
-      store = new Store(obj);
+      store = new Store(obj)
     }
-    return store;
+    return store
   }
 }

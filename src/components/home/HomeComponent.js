@@ -1,43 +1,60 @@
-import React from 'react';
-import { observable } from 'mobx';
-import { inject, observer } from 'mobx-react';
-import { Link, Router } from '../../routes/routes';
-import LoadComponent from '../general/LoadComponent';
-import ItemProductComponent from '../products/ItemProductComponent';
-import '../products/products.scss';
-import './home.scss';
+import React from 'react'
+import { observable } from 'mobx'
+import { inject, observer } from 'mobx-react'
+import { intentPageString } from '../../utils/RouterUtils'
+import { Link, Router } from '../../routes/routes'
+import LoadComponent from '../general/LoadComponent'
+import ItemProductComponent from '../products/ItemProductComponent'
+import '../products/products.scss'
+import './home.scss'
 
 @observer
 class Item extends React.Component {
-  @observable isRender = false;
+  @observable isRender = false
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
-    const { item, index } = this.props;
+    const { item, index } = this.props
     return (
       <div className="col-3 product-item-home mb-4" style={{ height: 200 }}>
-        <div className="product-item-cover" style={{ height: '100%', width: '100%' }}>
-          <img
-            src={item.image[0] || '../../static/images/bannerHome.jpg'}
-            style={{ objectFit: 'cover', height: '100%', width: '100%' }}
-          />
+        <div
+          className="product-item-cover "
+          style={{ height: '100%', width: '100%' }}
+        >
+          <Link href={{ pathname: '/detail-products', query: { id: item.id } }}>
+            <img
+              className="cursor"
+              src={item.image[0] || '../../static/images/bannerHome.jpg'}
+              style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+            />
+          </Link>
         </div>
         <div className="row product-item-txt w-100 pr-4">
           <div className="col-8">
-            <Link>
-              <a>
-                <h5 className="font-weight-bold colorWhite cursor">{item.name}</h5>
-              </a>
-            </Link>
+            <h5 className="font-weight-bold  cursor">
+              <Link
+                href={{ pathname: '/detail-products', query: { id: item.id } }}
+              >
+                <a className="colorWhite" style={{ textDecoration: 'none' }}>
+                  {item.name}
+                </a>
+              </Link>
+            </h5>
 
             <p className="colorWhite">{item.price}</p>
           </div>
           <div className="col-4 align-self-center text-right">
             <button
               className="cursor"
-              onClick={() => this.props.callBack('ADD_CART', { item, index })}
+              onClick={() => {
+                if (item.type && item.type.length > 0) {
+                  intentPageString('/detail-products?id=' + item.id)
+                } else {
+                  this.props.callBack('ADD_CART', { item, index })
+                }
+              }}
             >
               <img
                 style={{ width: 25, height: 25 }}
@@ -49,20 +66,20 @@ class Item extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
 @inject('store')
 @observer
 export default class HomeComponent extends React.Component {
-  @observable isRender = false;
-  @observable data = [];
+  @observable isRender = false
+  @observable data = []
 
   constructor(props) {
-    super(props);
-    this.isRender = true;
-    this.data = this.props.data;
+    super(props)
+    this.isRender = true
+    this.data = this.props.data
   }
 
   render() {
@@ -72,14 +89,19 @@ export default class HomeComponent extends React.Component {
           <div className="">
             <div className="limit">
               <div className="mx-4 my-3">
-                <h4 style={{ color: 'red' }}>Sản phẩm được yêu thích</h4>
+                {this.props.dataFavourite.length > 0 ? (
+                  <h4 style={{ color: 'red' }}>Sản phẩm được yêu thích</h4>
+                ) : null}
               </div>
               <div className="row pb-3">
                 {this.props.dataFavourite.map((e, i) => {
-                  return <Item item={e} index={i} callBack={this.props.callBack} />;
+                  return (
+                    <Item item={e} index={i} callBack={this.props.callBack} />
+                  )
                 })}
               </div>
             </div>
+
             <div className="limit">
               {this.data.map((item, index) => {
                 if (item.data && item.data.length > 0)
@@ -100,14 +122,14 @@ export default class HomeComponent extends React.Component {
                                   callBack={this.props.callBack}
                                 />
                               </div>
-                            );
-                          return null;
+                            )
+                          return null
                         })}
                       </div>
                       {item.data.length > 10 ? (
                         <div className="view-more mr-5 mb-4 text-right">
                           <Link
-                            route={'products/' + item.query}
+                            route={'/products/' + item.query}
                             // href={{ pathname: item.query.pathname, query: { name: item.query.name } }}
                           >
                             <a>
@@ -117,8 +139,8 @@ export default class HomeComponent extends React.Component {
                         </div>
                       ) : null}
                     </div>
-                  );
-                return null;
+                  )
+                return null
               })}
             </div>
           </div>
@@ -126,6 +148,6 @@ export default class HomeComponent extends React.Component {
           <LoadComponent />
         )}
       </div>
-    );
+    )
   }
 }

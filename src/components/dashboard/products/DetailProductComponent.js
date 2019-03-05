@@ -16,7 +16,7 @@ export default class DetailProductComponent extends React.Component {
   @observable editorState = '';
   @observable data = {};
   @observable size = '';
-
+  @observable image = '';
   constructor(props) {
     super(props);
     this.data = this.props.data;
@@ -261,7 +261,10 @@ export default class DetailProductComponent extends React.Component {
                     >
                       <img
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        src={item}
+                        src={
+                          item ||
+                          'https://chupanh.vn/wp-content/uploads/2017/04/nghe-thuat-chup-anh-thuc-pham-khong-chi-la-mon-an2.jpg'
+                        }
                       />
                       <img
                         className="cursor img-cancel"
@@ -272,16 +275,18 @@ export default class DetailProductComponent extends React.Component {
                           top: -7,
                           right: -7
                         }}
+                        onClick={() => {
+                          this.data.image.splice(index, 1);
+                        }}
                         src="../../../static/images/cancel.png"
                       />
                     </div>
                   );
                 })}
 
-              <img
+              {/* <img
                 onClick={() => {
                   this.addImg.current.click();
-                  // callBack('ADD_IMG');
                 }}
                 className="border cursor"
                 style={{ width: 100, height: 100, objectFit: 'cover' }}
@@ -302,7 +307,28 @@ export default class DetailProductComponent extends React.Component {
                     // }
                   });
                 }}
-              />
+              /> */}
+              <p className="d-inline-block w-50">
+                <input
+                  type="text"
+                  className="w-50 form-control font float-left mr-3"
+                  style={{}}
+                  value={this.image}
+                  name="image"
+                  onChange={e => {
+                    this.image = e.target.value;
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    this.data.image.push(this.image);
+                    this.image = '';
+                  }}
+                  className="bgDefault colorWhite p-2 px-3 rounded cursor"
+                >
+                  Thêm
+                </button>
+              </p>
             </div>
           </div>
           <div className="row mb-3">

@@ -4,7 +4,7 @@ import { observable } from 'mobx';
 
 import { inject, observer } from 'mobx-react';
 import { getProduct, createProduct, updateProduct } from '../api/Product';
-import { getPathName, getQuery, getAllUrlParams } from '../utils/RouterUtils';
+import { getPathName, getQuery, getAllUrlParams, intentPage } from '../utils/RouterUtils';
 import { Link, Router } from '../routes/routes';
 import Config from '../config/env';
 import MenuLeftComponent from '../components/dashboard/MenuLeftComponent';
@@ -13,6 +13,8 @@ import DetailProductComponent from '../components/dashboard/products/DetailProdu
 @observer
 export default class DetailProductMana extends React.Component {
   @observable isRender = false;
+  @observable statusAddCart = false;
+  @observable titleAddCart = 0;
   @observable data = {
     name: '',
     highlight: false,
@@ -69,10 +71,15 @@ export default class DetailProductMana extends React.Component {
         } else {
           data.highlight = 1;
         }
-        data.description = JSON.stringify(data.description);
+
         updateProduct(data).then(res => {
-          if (res.code == 1) {
-            alert('UPDATE thành công !');
+          if (res) {
+            this.titleAddCart = 1;
+            this.statusAddCart = true;
+            setTimeout(() => {
+              this.statusAddCart = false;
+              intentPage('/admin/products');
+            }, 1000);
           }
         });
         break;
@@ -84,7 +91,7 @@ export default class DetailProductMana extends React.Component {
         } else {
           data.highlight = 1;
         }
-        data.description = JSON.stringify(data.description);
+
         createProduct(data).then(res => {
           if (res) {
             this.data = res;
@@ -93,6 +100,11 @@ export default class DetailProductMana extends React.Component {
             } else {
               this.data.highlight = false;
             }
+            this.titleAddCart = 0;
+            this.statusAddCart = true;
+            setTimeout(() => {
+              this.statusAddCart = false;
+            }, 1000);
           }
           console.log(JSON.stringify(res));
         });
@@ -113,6 +125,19 @@ export default class DetailProductMana extends React.Component {
             <DetailProductComponent data={this.data} callBack={this.callBack} />
           ) : null}
         </div>
+        {this.statusAddCart ? (
+          <div
+            className={this.titleAddCart == 0 ? 'alert alert-success' : 'alert alert-false'}
+            role="alert"
+            style={{ position: 'fixed', top: 100, right: 20 }}
+          >
+            {this.titleAddCart == 0
+              ? 'Thêm thành công !'
+              : this.titleAddCart == 1
+              ? 'Sửa thành công !'
+              : 'Không thành công !'}
+          </div>
+        ) : null}
       </div>
     );
   }

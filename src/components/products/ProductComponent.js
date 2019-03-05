@@ -22,7 +22,7 @@ export default class ProductComponent extends React.Component {
       <div className="product w-100">
         {this.isRender ? (
           <div className="">
-            <ul className="menu w-100 m-auto nav nav-pills nav-fill" style={{ zIndex: 1 }}>
+            {/* <ul className="menu w-100 m-auto nav nav-pills nav-fill" style={{ zIndex: 1 }}>
               {this.props.store.dataCategory.map((e, i) => {
                 return (
                   <li
@@ -37,7 +37,7 @@ export default class ProductComponent extends React.Component {
                   </li>
                 );
               })}
-            </ul>
+            </ul> */}
             <div className="limit">
               {this.data && this.data.length > 0 ? (
                 <div className="row py-3">

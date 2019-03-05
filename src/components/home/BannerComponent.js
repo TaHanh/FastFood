@@ -7,6 +7,7 @@ import './home.scss';
 @observer
 export default class BannerComponent extends React.Component {
   @observable isRender = false;
+  @observable textSearch = '';
 
   constructor(props) {
     super(props);
@@ -45,10 +46,22 @@ export default class BannerComponent extends React.Component {
                 type="text"
                 placeholder="Bạn tìm gì ?"
                 style={{ height: 40 }}
+                value={this.textSearch}
+                onChange={e => {
+                  this.textSearch = e.target.value;
+                }}
+                onKeyPress={({ charCode }) => {
+                  if (charCode === 13) {
+                    this.props.callBack('SEARCH', this.textSearch);
+                  }
+                }}
               />
             </div>
             <div className="col-2">
               <button
+                onClick={() => {
+                  this.props.callBack('SEARCH', this.textSearch);
+                }}
                 className="btn-search borderR w-100 bgDefault colorWhite cursor"
                 style={{ height: '40px', lineHeight: '40px', fontWeight: 'bold' }}
               >

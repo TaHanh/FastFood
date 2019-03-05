@@ -3,6 +3,11 @@ const routes = require('next-routes')();
 routes
   .add({ name: 'index', pattern: '/', page: 'Index' })
   .add({
+    name: 'IndexMana',
+    pattern: '/admin',
+    page: 'ProductsMana'
+  })
+  .add({
     name: 'ProductsMana',
     pattern: '/admin/products',
     page: 'ProductsMana'
