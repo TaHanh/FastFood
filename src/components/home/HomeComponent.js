@@ -43,7 +43,7 @@ class Item extends React.Component {
               </Link>
             </h5>
 
-            <p className="colorWhite">{item.price}</p>
+            <p className="colorWhite">{item.price}đ</p>
           </div>
           <div className="col-4 align-self-center text-right">
             <button

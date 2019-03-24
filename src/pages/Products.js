@@ -24,6 +24,13 @@ export default class Products extends React.Component {
     }
   }
   componentDidMount() {
+    this.getProductSearch()
+
+    if (localStorage.getItem('myCartFF'))
+      this.props.store.myCart = JSON.parse(localStorage.myCartFF);
+  }
+  getProductSearch = () => {
+    this.isRender = false;
     this.props.store.getAllProductsAPI(res => {
       let query = getQuery('search');
       let pathName = getPathName();
@@ -43,8 +50,6 @@ export default class Products extends React.Component {
 
       this.isRender = true;
     });
-    if (localStorage.getItem('myCartFF'))
-      this.props.store.myCart = JSON.parse(localStorage.myCartFF);
   }
   search = query => {
     let text = query.toLowerCase();
@@ -83,15 +88,11 @@ export default class Products extends React.Component {
         break;
       case 'DIREC':
         intentPageString(data);
+        this.getProductSearch()
         break;
       case 'SEARCH':
         intentPage('/products', { search: data });
-        let query = getQuery('search');
-        if (query && query != '') {
-          this.data = this.search(query);
-        } else {
-          this.data = this.props.store.dataProducts;
-        }
+        this.getProductSearch()
         break;
       default:
         break;

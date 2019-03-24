@@ -14,7 +14,7 @@ class MyDocument extends Document {
       '/_next/static/style.css',
       '//use.fontawesome.com/releases/v5.2.0/css/all.css',
       '//fonts.googleapis.com/css?family=Roboto:300,400,500',
-      '//fonts.googleapis.com/icon?family=Material+Icons',
+
       '//stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css'
     ];
 
@@ -23,8 +23,7 @@ class MyDocument extends Document {
       '//code.jquery.com/jquery-3.1.1.min.js',
       '/_next/static/commons/main.js',
       '//stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js',
-      '//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js',
-      '//maps.googleapis.com/maps/api/js?key=AIzaSyAXhItM5DtDeNF7uesxuyhEGd3Wb_5skTg'
+      '//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js'
     ];
 
     const { pageContext } = this.props;
@@ -52,11 +51,7 @@ class MyDocument extends Document {
             type="image/vnd.microsoft.icon"
             href="../static/images/logo.png"
           />
-          <link
-            rel="apple-touch-icon"
-            type="image/png"
-            href="../static/images/logo.png"
-          />
+          <link rel="apple-touch-icon" type="image/png" href="../static/images/logo.png" />
           {/* <meta name="description" content="HRC" />
           <meta name="keywords" content="" />
           <link rel="canonical" href="https://hrcvn.tk/" />
@@ -69,31 +64,17 @@ class MyDocument extends Document {
           <meta name="popads-verification-1412279" value="ed115e5aaae12215765c6b4286d3a4da" />
           <meta name="referrer" content="always" /> */}
 
-          {/* <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126717852-1" /> */}
-
           {cssFiles.map((c, i) => (
             <link key={i} href={c} rel="stylesheet" />
           ))}
 
           {this.props.styleTags}
-          {/*  Google Tag Manage */}
-          {/* <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-KT4LJ4N');</script> */}
+
           {/*  End Google Tag Manager  */}
         </Head>
-        <body style={{ position: 'relative' }}>
+        <body>
           {/* <!-- Google Tag Manager (noscript) --> */}
-          <noscript>
-            {/* <iframe
-              src="https://www.googletagmanager.com/ns.html?id=GTM-KT4LJ4N"
-              height="0"
-              width="0"
-              style={{ display: 'none', visibility: 'hidden' }}
-            /> */}
-          </noscript>
+          <noscript />
           {/* <!-- End Google Tag Manager (noscript) --> */}
           <Main />
           <NextScript />

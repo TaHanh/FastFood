@@ -100,7 +100,7 @@ export default class OrderComponent extends React.Component {
                               </a>
                             </Link>
                             <br />
-                            <small>Đơn gía : {item.price}</small>
+                            <small>Đơn gía : {item.price}đ</small>
                           </div>
                         </div>
                       </th>
@@ -154,7 +154,7 @@ export default class OrderComponent extends React.Component {
                       </td>
                       <td className="text-center">
                         <span style={{ color: 'red' }}>
-                          {item.price * item.amount}
+                          {item.price * item.amount}đ
                         </span>
                       </td>
                       <td className="text-center">
@@ -176,7 +176,7 @@ export default class OrderComponent extends React.Component {
             <h5>
               <b>
                 Tổng thành tiền:{' '}
-                <span style={{ color: 'red' }}>{this.totalPrice()}</span>
+                <span style={{ color: 'red' }}>{this.totalPrice()}đ</span>
               </b>
             </h5>
             <div className=" pt-5">
@@ -257,7 +257,7 @@ export default class OrderComponent extends React.Component {
                         }}
                       />
                     </div>
-                  </div>{' '}
+                  </div>
                   <div className="row">
                     <div className="col-lg-2 px-0">Lời nhắn</div>
                     <div className="col-lg-10">

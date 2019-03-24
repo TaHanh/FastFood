@@ -200,7 +200,7 @@ export default class HeaderProductComponent extends React.Component {
                         </div>
                         <div className="col-3 px-0 mb-2">
                           <p className="mb-0">
-                            {item.price} <small> x {item.amount || 1}</small>
+                            {item.price}đ <small> x {item.amount || 1}</small>
                           </p>
                           <button
                             onClick={() => {

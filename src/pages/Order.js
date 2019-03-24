@@ -28,6 +28,7 @@ export default class Order extends React.Component {
     phone: '',
     address: '',
     email: '',
+    role: 'customer',
     message: ''
   }
 
@@ -106,48 +107,46 @@ export default class Order extends React.Component {
           message: data.user.message,
           products: data.product
         }
-        console.log(JSON.stringify(this.props.store.myCart))
-        getAllCustomers().then(res => {
-          let findUser = res.rows.find(res => res.phone == data.user.phone)
-          if (findUser != undefined) {
-            createOrder({ ...dataOrder, idUser: findUser.id }).then(res => {
-              console.log(JSON.stringify(res))
-              if (res) {
-                this.statusAddCart = true
-                this.props.store.myCart = []
-                localStorage['myCartFF'] = JSON.stringify(
-                  this.props.store.myCart
-                )
+        createCustomer({ ...data.user, type: 1 }).then(res => {
+          this.setCookie('user', JSON.stringify(res))
+          // console.log(res.id + '--setCookie---' + JSON.stringify(data.user))
+          createOrder({ ...dataOrder, idUser: res.id }).then(res => {
+            if (res) {
+              this.statusAddCart = true
+              this.props.store.myCart = []
+              localStorage['myCartFF'] = JSON.stringify(this.props.store.myCart)
+              setTimeout(() => {
+                this.statusAddCart = false
                 setTimeout(() => {
-                  this.statusAddCart = false
-                  setTimeout(() => {
-                    intentPageString('/')
-                  }, 2000)
-                }, 1000)
-              }
-            })
-          } else {
-            createCustomer(data.user).then(res => {
-              this.setCookie('user', JSON.stringify(res))
-              console.log(res.id + '--setCookie---' + JSON.stringify(data.user))
-              createOrder({ ...dataOrder, idUser: res.id }).then(res => {
-                if (res) {
-                  this.statusAddCart = true
-                  this.props.store.myCart = []
-                  localStorage['myCartFF'] = JSON.stringify(
-                    this.props.store.myCart
-                  )
-                  setTimeout(() => {
-                    this.statusAddCart = false
-                    setTimeout(() => {
-                      intentPageString('/')
-                    }, 100)
-                  }, 1000)
-                }
-              })
-            })
-          }
+                  intentPageString('/')
+                }, 100)
+              }, 1000)
+            }
+          })
         })
+        // getAllCustomers().then(res => {
+        //   let findUser = res.rows.find(res => res.phone == data.user.phone)
+        //   if (findUser != undefined) {
+        //     createOrder({ ...dataOrder, idUser: findUser.id }).then(res => {
+        //       console.log(JSON.stringify(res))
+        //       if (res) {
+        //         this.statusAddCart = true
+        //         this.props.store.myCart = []
+        //         localStorage['myCartFF'] = JSON.stringify(
+        //           this.props.store.myCart
+        //         )
+        //         setTimeout(() => {
+        //           this.statusAddCart = false
+        //           setTimeout(() => {
+        //             intentPageString('/')
+        //           }, 2000)
+        //         }, 1000)
+        //       }
+        //     })
+        //   } else {
+
+        //   }
+        // })
 
         break
       case 'SEARCH':

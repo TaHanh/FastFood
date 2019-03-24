@@ -1,237 +1,457 @@
-import React from 'react';
-import { observable } from 'mobx';
-import { inject, observer } from 'mobx-react';
-import { Link, Router } from '../../../routes/routes';
-import { ContentState, convertToRaw, EditorState, convertFromHTML } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-import './product.scss';
-import { Editor } from 'react-draft-wysiwyg';
-import './react-draft-wysiwyg.scss';
-import { upLoad } from '../../../api/upLoad';
+import React, { Component } from 'react'
+import { observable } from 'mobx'
+import { inject, observer } from 'mobx-react'
+import { Link, Router } from '../../../routes/routes'
+
+import CKEditor from 'react-ckeditor-component'
+import './product.scss'
+import './quill.snow.scss'
+// import * as ReactQuill from 'react-quill'
+import MultiSelect from '@khanacademy/react-multi-select'
+import ReactSummernote from 'react-summernote'
+import 'bootstrap/js/dist/modal'
+import 'bootstrap/js/dist/dropdown'
+import 'bootstrap/js/dist/tooltip'
+import { upLoad } from '../../../api/upLoad'
+
+const Editor = props => {
+  if (typeof window != 'undefined') {
+    const CKEditor = require('@ckeditor/ckeditor5-react')
+    const ClassicEditor = require('@ckeditor/ckeditor5-build-classic')
+
+    function MyCustomUploadAdapterPlugin(editor) {
+      console.log('editor ' + editor)
+    }
+    ClassicEditor.create(document.querySelector('#editor'), {
+      extraPlugins: [MyCustomUploadAdapterPlugin],
+
+      ckfinder: {
+        uploadUrl:
+          '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
+      }
+    })
+      .then()
+      .catch()
+    return (
+      <div>
+        <div className="editor" />
+        <CKEditor
+          editor={ClassicEditor}
+          config={{
+            filebrowserUploadUrl: '/admin/upload/upload_editor_image'
+          }}
+          {...props}
+        />
+      </div>
+    )
+  } else {
+    return ''
+  }
+}
+
+class ItemRenderer extends Component {
+  render() {
+    const { checked, option, onClick } = this.props
+
+    return (
+      <span>
+        <span>{option.label}</span>
+        <input
+          type="checkbox"
+          onChange={onClick}
+          value={option.label}
+          checked={checked}
+          tabIndex="-1"
+          style={{ float: 'right' }}
+        />
+      </span>
+    )
+  }
+}
 @inject('store')
 @observer
 export default class DetailProductComponent extends React.Component {
-  @observable typeProduct = [];
-  @observable editorState = '';
-  @observable data = {};
-  @observable size = '';
-  @observable image = '';
+  @observable typeProduct = []
+  @observable editorTxt =
+    '<img style="width: 100%;" src="https://image.winudf.com/v2/image1/ZnJlZS52cG4udW5ibG9jay5wcm94eS52cG5wcm9fc2NyZWVuXzBfMTU1MDgyNDM2M18wNDQ/screen-0.jpg?h=960&fakeurl=1&type=.jpg" />'
+  @observable data = {}
+  @observable size = ''
+  @observable image = ''
+  @observable CKEditor = ''
+  @observable isRender = false
+  @observable selected = []
   constructor(props) {
-    super(props);
-    this.data = this.props.data;
-    this.addImg = React.createRef();
-    // console.log('this.data' + JSON.stringify(this.data));
-    // const contentBlock = htmlToDraft(this.data.description);
-    // if (contentBlock) {
-    //   const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-    //   const editorState = EditorState.createWithContent(contentState);
-    //   this.editorState = editorState;
-    // }
-    // this.data.description === ''
-    //   ? (this.editorState = EditorState.createEmpty())
-    //   : (this.editorState = EditorState.createWithContent(
-    //       ContentState.createFromBlockArray(convertFromHTML(this.data.description))
-    //     ));
+    super(props)
+    this.data = this.props.data
+    this.addImg = React.createRef()
+    if (typeof window !== 'undefined') {
+      this.ReactSummernote = require('react-summernote').default
+    }
   }
   componentDidMount() {
-    // this.editorState = this.data.description;
+    this.isRender = true
   }
   changeInput = data => {
-    const { value, name } = data.target;
+    const { value, name } = data.target
     switch (name) {
       case 'highlight':
-        this.data.highlight = !this.data.highlight;
-        break;
+        this.data.highlight = !this.data.highlight
+        break
       case 'status':
         if (value == 0) {
-          this.data.status = 0;
+          this.data.status = 0
         } else {
-          this.data.status = 1;
+          this.data.status = 1
         }
-        break;
+        break
       case 'size':
-        this.size = value;
-        break;
-      // case 'category':
-      //   this.data.category = this.props.store.dataCategory.find(e => e.key == value);
-      //   break;
-      default:
-        this.data[name] = value;
-        break;
-    }
-  };
-  onEditorStateChange = editorState => {
-    // this.editorState = editorState;
-    // this.data.description = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-  };
+        this.size = value
+        break
 
+      default:
+        this.data[name] = value
+        break
+    }
+    console.log(JSON.stringify(this.data[name]) + name)
+  }
+  _onChange = e => {
+    this.editorTxt = e
+  }
+  valueRenderer(selected, options) {
+    if (selected.length === 0) {
+      return 'Select some students...'
+    }
+
+    if (selected.length === options.length) {
+      return 'All students selected'
+    }
+    return JSON.stringify(selected)
+    return `Selected ${selected.length} Students`
+  }
+  filterOptions = (options, filter) => {
+    const optionIncludesText = option => {
+      const label = option.label || ''
+      return label.toLowerCase().includes(filter)
+    }
+
+    return options.filter(optionIncludesText)
+  }
   render() {
-    const { callBack } = this.props;
+    const { callBack } = this.props
+    const ReactSummernote = this.ReactSummernote
+    if (typeof window !== 'undefined' && ReactSummernote) {
+      return (
+        <ReactSummernote
+          value="Default value"
+          options={{
+            height: 350,
+            dialogsInBody: true,
+            toolbar: [
+              ['style', ['style']],
+              ['font', ['bold', 'underline', 'clear']],
+              ['fontname', ['fontname']],
+              ['para', ['ul', 'ol', 'paragraph']],
+              ['table', ['table']],
+              ['insert', ['link', 'picture', 'video']],
+              ['view', ['fullscreen', 'codeview']]
+            ]
+          }}
+          onChange={this.onChange}
+        />
+      )
+    } else {
+      return <textarea />
+    }
+
+    return (
+      <div>
+        {/* <Editor
+          onInit={editor => {
+            // You can store the "editor" and use when it is needed.
+            console.log('Editor is ready to use!', editor)
+          }}
+          onChange={(event, editor) => {
+            this.editorTxt = editor.getData()
+            console.log({ event, editor })
+          }}
+          onBlur={editor => {
+            console.log('Blur.', editor)
+          }}
+          onFocus={editor => {
+            console.log('Focus.', editor)
+          }}
+        /> */}
+        <ReactSummernote
+          value="Default value"
+          options={{
+            height: 350,
+            dialogsInBody: true,
+            toolbar: [
+              ['style', ['style']],
+              ['font', ['bold', 'underline', 'clear']],
+              ['fontname', ['fontname']],
+              ['para', ['ul', 'ol', 'paragraph']],
+              ['table', ['table']],
+              ['insert', ['link', 'picture', 'video']],
+              ['view', ['fullscreen', 'codeview']]
+            ]
+          }}
+          onChange={e => {
+            console.log(e)
+          }}
+        />
+        <MultiSelect
+          options={[
+            { label: 'Brian Genisio', value: 'Genisio', _id: 'dsfr' },
+            { label: 'John Doe', value: 'John', _id: 'dsfr' },
+            { label: 'Jane Doe', value: 'Jane', _id: 'dsfr' }
+          ]}
+          onSelectedChanged={selected => {
+            this.selected = selected
+            console.log('selected ' + selected)
+          }}
+          selected={this.selected}
+          // valueRenderer={this.valueRenderer}
+          ItemRenderer={ItemRenderer}
+          // isLoading={true}
+          filterOptions={this.filterOptions}
+          overrideStrings={{
+            selectSomeItems: 'SeLeCt SoMe iTeMs...',
+            allItemsAreSelected: 'ALl ItEmS aRe SeLeCtEd',
+            selectAll: 'Chọn tất cả',
+            search: 'Tìm kiếm'
+          }}
+        />
+      </div>
+    )
+
     return (
       <div className="py-4 detail-product">
-        <div className="px-4 font">
-          {/* <button className="bgDefault  p-2 px-3 rounded cursor">
-                <Link route="/admin/detail-product">
-                  <a className="colorWhite" style={{ textDecoration: 'none' }}>
-                    Thêm món
-                  </a>
-                </Link>
-              </button> */}
-          <div className="row align-items-center mb-3 ">
-            <div className="col-2">
-              <span className="font">Tên sản phẩm</span>
+        {this.isRender ? (
+          <div className="px-4 font">
+            <div className="row align-items-center mb-3 ">
+              <div className="col-2">
+                <span className="font">Tên sản phẩm</span>
+              </div>
+              <div className="col-10">
+                <input
+                  name="name"
+                  type="text"
+                  value={this.data.name}
+                  className="w-75 form-control font"
+                  style={{}}
+                  onChange={e => {
+                    this.changeInput(e)
+                  }}
+                />
+              </div>
             </div>
-            <div className="col-10">
-              <input
-                name="name"
-                type="text"
-                value={this.data.name}
-                className="w-75 form-control font"
-                style={{}}
-                onChange={e => {
-                  this.changeInput(e);
-                }}
-              />
-            </div>
-          </div>
-          <div className="row  align-items-center mb-3">
-            <div className="col-2">
-              <span className="font">Giá sản phẩm</span>
-            </div>
-            <div className="col-10">
-              <div className="row align-items-center">
-                <div className="col-5 px-0">
-                  <input
-                    name="price"
-                    type="text"
-                    value={this.data.price}
-                    onChange={e => {
-                      this.changeInput(e);
-                    }}
-                    className="w-75 form-control font"
-                    style={{}}
-                  />
-                </div>
-                <div className="col-7">
-                  <label className="check mr-2 ml-3">
+            <div className="row  align-items-center mb-3">
+              <div className="col-2">
+                <span className="font">Giá sản phẩm</span>
+              </div>
+              <div className="col-10">
+                <div className="row align-items-center">
+                  <div className="col-5 px-0">
                     <input
-                      type="checkbox"
-                      name="highlight"
-                      checked={this.data.highlight}
+                      name="price"
+                      type="text"
+                      value={this.data.price}
                       onChange={e => {
-                        this.changeInput(e);
+                        this.changeInput(e)
                       }}
+                      className="w-75 form-control font"
+                      style={{}}
                     />
-                    <div className="box" />
-                  </label>
-                  <span>Nổi bật</span>
+                  </div>
+                  <div className="col-7">
+                    <label className="check mr-2 ml-3">
+                      <input
+                        type="checkbox"
+                        name="highlight"
+                        checked={this.data.highlight}
+                        onChange={e => {
+                          this.changeInput(e)
+                        }}
+                      />
+                      <div className="box" />
+                    </label>
+                    <span>Nổi bật</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="row  align-items-center mb-3">
-            <div className="col-2">
-              <span className="font">Trạng thái</span>
-            </div>
-            <div className="col-10">
-              <div className="row align-items-center">
-                <div className="col-5 px-0">
-                  <select
-                    type="text"
-                    className="w-75 custom-select font"
-                    name="status"
-                    onChange={e => {
-                      this.changeInput(e);
-                    }}
-                  >
-                    <option selected={this.data.status == 0 ? true : false} value="0">
-                      Còn hàng
-                    </option>
-                    <option selected={this.data.status == 1 ? true : false} value="1">
-                      Hết hàng
-                    </option>
-                  </select>
-                </div>
-                <div className="col-7">
-                  <div className="row  align-items-center">
-                    <div className="col-3">
-                      <span className="font">Danh mục </span>
-                    </div>
-                    <div className="col-9">
-                      <select
-                        type="text"
-                        name="category"
-                        onChange={e => {
-                          this.changeInput(e);
-                        }}
-                        className="w-75 custom-select font"
+            <div className="row  align-items-center mb-3">
+              <div className="col-2">
+                <span className="font">Trạng thái</span>
+              </div>
+              <div className="col-10">
+                <div className="row align-items-center">
+                  <div className="col-5 px-0">
+                    <select
+                      type="text"
+                      className="w-75 custom-select font"
+                      name="status"
+                      onChange={e => {
+                        this.changeInput(e)
+                      }}
+                    >
+                      <option
+                        selected={this.data.status == 0 ? true : false}
+                        value="0"
                       >
-                        {this.props.store.dataCategory.map((item, index) => {
-                          // if (this.data.category.key != undefined) {
-                          //   return (
-                          //     <option
-                          //       selected={item.key == this.data.category.key ? true : false}
-                          //       value={item.key}
-                          //     >
-                          //       {item.name}
-                          //     </option>
-                          //   );
-                          // }
-                          return <option value={item.key}>{item.name}</option>;
-                        })}
-                      </select>
+                        Còn hàng
+                      </option>
+                      <option
+                        selected={this.data.status == 1 ? true : false}
+                        value="1"
+                      >
+                        Hết hàng
+                      </option>
+                    </select>
+                  </div>
+                  <div className="col-7">
+                    <div className="row  align-items-center">
+                      <div className="col-3">
+                        <span className="font">Danh mục </span>
+                      </div>
+                      <div className="col-9">
+                        <select
+                          type="text"
+                          name="category"
+                          onChange={e => {
+                            this.changeInput(e)
+                          }}
+                          className="w-75 custom-select font"
+                        >
+                          <option
+                            value=""
+                            selected={this.data.category ? false : true}
+                          >
+                            ----
+                          </option>
+                          ;
+                          {this.props.store.dataCategory.map((item, index) => {
+                            // if (this.data.category.key != undefined) {
+                            //   return (
+                            //     <option
+                            //       selected={item.key == this.data.category.key ? true : false}
+                            //       value={item.key}
+                            //     >
+                            //       {item.name}
+                            //     </option>
+                            //   );
+                            // }
+                            return (
+                              <option
+                                value={item.key}
+                                selected={
+                                  this.data.category &&
+                                  this.data.category == item.key
+                                    ? true
+                                    : false
+                                }
+                              >
+                                {item.name}
+                              </option>
+                            )
+                          })}
+                        </select>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="row  mb-3">
-            <div className="col-2">
-              <span className="font">Phân loại hàng</span>
-              <br />
-              <small style={{ color: 'gray' }}>
-                Phân loại sản phẩm lựa chọn: kích thước, màu sắc, ...
-              </small>
-            </div>
-            <div className="col-10">
-              <div className="d-inline-block mb-3">
-                <input
-                  type="text"
-                  className="w-50 form-control font float-left mr-3"
-                  style={{}}
-                  value={this.size}
-                  name="size"
-                  onChange={e => {
-                    this.changeInput(e);
-                  }}
-                />
-                <button
-                  onClick={() => {
-                    this.data.type.push(this.size);
-                    this.size = '';
-                  }}
-                  className="bgDefault colorWhite p-2 px-3 rounded cursor"
-                >
-                  Thêm
-                </button>
+            <div className="row  mb-3">
+              <div className="col-2">
+                <span className="font">Phân loại hàng</span>
+                <br />
+                <small style={{ color: 'gray' }}>
+                  Phân loại sản phẩm lựa chọn: kích thước, màu sắc, ...
+                </small>
               </div>
+              <div className="col-10">
+                <div className="d-inline-block mb-3">
+                  <input
+                    type="text"
+                    className="w-50 form-control font float-left mr-3"
+                    style={{}}
+                    value={this.size}
+                    name="size"
+                    onChange={e => {
+                      this.changeInput(e)
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      this.data.type.push(this.size)
+                      this.size = ''
+                    }}
+                    className="bgDefault colorWhite p-2 px-3 rounded cursor"
+                  >
+                    Thêm
+                  </button>
+                </div>
 
-              <div>
-                {this.data.type &&
-                  this.data.type.map((item, index) => {
+                <div>
+                  {this.data.type &&
+                    this.data.type.map((item, index) => {
+                      return (
+                        <div
+                          className="bgDefault colorWhite px-2 py-1 d-block float-left mr-3"
+                          style={{ position: 'relative' }}
+                        >
+                          {item}
+                          <img
+                            onClick={() => {
+                              this.data.type.splice(index, 1)
+                            }}
+                            className="cursor"
+                            style={{
+                              width: 20,
+                              objectFit: 'cover',
+                              position: 'absolute',
+                              top: -7,
+                              right: -7
+                            }}
+                            src="../../../static/images/cancel.png"
+                          />
+                        </div>
+                      )
+                    })}
+                </div>
+              </div>
+            </div>
+            <div className="row mb-3">
+              <div className="col-2">
+                <span className="font">Ảnh sản phẩm</span>
+              </div>
+              <div className="col-10">
+                {this.data.image &&
+                  this.data.image.map((item, index) => {
                     return (
                       <div
-                        className="bgDefault colorWhite px-2 py-1 d-block float-left mr-3"
-                        style={{ position: 'relative' }}
+                        className="border cursor mr-2 float-left img-product"
+                        style={{
+                          width: 100,
+                          height: 100,
+                          position: 'relative'
+                        }}
                       >
-                        {item}
                         <img
-                          onClick={() => {
-                            this.data.type.splice(index, 1);
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
                           }}
-                          className="cursor"
+                          src={
+                            item ||
+                            'https://chupanh.vn/wp-content/uploads/2017/04/nghe-thuat-chup-anh-thuc-pham-khong-chi-la-mon-an2.jpg'
+                          }
+                        />
+                        <img
+                          className="cursor img-cancel"
                           style={{
                             width: 20,
                             objectFit: 'cover',
@@ -239,52 +459,16 @@ export default class DetailProductComponent extends React.Component {
                             top: -7,
                             right: -7
                           }}
+                          onClick={() => {
+                            this.data.image.splice(index, 1)
+                          }}
                           src="../../../static/images/cancel.png"
                         />
                       </div>
-                    );
+                    )
                   })}
-              </div>
-            </div>
-          </div>
-          <div className="row mb-3">
-            <div className="col-2">
-              <span className="font">Ảnh sản phẩm</span>
-            </div>
-            <div className="col-10">
-              {this.data.image &&
-                this.data.image.map((item, index) => {
-                  return (
-                    <div
-                      className="border cursor mr-2 float-left img-product"
-                      style={{ width: 100, height: 100, position: 'relative' }}
-                    >
-                      <img
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        src={
-                          item ||
-                          'https://chupanh.vn/wp-content/uploads/2017/04/nghe-thuat-chup-anh-thuc-pham-khong-chi-la-mon-an2.jpg'
-                        }
-                      />
-                      <img
-                        className="cursor img-cancel"
-                        style={{
-                          width: 20,
-                          objectFit: 'cover',
-                          position: 'absolute',
-                          top: -7,
-                          right: -7
-                        }}
-                        onClick={() => {
-                          this.data.image.splice(index, 1);
-                        }}
-                        src="../../../static/images/cancel.png"
-                      />
-                    </div>
-                  );
-                })}
 
-              {/* <img
+                {/* <img
                 onClick={() => {
                   this.addImg.current.click();
                 }}
@@ -308,83 +492,76 @@ export default class DetailProductComponent extends React.Component {
                   });
                 }}
               /> */}
-              <p className="d-inline-block w-50">
-                <input
-                  type="text"
-                  className="w-50 form-control font float-left mr-3"
-                  style={{}}
-                  value={this.image}
-                  name="image"
+                <p className="d-inline-block w-50">
+                  <input
+                    type="text"
+                    className="w-50 form-control font float-left mr-3"
+                    style={{}}
+                    value={this.image}
+                    name="image"
+                    onChange={e => {
+                      this.image = e.target.value
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      this.data.image.push(this.image)
+                      this.image = ''
+                    }}
+                    className="bgDefault colorWhite p-2 px-3 rounded cursor"
+                  >
+                    Thêm
+                  </button>
+                </p>
+              </div>
+            </div>
+            <div className="row mb-3">
+              <div className="col-2">
+                <span className="font">Mô tả</span>
+              </div>
+              <div className="col-10">
+                {/* <ReactQuill
+                  editorState={this.editorTxt}
+                  onChange={res => this._onChange(res)}
+                /> */}
+                <textarea
+                  name="description"
+                  value={this.data.description}
                   onChange={e => {
-                    this.image = e.target.value;
+                    this.changeInput(e)
                   }}
+                  rows="5"
+                  type="text"
+                  className="w-100 form-control font"
+                  style={{}}
                 />
+              </div>
+            </div>
+            <div className="row justify-content-center mb-4 pr-5">
+              {this.data.id != undefined && this.data.id != '' ? (
                 <button
                   onClick={() => {
-                    this.data.image.push(this.image);
-                    this.image = '';
+                    // console.log(JSON.stringify(this.data))
+                    callBack('UPDATE_PRODUCT', this.data)
                   }}
                   className="bgDefault colorWhite p-2 px-3 rounded cursor"
                 >
-                  Thêm
+                  Chỉnh sửa
                 </button>
-              </p>
+              ) : (
+                <button
+                  onClick={() => {
+                    callBack('CREATE_PRODUCT', this.data)
+                  }}
+                  className="bgDefault colorWhite p-2 px-3 rounded cursor"
+                >
+                  Lưu
+                </button>
+              )}
             </div>
           </div>
-          <div className="row mb-3">
-            <div className="col-2">
-              <span className="font">Mô tả</span>
-            </div>
-            <div className="col-10">
-              {/* <Editor
-                editorState={this.editorState}
-                toolbarClassName="toolbarClassName"
-                toolbar={{
-                  options: ['inline', 'blockType', 'list', 'textAlign', 'link', 'emoji'],
-                  inline: {
-                    options: ['bold', 'italic', 'underline']
-                  }
-                }}
-                wrapperClassName="wrapperClassName"
-                editorClassName="editorClassName"
-                onEditorStateChange={this.onEditorStateChange}
-              /> */}
-              <textarea
-                name="description"
-                value={this.data.description}
-                onChange={e => {
-                  this.changeInput(e);
-                }}
-                rows="5"
-                type="text"
-                className="w-100 form-control font"
-                style={{}}
-              />
-            </div>
-          </div>
-          <div className="row justify-content-center mb-4 pr-5">
-            {this.data.id != undefined && this.data.id != '' ? (
-              <button
-                onClick={() => {
-                  callBack('UPDATE_PRODUCT', this.data);
-                }}
-                className="bgDefault colorWhite p-2 px-3 rounded cursor"
-              >
-                Chỉnh sửa
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  callBack('CREATE_PRODUCT', this.data);
-                }}
-                className="bgDefault colorWhite p-2 px-3 rounded cursor"
-              >
-                Lưu
-              </button>
-            )}
-          </div>
-        </div>
+        ) : null}
       </div>
-    );
+    )
   }
 }

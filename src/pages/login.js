@@ -1,35 +1,30 @@
 import React from 'react';
 import { Link, Router } from '../routes/routes';
-import HeaderComponent from '../components/header/header-component';
+import HeaderComponent from '../components/header/HeaderComponent';
 
-import FooterComponent from '../components/footer/footer-component';
+import FooterComponent from '../components/general/FooterComponent';
 
 import { inject, observer } from 'mobx-react';
 
-import { initFB, loginFB } from '../utils/FBUtils';
+// import { initFB, loginFB } from '../utils/FBUtils';
 import { observable } from 'mobx';
-import { login, loginHRC } from '../api/Auth';
-import { setToken } from '../utils/auth';
+// import { login, loginHRC, resetPass } from '../api/Auth';
+// import { setToken } from '../utils/auth';
 import Config from '../config/env';
-import { validateEmail } from '../utils/EmailUtils';
-import { setData } from '../utils/LocalStorageUtils';
+// import { validateEmail } from '../utils/EmailUtils';
+// import { setData } from '../utils/LocalStorageUtils';
 import LoginComponent from '../components/login/LoginComponent';
+// import { convertImgUrl } from '../utils/ImgUtils';
+import { intentPage, getPathName } from '../utils/RouterUtils';
 @inject('store')
 @observer
 export default class Login extends React.Component {
   @observable
   message = '';
-
+  @observable load = false;
   static async getInitialProps(ctx) {
     const { mobxStore, res } = ctx;
 
-    // if (mobxStore.isAuthenticated) {
-    //   if (res && mobxStore.isServer) {
-    //     res.redirect('/');
-    //   } else {
-    //     Router.pushRoute('index');
-    //   }
-    // }
     return {};
   }
   constructor(props) {
@@ -38,27 +33,39 @@ export default class Login extends React.Component {
     this.store = this.props.store;
   }
   componentDidMount() {
-    initFB(Config.app.fb);
+    // initFB(Config.app.fb);
   }
   callBack = (key, data) => {
     switch (key) {
       case 'LogIn':
+        this.load = true;
         if (data.user.length > 0 && data.password.length > 0) {
           if (!validateEmail(data.user)) {
             this.message = 'Email không đúng :)';
 
             return;
           }
+          setData('email', data.user);
 
           loginHRC(data.user, data.password)
             .then(res => {
               this.store.setLogin(res, res.data.user.role);
+              this.load = false;
             })
             .catch(e => {
               const res = e.response.data;
-              this.message = 'Sai email/mật khẩu. Vui lòng kiểm tra lại';
+              this.load = false;
+              if (res.code == 2 && res.error_code == 5) {
+                resetPass(data.user).then(res => {
+                  this.message = 'Hệ thống mới vui lòng check Email để xác thực tài khoản';
+                  intentPage('/update-password', { email: data.user });
+                });
+              } else {
+                this.message = 'Sai email/mật khẩu. Vui lòng kiểm tra lại';
+              }
             });
         } else {
+          this.load = false;
           this.message = 'Tài khoản hoặc mật khẩu không được rỗng';
         }
         break;
@@ -89,9 +96,9 @@ export default class Login extends React.Component {
   };
   render() {
     return (
-      <div>
+      <div className="signup font">
         <HeaderComponent />
-        <LoginComponent callBack={this.callBack} message={this.message} />
+        <LoginComponent callBack={this.callBack} message={this.message} load={this.load} />
         <FooterComponent />
       </div>
     );

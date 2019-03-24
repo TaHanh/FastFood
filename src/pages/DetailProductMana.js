@@ -81,10 +81,17 @@ export default class DetailProductMana extends React.Component {
               intentPage('/admin/products');
             }, 1000);
           }
+        }).catch((res)=>{
+           this.titleAddCart = 3;
+            this.statusAddCart = true;
+            setTimeout(() => {
+              this.statusAddCart = false;
+              intentPage('/admin/products');
+            }, 1000);
         });
         break;
       case 'CREATE_PRODUCT':
-        if (data.name == '' || data.price == '' || data.category == {})
+        if (data.name == '' || data.price == '' || data.category == '')
           return alert('Bạn phải nhập đầy đủ thông tin');
         if (data.highlight) {
           data.highlight = 0;
@@ -93,7 +100,6 @@ export default class DetailProductMana extends React.Component {
         }
 
         createProduct(data).then(res => {
-          if (res) {
             this.data = res;
             if (this.data.highlight == 0) {
               this.data.highlight = true;
@@ -104,9 +110,17 @@ export default class DetailProductMana extends React.Component {
             this.statusAddCart = true;
             setTimeout(() => {
               this.statusAddCart = false;
+              intentPage('/admin/products');
             }, 1000);
-          }
+
           console.log(JSON.stringify(res));
+        }).catch((res)=>{
+           this.titleAddCart = 3;
+            this.statusAddCart = true;
+            setTimeout(() => {
+              this.statusAddCart = false;
+              intentPage('/admin/products');
+            }, 1000);
         });
         break;
 
@@ -127,7 +141,7 @@ export default class DetailProductMana extends React.Component {
         </div>
         {this.statusAddCart ? (
           <div
-            className={this.titleAddCart == 0 ? 'alert alert-success' : 'alert alert-false'}
+            className={this.titleAddCart == 0 || this.titleAddCart == 1 ? 'alert alert-success' : 'alert alert-false'}
             role="alert"
             style={{ position: 'fixed', top: 100, right: 20 }}
           >

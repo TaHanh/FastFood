@@ -1,17 +1,18 @@
 import React from 'react';
 
-import { initFB, loginFB } from '../utils/FBUtils';
+// import { initFB, loginFB } from '../utils/FBUtils';
 import { Link, Router } from '../routes/routes';
 import { validateEmail } from '../utils/EmailUtils';
-import { createUser, login } from '../api/Auth';
+// import { createUser, login } from '../api/Auth';
 import { inject, observer } from 'mobx-react';
 import { observable } from 'mobx';
 import Config from '../config/env';
-import I18n from '../locales/String';
 import { setData } from '../utils/LocalStorageUtils';
-import HeaderComponent from '../components/header/header-component';
-import FooterComponent from '../components/footer/footer-component';
+import HeaderComponent from '../components/header/HeaderComponent';
+import FooterComponent from '../components/general/FooterComponent';
 import SignUpComponent from '../components/login/SignUpComponent';
+import { getPathName } from '../utils/RouterUtils';
+import { getAllCustomers, createCustomer } from '../api/Customer';
 @inject('store')
 @observer
 export default class SignUp extends React.Component {
@@ -25,33 +26,31 @@ export default class SignUp extends React.Component {
   }
 
   componentDidMount() {
-    initFB(Config.app.fb);
-    const pathSignUp = Router.router.asPath;
+    // initFB(Config.app.fb);
+    // const pathSignUp = Router.router.asPath;
     ////console.log('Router.router', Router.router);
-    if (pathSignUp === '/sign-up/doanh-nghiep') {
-      this.path = 'doanh-nghiep';
-    } else {
-      this.path = 'sinh-vien';
-    }
+    // if (pathSignUp === '/sign-up/doanh-nghiep') {
+    //   this.path = 'doanh-nghiep';
+    // } else {
+    //   this.path = 'sinh-vien';
+    // }
     ////console.log(this.path);
   }
 
   callBack = (key, data) => {
     switch (key) {
       case 'signup':
-        if (data.password.length > 0 && data.password2.length > 0 && data.name.length > 0 && data.email.length > 0) {
+        if (
+          data.password.length > 0 &&
+          data.password2.length > 0 &&
+          data.name.length > 0 &&
+          data.phone.length > 0
+        ) {
           if (!validateEmail(data.email)) {
             alert('Email không đúng :)');
-
             return;
           }
-          if (this.pathname == 'doanh-nghiep') {
-            if (!validateEmail(data.emailCv)) {
-              alert('Email nhận cv không đúng :)');
 
-              return;
-            }
-          }
           if (data.password != data.password2) {
             alert('Mật khẩu không trùng nhau');
             return;
@@ -61,20 +60,13 @@ export default class SignUp extends React.Component {
             return;
           }
 
-          createUser({
-            email: data.email,
-            name: data.name,
-            password: data.password,
-            link: Config.api.host.link,
-            role: this.path == 'sinh-vien' ? Config.role.user : Config.role.employ,
-            phone: this.path == 'sinh-vien' ? undefined : data.phone,
-            emailCv: this.path == 'sinh-vien' ? undefined : data.emailCv
-          })
+          createCustomer({ ...data, type: 1, address: '', role: 'customer' })
             .then(res => {
-              // Router.pushRoute('index');
-              this.isEmailRegistered = false;
-              document.getElementById('login-view').style.display = 'none';
-              document.getElementById('verify-mail').style.display = 'block';
+              Router.pushRoute('index');
+              this.setCookie('user', JSON.stringify(res));
+              // this.isEmailRegistered = false;
+              // document.getElementById('login-view').style.display = 'none';
+              // document.getElementById('verify-mail').style.display = 'block';
 
               // ////console.log('signup ok ' + JSON.stringify(res));
             })
@@ -119,9 +111,9 @@ export default class SignUp extends React.Component {
   };
   render() {
     return (
-      <div>
+      <div className="signup font">
         <HeaderComponent />
-        <SignUpComponent isEmailRegistered={this.isEmailRegistered} pathname={this.path} callBack={this.callBack} />
+        <SignUpComponent isEmailRegistered={this.isEmailRegistered} callBack={this.callBack} />
         <FooterComponent />
       </div>
     );
