@@ -1,22 +1,33 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose'
 
 const customerSchema = new Schema(
   {
     name: {
       type: String
     },
-    email: {
+    avatar: {
       type: String
     },
     phone: {
       type: String
     },
-    address: {
+    email: {
       type: String
     },
     type: {
-      type: String,
-      default: 1
+      type: String
+    },
+    role: {
+      type: String
+    },
+    address: {
+      type: String
+    },
+    userName: {
+      type: String
+    },
+    password: {
+      type: String
     }
   },
   {
@@ -24,11 +35,11 @@ const customerSchema = new Schema(
     toJSON: {
       virtuals: true,
       transform: (obj, ret) => {
-        delete ret._id;
+        delete ret._id
       }
     }
   }
-);
+)
 
 customerSchema.methods = {
   view(full) {
@@ -36,24 +47,28 @@ customerSchema.methods = {
       // simple view
       id: this.id,
       name: this.name,
-      email: this.email,
+      avatar: this.avatar,
       phone: this.phone,
-      address: this.address,
+      email: this.email,
       type: this.type,
+      role: this.role,
+      address: this.address,
+      userName: this.userName,
+      password: this.password,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
-    };
+    }
 
     return full
       ? {
           ...view
           // add properties for a full view
         }
-      : view;
+      : view
   }
-};
+}
 
-const model = mongoose.model('Customer', customerSchema);
+const model = mongoose.model('Customer', customerSchema)
 
-export const schema = model.schema;
-export default model;
+export const schema = model.schema
+export default model

@@ -6,23 +6,27 @@ import { schema } from './model'
 export Customer, { schema } from './model'
 
 const router = new Router()
-const { name, email, phone, address, type } = schema.tree
+const { name, avatar, phone, email, type, role, address, userName, password } = schema.tree
 
 /**
  * @api {post} /customers Create customer
  * @apiName CreateCustomer
  * @apiGroup Customer
  * @apiParam name Customer's name.
- * @apiParam email Customer's email.
+ * @apiParam avatar Customer's avatar.
  * @apiParam phone Customer's phone.
- * @apiParam address Customer's address.
+ * @apiParam email Customer's email.
  * @apiParam type Customer's type.
+ * @apiParam role Customer's role.
+ * @apiParam address Customer's address.
+ * @apiParam userName Customer's userName.
+ * @apiParam password Customer's password.
  * @apiSuccess {Object} customer Customer's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Customer not found.
  */
 router.post('/',
-  body({ name, email, phone, address, type }),
+  body({ name, avatar, phone, email, type, role, address, userName, password }),
   create)
 
 /**
@@ -54,16 +58,20 @@ router.get('/:id',
  * @apiName UpdateCustomer
  * @apiGroup Customer
  * @apiParam name Customer's name.
- * @apiParam email Customer's email.
+ * @apiParam avatar Customer's avatar.
  * @apiParam phone Customer's phone.
- * @apiParam address Customer's address.
+ * @apiParam email Customer's email.
  * @apiParam type Customer's type.
+ * @apiParam role Customer's role.
+ * @apiParam address Customer's address.
+ * @apiParam userName Customer's userName.
+ * @apiParam password Customer's password.
  * @apiSuccess {Object} customer Customer's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Customer not found.
  */
 router.put('/:id',
-  body({ name, email, phone, address, type }),
+  body({ name, avatar, phone, email, type, role, address, userName, password }),
   update)
 
 /**

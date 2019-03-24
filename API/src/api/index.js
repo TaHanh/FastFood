@@ -2,16 +2,18 @@ import { Router } from 'express'
 import product from './product'
 import category from './category'
 import upload from './upload'
-import customer from './customer'
+
 import order from './order'
+import customer from './customer'
 
 const router = new Router()
 
 router.use('/products', product)
 router.use('/categories', category)
 router.use('/uploads', upload)
-router.use('/customers', customer)
+
 router.use('/orders', order)
+router.use('/customers', customer)
 
 /**
  * @apiDefine master Master access only
