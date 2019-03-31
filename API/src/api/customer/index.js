@@ -1,12 +1,12 @@
-import { Router } from 'express'
-import { middleware as query } from 'querymen'
-import { middleware as body } from 'bodymen'
-import { create, index, show, update, destroy } from './controller'
-import { schema } from './model'
-export Customer, { schema } from './model'
+import { Router } from 'express';
+import { middleware as query } from 'querymen';
+import { middleware as body } from 'bodymen';
+import { create, index, show, update, destroy, findUserByEmail } from './controller';
+import { schema } from './model';
+export Customer, { schema } from './model';
 
-const router = new Router()
-const { name, avatar, phone, email, type, role, address, userName, password } = schema.tree
+const router = new Router();
+const { name, avatar, phone, email, type, role, address, userName, password } = schema.tree;
 
 /**
  * @api {post} /customers Create customer
@@ -25,9 +25,11 @@ const { name, avatar, phone, email, type, role, address, userName, password } = 
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Customer not found.
  */
-router.post('/',
+router.post(
+  '/',
   body({ name, avatar, phone, email, type, role, address, userName, password }),
-  create)
+  create
+);
 
 /**
  * @api {get} /customers Retrieve customers
@@ -38,9 +40,7 @@ router.post('/',
  * @apiSuccess {Object[]} rows List of customers.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
-router.get('/',
-  query(),
-  index)
+router.get('/', query(), index);
 
 /**
  * @api {get} /customers/:id Retrieve customer
@@ -50,8 +50,7 @@ router.get('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Customer not found.
  */
-router.get('/:id',
-  show)
+router.get('/:id', show);
 
 /**
  * @api {put} /customers/:id Update customer
@@ -70,9 +69,14 @@ router.get('/:id',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Customer not found.
  */
-router.put('/:id',
+
+router.get('/check-email/:email', findUserByEmail);
+
+router.put(
+  '/:id',
   body({ name, avatar, phone, email, type, role, address, userName, password }),
-  update)
+  update
+);
 
 /**
  * @api {delete} /customers/:id Delete customer
@@ -81,7 +85,6 @@ router.put('/:id',
  * @apiSuccess (Success 204) 204 No Content.
  * @apiError 404 Customer not found.
  */
-router.delete('/:id',
-  destroy)
+router.delete('/:id', destroy);
 
-export default router
+export default router;
