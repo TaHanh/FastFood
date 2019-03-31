@@ -1,129 +1,133 @@
-import React from 'react';
+import React from 'react'
 
-import { initFB, loginFB } from '../utils/FBUtils';
-import { Link, Router } from '../routes/routes';
-import { validateEmail } from '../utils/EmailUtils';
-import { createUser, login } from '../api/Auth';
-import { inject, observer } from 'mobx-react';
-import { observable } from 'mobx';
-import Config from '../config/env';
-import I18n from '../locales/String';
-import { setData } from '../utils/LocalStorageUtils';
-import HeaderComponent from '../components/header/header-component';
-import FooterComponent from '../components/footer/footer-component';
-import SignUpComponent from '../components/login/SignUpComponent';
+// import { initFB, loginFB } from '../utils/FBUtils';
+import { Link, Router } from '../routes/routes'
+import { validateEmail } from '../utils/EmailUtils'
+// import { createUser, login } from '../api/Auth';
+import { inject, observer } from 'mobx-react'
+import { observable } from 'mobx'
+import Config from '../config/env'
+import { setData } from '../utils/LocalStorageUtils'
+import HeaderComponent from '../components/header/HeaderComponent'
+import FooterComponent from '../components/general/FooterComponent'
+import SignUpComponent from '../components/login/SignUpComponent'
+import { getPathName } from '../utils/RouterUtils'
+import { getAllCustomers, createCustomer } from '../api/Customer'
 @inject('store')
 @observer
 export default class SignUp extends React.Component {
   @observable
-  path = '';
+  path = ''
   @observable
-  isEmailRegistered = false;
+  isEmailRegistered = false
+  @observable
+  isRegistered = false
   constructor(props) {
-    super(props);
-    this.store = this.props.store;
+    super(props)
+    this.store = this.props.store
   }
 
   componentDidMount() {
-    initFB(Config.app.fb);
-    const pathSignUp = Router.router.asPath;
+    // initFB(Config.app.fb);
+    // const pathSignUp = Router.router.asPath;
     ////console.log('Router.router', Router.router);
-    if (pathSignUp === '/sign-up/doanh-nghiep') {
-      this.path = 'doanh-nghiep';
-    } else {
-      this.path = 'sinh-vien';
-    }
+    // if (pathSignUp === '/sign-up/doanh-nghiep') {
+    //   this.path = 'doanh-nghiep';
+    // } else {
+    //   this.path = 'sinh-vien';
+    // }
     ////console.log(this.path);
   }
 
   callBack = (key, data) => {
+    this.isRegistered = true
+
     switch (key) {
       case 'signup':
-        if (data.password.length > 0 && data.password2.length > 0 && data.name.length > 0 && data.email.length > 0) {
+        if (
+          data.password.length > 0 &&
+          data.password2.length > 0 &&
+          data.name.length > 0 &&
+          data.phone.length > 0
+        ) {
           if (!validateEmail(data.email)) {
-            alert('Email không đúng :)');
-
-            return;
+            alert('Email không đúng :)')
+            return
           }
-          if (this.pathname == 'doanh-nghiep') {
-            if (!validateEmail(data.emailCv)) {
-              alert('Email nhận cv không đúng :)');
 
-              return;
-            }
-          }
           if (data.password != data.password2) {
-            alert('Mật khẩu không trùng nhau');
-            return;
+            alert('Mật khẩu không trùng nhau')
+            return
           }
           if (data.password.length < 8) {
-            alert('Mật khẩu >= 8 kí tự');
-            return;
+            alert('Mật khẩu >= 8 kí tự')
+            return
           }
-
-          createUser({
-            email: data.email,
-            name: data.name,
-            password: data.password,
-            link: Config.api.host.link,
-            role: this.path == 'sinh-vien' ? Config.role.user : Config.role.employ,
-            phone: this.path == 'sinh-vien' ? undefined : data.phone,
-            emailCv: this.path == 'sinh-vien' ? undefined : data.emailCv
-          })
+          createCustomer({ ...data, type: 1, address: '', role: 'customer' })
             .then(res => {
-              // Router.pushRoute('index');
-              this.isEmailRegistered = false;
-              document.getElementById('login-view').style.display = 'none';
-              document.getElementById('verify-mail').style.display = 'block';
+              console.log(res)
+              localStorage['userFF'] = JSON.stringify(res)
+              this.props.store.user = res
 
-              // ////console.log('signup ok ' + JSON.stringify(res));
+              Router.pushRoute('index')
+              // this.isEmailRegistered = false;
+              // document.getElementById('login-view').style.display = 'none';
+              // document.getElementById('verify-mail').style.display = 'block';
+
+              this.isRegistered = false
             })
             .catch(e => {
-              const res = e.response.data;
+              this.isRegistered = false
+              const res = e.response.data
               // alert(res.message);
               if (res.message === 'email already registered') {
-                this.isEmailRegistered = true;
+                this.isEmailRegistered = true
               } else {
-                alert(res.message);
+                alert(res.message)
               }
               ////console.log('signup ' + JSON.stringify(e));
-            });
+            })
         } else {
-          alert('Vui lòng điền đầy đủ thông tin trước khi tạo tài khoản');
+          this.isRegistered = false
+          alert('Vui lòng điền đầy đủ thông tin trước khi tạo tài khoản')
         }
-        break;
+        break
 
       case 'loginGHRC':
         login(Config.api.path.base.loginG, data.tokenObj.access_token)
           .then(res => {
-            this.store.setLogin(res, Config.role.user);
+            this.store.setLogin(res, Config.role.user)
           })
           .catch(e => {
-            alert(JSON.stringify(e));
-          });
-        break;
+            alert(JSON.stringify(e))
+          })
+        break
       case 'loginFBHRC':
         loginFB(res => {
           login(Config.api.path.base.loginF, res.authResponse.accessToken)
             .then(res => {
-              this.store.setLogin(res, Config.role.user);
+              this.store.setLogin(res, Config.role.user)
             })
             .catch(e => {
-              alert(JSON.stringify(e));
-            });
-        });
-        break;
+              alert(JSON.stringify(e))
+            })
+        })
+        break
       default:
-        break;
+        break
     }
-  };
+  }
   render() {
     return (
-      <div>
+      <div className="signup font">
         <HeaderComponent />
-        <SignUpComponent isEmailRegistered={this.isEmailRegistered} pathname={this.path} callBack={this.callBack} />
+        <SignUpComponent
+          isEmailRegistered={this.isEmailRegistered}
+          callBack={this.callBack}
+          isRegistered={this.isRegistered}
+        />
         <FooterComponent />
       </div>
-    );
+    )
   }
 }

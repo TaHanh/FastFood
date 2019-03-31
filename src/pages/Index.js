@@ -1,7 +1,5 @@
 import React from 'react'
-
 import { observable } from 'mobx'
-
 import { inject, observer } from 'mobx-react'
 import { getPathName } from '../utils/RouterUtils'
 import { Link, Router } from '../routes/routes'
@@ -11,7 +9,6 @@ import BannerComponent from '../components/home/BannerComponent'
 import HomeComponent from '../components/home/HomeComponent'
 import LoadComponent from '../components/general/LoadComponent'
 import FooterComponent from '../components/general/FooterComponent'
-// import { getCategoriesAPI } from '../store/store'
 import { intentPageString, intentPage } from '../utils/RouterUtils'
 @inject('store')
 @observer
@@ -47,7 +44,7 @@ export default class Index extends React.Component {
           index++
         ) {
           let element = this.props.store.dataProducts[index]
-          if (element.highlight == '0' && this.dataFavourite.length < 8) {
+          if (element.highlight == '0') {
             this.dataFavourite.push(element)
           }
           if (
@@ -138,7 +135,10 @@ export default class Index extends React.Component {
             ) : null}
           </div>
         ) : (
-          <LoadComponent />
+          <div>
+            ytyrtyr
+            <LoadComponent />
+          </div>
         )}
       </div>
     )

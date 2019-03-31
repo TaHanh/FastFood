@@ -60,7 +60,7 @@ export default class ProductsMana extends React.Component {
     switch (key) {
       case 'DEL_ITEM':
         deleteProduct(data.item.id).then(res => {
-          this.props.store.dataProducts.splice(data.index, 1);
+          this.data.rows.splice(data.index, 1);
         });
         break;
       case 'NEXT_PAGE':

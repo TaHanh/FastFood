@@ -26,7 +26,7 @@ export default class ItemProductComponent extends React.Component {
             <p className="my-2">{item.name}</p>
           </Link>
           <p className="mb-1" style={{ color: 'red' }}>
-            {item.price}
+            {item.price}đ
           </p>
         </div>
         <button

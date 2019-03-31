@@ -43,7 +43,7 @@ class Item extends React.Component {
               </Link>
             </h5>
 
-            <p className="colorWhite">{item.price}</p>
+            <p className="colorWhite">{item.price}đ</p>
           </div>
           <div className="col-4 align-self-center text-right">
             <button
@@ -84,7 +84,7 @@ export default class HomeComponent extends React.Component {
 
   render() {
     return (
-      <div className="product w-100">
+      <div className="product w-100 font">
         {this.isRender ? (
           <div className="">
             <div className="limit">
@@ -95,9 +95,10 @@ export default class HomeComponent extends React.Component {
               </div>
               <div className="row pb-3">
                 {this.props.dataFavourite.map((e, i) => {
-                  return (
-                    <Item item={e} index={i} callBack={this.props.callBack} />
-                  )
+                  if (i < 8)
+                    return (
+                      <Item item={e} index={i} callBack={this.props.callBack} />
+                    )
                 })}
               </div>
             </div>

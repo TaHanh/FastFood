@@ -61,26 +61,57 @@ class Item extends React.Component {
           {item.statusOrder.map(e => {
             if (e.status == 0) {
               return (
-                <p className="mb-0">Đang chờ xử lý - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null }</p>
+                <p className="mb-0">
+                  Đang chờ xử lý - {unixToTime(e.time)}{' '}
+                  {e.name != '' ? ' - ' + e.name : null}
+                </p>
               )
             } else if (e.status == 1) {
-              return <p className="mb-0">Xác nhận - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null }</p>
+              return (
+                <p className="mb-0">
+                  Xác nhận - {unixToTime(e.time)}{' '}
+                  {e.name != '' ? ' - ' + e.name : null}
+                </p>
+              )
             } else {
-              return <p className="mb-0">Hủy đơn - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null }</p>
+              return (
+                <p className="mb-0">
+                  Hủy đơn - {unixToTime(e.time)}{' '}
+                  {e.name != '' ? ' - ' + e.name : null}
+                </p>
+              )
             }
           })}
         </td>
         <td>
           {item.statusShip.map(e => {
             if (e.status == 0) {
-              return <p className="mb-0">Đang giao - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null }</p>
+              return (
+                <p className="mb-0">
+                  Đang giao - {unixToTime(e.time)}{' '}
+                  {e.name != '' ? ' - ' + e.name : null}
+                </p>
+              )
             } else if (e.status == 1) {
-              return <p className="mb-0">Đã nhận -{unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null }</p>
+              return (
+                <p className="mb-0">
+                  Đã nhận -{unixToTime(e.time)}{' '}
+                  {e.name != '' ? ' - ' + e.name : null}
+                </p>
+              )
             } else if (e.status == 2) {
-              return <p className="mb-0">Hủy đơn - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null }</p>
+              return (
+                <p className="mb-0">
+                  Hủy đơn - {unixToTime(e.time)}{' '}
+                  {e.name != '' ? ' - ' + e.name : null}
+                </p>
+              )
             } else {
               return (
-                <p className="mb-0">Đang chờ xử lý - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null }</p>
+                <p className="mb-0">
+                  Đang chờ xử lý - {unixToTime(e.time)}{' '}
+                  {e.name != '' ? ' - ' + e.name : null}
+                </p>
               )
             }
           })}
@@ -157,6 +188,10 @@ export default class OrderProductComponent extends React.Component {
                         type="text"
                         className="w-75 form-control font"
                         style={{}}
+                        onKeyPress={({ charCode }) => {
+                          if (charCode === 13) {
+                          }
+                        }}
                       />
                     </div>
                   </div>
@@ -169,6 +204,10 @@ export default class OrderProductComponent extends React.Component {
                         type="text"
                         className="w-75 form-control font"
                         style={{}}
+                        onKeyPress={({ charCode }) => {
+                          if (charCode === 13) {
+                          }
+                        }}
                       />
                     </div>
                   </div>
@@ -213,14 +252,45 @@ export default class OrderProductComponent extends React.Component {
                       <span className="font">Tình trạng</span>
                     </div>
                     <div className="col-8">
-                      <select type="text" className="w-75 custom-select font"
-                      onChange={e => {
-                          this.search.statusOrder = e.target.value;
-                        }}>
-                       <option value=""  selected={this.search.statusOrder == "" ? true : false}>-----</option>
-                        <option value="0"  selected={this.search.statusOrder == "0" ? true : false}>Đang chờ xử lý</option>
-                        <option value="1"  selected={this.search.statusOrder == "1" ? true : false}>Xác nhận</option>
-                        <option value="2"  selected={this.search.statusOrder =="2" ? true : false}>Hủy đơn</option>
+                      <select
+                        type="text"
+                        className="w-75 custom-select font"
+                        onChange={e => {
+                          this.search.statusOrder = e.target.value
+                        }}
+                      >
+                        <option
+                          value=""
+                          selected={
+                            this.search.statusOrder == '' ? true : false
+                          }
+                        >
+                          -----
+                        </option>
+                        <option
+                          value="0"
+                          selected={
+                            this.search.statusOrder == '0' ? true : false
+                          }
+                        >
+                          Đang chờ xử lý
+                        </option>
+                        <option
+                          value="1"
+                          selected={
+                            this.search.statusOrder == '1' ? true : false
+                          }
+                        >
+                          Xác nhận
+                        </option>
+                        <option
+                          value="2"
+                          selected={
+                            this.search.statusOrder == '2' ? true : false
+                          }
+                        >
+                          Hủy đơn
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -229,36 +299,75 @@ export default class OrderProductComponent extends React.Component {
                       <span className="font">Tình trạng giao</span>
                     </div>
                     <div className="col-8">
-                      <select type="text" className="w-75 custom-select font"
-                      onChange={e => {
-                          this.search.statusShip = e.target.value;
-                        }}>
-                        <option value="" selected={this.search.statusShip == '' ? true : false} >-----</option>
-                        <option value="0" selected={this.search.statusShip == "0" ? true : false}>Đang giao</option>
-                        <option value="1" selected={this.search.statusShip == "1" ? true : false}>Đã nhận</option>
-                        <option value="2" selected={this.search.statusShip == "2" ? true : false}>Hủy đơn</option>
-                        <option value="3" selected={this.search.statusShip == "3" ? true : false}>Đang chờ xử lý</option>
+                      <select
+                        type="text"
+                        className="w-75 custom-select font"
+                        onChange={e => {
+                          this.search.statusShip = e.target.value
+                        }}
+                      >
+                        <option
+                          value=""
+                          selected={this.search.statusShip == '' ? true : false}
+                        >
+                          -----
+                        </option>
+                        <option
+                          value="0"
+                          selected={
+                            this.search.statusShip == '0' ? true : false
+                          }
+                        >
+                          Đang giao
+                        </option>
+                        <option
+                          value="1"
+                          selected={
+                            this.search.statusShip == '1' ? true : false
+                          }
+                        >
+                          Đã nhận
+                        </option>
+                        <option
+                          value="2"
+                          selected={
+                            this.search.statusShip == '2' ? true : false
+                          }
+                        >
+                          Hủy đơn
+                        </option>
+                        <option
+                          value="3"
+                          selected={
+                            this.search.statusShip == '3' ? true : false
+                          }
+                        >
+                          Đang chờ xử lý
+                        </option>
                       </select>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="row justify-content-end mb-4 pr-5 mt-3">
-                <button className="bgDefault colorWhite p-2 px-3 mr-3 rounded cursor"
-                 onClick={() => {
-                    callBack('SEARCH', this.search);
-                  }}>
+                <button
+                  className="bgDefault colorWhite p-2 px-3 mr-3 rounded cursor"
+                  onClick={() => {
+                    callBack('SEARCH', this.search)
+                  }}
+                >
                   Tìm kiếm
                 </button>
-                {this.props.isSearch ?
-                 <button
-                  onClick={() => {
-                    callBack('BACK_ALL');
-                  }}
-                  className="bgDefault colorWhite p-2 px-3 rounded cursor"
-                >
-                  Tất cả đơn hàng
-                </button> : null }
+                {this.props.isSearch ? (
+                  <button
+                    onClick={() => {
+                      callBack('BACK_ALL')
+                    }}
+                    className="bgDefault colorWhite p-2 px-3 rounded cursor"
+                  >
+                    Tất cả đơn hàng
+                  </button>
+                ) : null}
               </div>
             </div>
             <div className="w-100" style={{ overflowX: 'scroll' }}>
@@ -287,8 +396,8 @@ export default class OrderProductComponent extends React.Component {
                     )
                   })}
                   {this.data.length == 0 ? (
-                  <td colSpan="10">Không có sản phẩm nào</td>
-                ) : null}
+                    <td colSpan="10">Không có sản phẩm nào</td>
+                  ) : null}
                 </tbody>
               </table>
             </div>{' '}

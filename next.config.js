@@ -1,7 +1,7 @@
-const webpack = require('webpack');
-const withSass = require('@zeit/next-sass');
-const withPlugins = require('next-compose-plugins');
-const optimizedImages = require('next-optimized-images');
+const webpack = require('webpack')
+const withSass = require('@zeit/next-sass')
+const withPlugins = require('next-compose-plugins')
+const optimizedImages = require('next-optimized-images')
 
 const nextConfig = {
   distDir: '../build',
@@ -14,6 +14,6 @@ const nextConfig = {
       jQuery: 'jquery'
     })
   ]
-};
+}
 
-module.exports = withPlugins([[optimizedImages], withSass()], nextConfig);
+module.exports = withPlugins([[optimizedImages], withSass()], nextConfig)

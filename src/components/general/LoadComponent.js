@@ -7,6 +7,30 @@ export default class LoadComponent extends React.Component {
 
   render() {
     return (
+      <ul class="loader">
+        <li className="mr-2">
+          <div class="circle" />
+          <div class="ball" />
+        </li>
+        <li className="mr-2">
+          <div class="circle" />
+          <div class="ball" />
+        </li>
+        <li className="mr-2">
+          <div class="circle" />
+          <div class="ball" />
+        </li>
+        <li className="mr-2">
+          <div class="circle" />
+          <div class="ball" />
+        </li>
+        <li>
+          <div class="circle" />
+          <div class="ball" />
+        </li>
+      </ul>
+    );
+    return (
       <div className="loading w-100">
         <div className="container">
           <div className="it item1" />

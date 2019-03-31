@@ -11,6 +11,7 @@ export default class MenuLeftComponent extends React.Component {
   @observable isRender = false;
   constructor(props) {
     super(props);
+    
   }
   componentDidMount() {
     $('#leftside-navigation .sub-menu > a').click(function(e) {
@@ -23,11 +24,15 @@ export default class MenuLeftComponent extends React.Component {
             .slideDown(),
         e.stopPropagation();
     });
+    if (localStorage.getItem('adminFF')) {
+      console.log(JSON.parse(localStorage.adminFF));
+      this.props.store.admin = JSON.parse(localStorage.adminFF);
+    }
     this.isRender = true;
   }
   render() {
     return (
-      <aside className="sidebar">
+      <aside className="sidebar" style={{position: 'fixed',     width: '16.666667%'}}>
         {this.isRender ? (
           <div id="leftside-navigation" className="nano">
             <ul className="nano-content">
@@ -59,6 +64,9 @@ export default class MenuLeftComponent extends React.Component {
                 );
               })}
             </ul>
+            <p style={{ textAlign: 'center', padding: ' 0 15px ', color: '#f08080', position: 'absolute', bottom: 30, left: 0 }}>
+              {this.props.store.admin ? this.props.store.admin.email : 'NO'}
+            </p>
           </div>
         ) : null}
       </aside>

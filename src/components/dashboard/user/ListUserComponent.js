@@ -2,8 +2,8 @@ import React from 'react'
 import { observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import { Link, Router } from '../../../routes/routes'
-import ReactHtmlParser from 'react-html-parser'
-import './product.scss'
+
+import './user.scss'
 @inject('store')
 @observer
 class Item extends React.Component {
@@ -26,6 +26,20 @@ class Item extends React.Component {
             {item.id || ''}
           </span>
         </td>
+        <td>
+          {' '}
+          <Link
+            href={{ pathname: '/admin/detail-user', query: { id: item.id } }}
+          >
+          <img
+
+            className="cursor rounded-circle border border-secondary "
+            style={{ width: 30, height: 30, }}
+            src={item.avatar || '../../../static/images/ava.jpg'}
+          />
+
+          </Link>{' '}
+        </td>
         <td
           className=""
           // onClick={() => {
@@ -33,68 +47,40 @@ class Item extends React.Component {
           // }}
         >
           <Link
-            href={{ pathname: '/admin/detail-product', query: { id: item.id } }}
+            href={{ pathname: '/admin/detail-user', query: { id: item.id } }}
           >
             <a
               className="colorDefault cursor"
               style={{ textDecoration: 'none' }}
             >
-              {item.name || ''}
+              {item.userName ? (
+                <span>
+                  {item.userName} <br />
+                </span>
+              ) : null}
+              {item.name ? item.name : null}
             </a>
           </Link>
         </td>
-        <td> {item.highlight == 0 ? 'true' : 'false'} </td>
-        <td style={{}}>
-          {item.image.map(e => {
-            return (
-              <p
-                className="mb-1"
-                style={{
-                  maxWidth: '150px',
-                  textOverflow: 'ellipsis',
-                  overflow: 'hidden',
-                  height: '16px',
-                  lineHeight: '16px'
-                }}
-              >
-                {e}
-              </p>
-            )
-          })}
-        </td>
-        <td>{item.price}</td>
-        <td style={{}}>
-          {item.type.map(e => {
-            return (
-              <p className="mb-1" style={{}}>
-                {' '}
-                {e}{' '}
-              </p>
-            )
-          })}
-        </td>
+        <td>{item.phone || ''}</td>
+        <td>{item.email || ''}</td>
         <td>
-          {item.status == 0 ? (
-            <span style={{ color: 'darkblue' }}>Còn hàng</span>
-          ) : (
-            <span style={{ color: 'red' }}>Hết hàng</span>
-          )}
+        <span className="colorDefault cursor"  data-toggle="modal"
+            data-target="#changeRoleModalCenter"
+            onClick={() => {
+              this.props.clickRole({ item, index }, item.role)
+            }}>
+          {item.role && item.role == 'customer'
+            ? 'Khách hàng'
+            : item.role == 'employee'
+            ? 'Nhân viên'
+            : item.role == 'admin'
+            ? 'Admin'
+            : ''}</span>
         </td>
-        <td>
-          <p
-            className="mb-0 description"
-            style={{
-              maxWidth: '200px'
-            }}
-          >
-            {ReactHtmlParser(item.description)}
-          </p>
-        </td>
-        <td>
-          {this.props.store.dataCategory.map((e, i) => {
-            if (e.key == item.category) return e.name
-          })}
-        </td>
+
+        <td>{item.password ? <span>Thay đổi mật khẩu</span> : null}</td>
+
         <td>
           <img
             data-toggle="modal"
@@ -114,10 +100,11 @@ class Item extends React.Component {
 
 @inject('store')
 @observer
-export default class ListProductComponent extends React.Component {
+export default class ListUserComponent extends React.Component {
   @observable isRender = false
   @observable data = []
   @observable search = ''
+  @observable role = ''
   constructor(props) {
     super(props)
     this.data = this.props.data
@@ -158,9 +145,9 @@ export default class ListProductComponent extends React.Component {
           <div className="py-4 font">
             <div className="px-5">
               <button className="bgDefault  p-2 px-3 rounded cursor">
-                <Link route="/admin/detail-product">
+                <Link route="/admin/detail-user">
                   <a className="colorWhite" style={{ textDecoration: 'none' }}>
-                    Thêm món
+                    Thêm người dùng
                   </a>
                 </Link>
               </button>
@@ -168,7 +155,7 @@ export default class ListProductComponent extends React.Component {
                 <div className="col-6 px-0">
                   <div className="row  align-items-center mb-3 ">
                     <div className="col-3 px-0">
-                      <span className="font">Tên sản phẩm</span>
+                      <span className="font">Tên người dùng</span>
                     </div>
                     <div className="col-9">
                       <input
@@ -179,79 +166,80 @@ export default class ListProductComponent extends React.Component {
                         onChange={e => {
                           this.search.name = e.target.value
                         }}
-                        onKeyPress={({ charCode }) => {
-                          if (charCode === 13) {
-                            callBack('SEARCH', this.search)
-                          }
+                      />
+                    </div>
+                  </div>
+                  <div className="row  align-items-center mb-3 ">
+                    <div className="col-3 px-0">
+                      <span className="font">Số điện thoại</span>
+                    </div>
+                    <div className="col-9">
+                      <input
+                        type="text"
+                        className="w-75 form-control font"
+                        style={{}}
+                        value={this.search.phone}
+                        onChange={e => {
+                          this.search.phone = e.target.value
                         }}
                       />
                     </div>
                   </div>
+                </div>
+                <div className="col-6 px-0">
+                  <div className="row  align-items-center mb-3 ">
+                    <div className="col-3 px-0">
+                      <span className="font">Email</span>
+                    </div>
+                    <div className="col-9">
+                      <input
+                        type="text"
+                        className="w-75 form-control font"
+                        style={{}}
+                        value={this.search.email}
+                        onChange={e => {
+                          this.search.email = e.target.value
+                        }}
+                      />
+                    </div>
+                  </div>
+
                   <div className="row  align-items-center">
                     <div className="col-3 px-0">
-                      <span className="font">Trạng thái</span>
+                      <span className="font">Phân quyền</span>
                     </div>
                     <div className="col-9">
                       <select
                         type="text"
                         className="w-75 custom-select font"
                         onChange={e => {
-                          this.search.status = e.target.value
+                          this.search.role = e.target.value
                         }}
                       >
                         <option
                           value=""
-                          selected={this.search.status == '' ? true : false}
+                          selected={this.search.role == '' ? true : false}
                         >
                           ----
                         </option>
                         <option
-                          value="0"
-                          selected={this.search.status == '0' ? true : false}
+                          value="customer"
+                          selected={this.search.role == 'customer' ? true : false}
                         >
-                          Còn hàng
+                          Khách hàng
                         </option>
                         <option
-                          value="1"
-                          selected={this.search.status == '1' ? true : false}
+                          value="employee"
+                          selected={this.search.role == 'employee' ? true : false}
                         >
-                          Hết hàng
+                          Nhân viên{' '}
                         </option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-6">
-                  <div className="row  align-items-center">
-                    <div className="col-4">
-                      <span className="font">Danh mục</span>
-                    </div>
-                    <div className="col-8">
-                      <select
-                        type="text"
-                        className="w-75 custom-select font"
-                        onChange={e => {
-                          this.search.category = e.target.value
-                        }}
-                      >
                         <option
-                          value=""
-                          selected={this.search.category == '' ? true : false}
+                          value="admin"
+                          selected={this.search.role == 'admin' ? true : false}
                         >
-                          ----
+                          Admin
                         </option>
-                        {this.props.store.dataCategory.map((item, index) => {
-                          return (
-                            <option
-                              value={item.key}
-                              selected={
-                                this.search.category == item.key ? true : false
-                              }
-                            >
-                              {item.name}
-                            </option>
-                          )
-                        })}
                       </select>
                     </div>
                   </div>
@@ -282,14 +270,13 @@ export default class ListProductComponent extends React.Component {
               <thead className="thead-light">
                 <tr>
                   <th scope="col">id</th>
-                  <th scope="col">Tên SP</th>
-                  <th scope="col">Hot</th>
-                  <th scope="col">Hình ảnh</th>
-                  <th scope="col">Giá</th>
-                  <th scope="col">Phân loại hàng</th>
-                  <th scope="col">Trạng thái</th>
-                  <th scope="col">Mô tả</th>
-                  <th scope="col">Danh mục</th>
+                  <th scope="col">Ảnh hồ sơ</th>
+                  <th scope="col">Tên người dùng</th>
+                  <th scope="col">Số điện thoại</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Phân quyền</th>
+                  <th scope="col">Mật khẩu</th>
+
                   <th scope="col">Xóa</th>
                 </tr>
               </thead>
@@ -303,12 +290,16 @@ export default class ListProductComponent extends React.Component {
                       clickItem={({ item, index }) => {
                         this.clickItem = { item: item, index: index }
                       }}
+                      clickRole={({ item, index }, role) => {
+                        this.clickItem = { item: item, index: index }
+                        this.role = role
+                      }}
                     />
                   )
                 })}
 
                 {this.data.length == 0 ? (
-                  <td colSpan="10">Không có sản phẩm nào</td>
+                  <td colSpan="10">Không có người dùng nào</td>
                 ) : null}
               </tbody>
             </table>
@@ -331,7 +322,7 @@ export default class ListProductComponent extends React.Component {
                 <div className="modal-content">
 
                   <div className="modal-body pt-5 pb-4 text-center">
-                    Bạn có chắc chắn muốn xóa sản phẩm này !
+                    Bạn có chắc chắn muốn xóa tài khoản người dùng này !
                   </div>
                   <div className="modal-footer">
                    <button
@@ -343,6 +334,68 @@ export default class ListProductComponent extends React.Component {
                       className="btn btn-primary"
                     >
                       Xóa
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      data-dismiss="modal"
+                    >
+                      Hủy
+                    </button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+             <div
+              ref="myModal"
+              className="modal fade"
+              id="changeRoleModalCenter"
+              tabIndex="-1"
+              role="dialog"
+              aria-labelledby="exampleModalCenterTitle"
+              aria-hidden="true"
+            >
+              <div
+                className="modal-dialog modal-dialog-centered"
+                role="document"
+              >
+                <div className="modal-content">
+
+                  <div className="modal-body row pt-4 px-4">
+
+                    <div className="col-6 mb-3">
+                    <input id="customer" value="customer" name="role" type="radio" checked={this.role == 'customer' ? true : false} onChange={e => {
+                          this.role = e.target.value
+                        }} />
+                     <label className="ml-2 mb-0" for="customer">Khách hàng</label>
+                  </div>
+                  <div className="col-6 mb-3">
+                    <input id="employee" value="employee" name="role" type="radio" checked={this.role == 'employee' ? true : false} onChange={e => {
+                          this.role = e.target.value
+                        }} />
+                     <label className="ml-2 mb-0" for="employee">Nhân viên</label>
+                  </div>
+                  <div className="col-6">
+                    <input id="admin" value="admin" name="role" type="radio" checked={this.role == 'admin' ? true : false} onChange={e => {
+                          this.role = e.target.value
+                        }} />
+                     <label className="ml-2 mb-0" for="admin">Quản trị</label>
+                  </div>
+                  </div>
+                  <div className="modal-footer">
+                   <button
+                   data-dismiss="modal"
+                      onClick={() => {
+                      this.props.callBack('CHANGE_ROLE',{role: this.role, data: this.clickItem} )
+                      }}
+                      data-dismiss="modal"
+                      type="button"
+                      className="btn btn-primary"
+                    >
+                      Thay đổi
                     </button>
                     <button
                       type="button"

@@ -12,8 +12,8 @@ export default class FooterComponent extends React.Component {
         <div className="row align-items-center mb-2">
           <div className="col-md-8 col-sm-6 col-xs-12">
             <p className="copyright-text">
-              Copyright &copy; 2017 All Rights Reserved by
-              <a href="#">Scanfcode</a>.
+              Copyright &copy; 2019 All Rights Reserved by
+              <a href="#" className="ml-1">Tạ Hạnh</a>.
             </p>
           </div>
 
@@ -26,7 +26,7 @@ export default class FooterComponent extends React.Component {
               </li>{' '}
               {/* <li><a className="twitter" href="#"><i className="fa fa-twitter"></i></a></li> */}
               <li>
-                <a className="dribbble" href="#">
+                <a className="dribbble" href="">
                   <i className="fas fa-envelope" />
                 </a>
               </li>

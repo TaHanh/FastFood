@@ -12,7 +12,7 @@ import { validateEmail } from '../utils/EmailUtils';
 import { setData } from '../utils/LocalStorageUtils';
 import HeaderComponent from '../components/header/HeaderComponent';
 import FooterComponent from '../components/general/FooterComponent';
-import LoginComponent from '../components/login/LoginComponent';
+import LoginAdminComponent from '../components/login/LoginAdminComponent';
 import LoadComponent from '../components/general/LoadComponent';
 // import { convertImgUrl } from '../utils/ImgUtils';
 import { intentPage, getPathName } from '../utils/RouterUtils';
@@ -48,13 +48,16 @@ export default class Login extends React.Component {
           getCustomerByEmail(data.email)
             .then(res => {
               if (res) {
-                console.log(res.password, data.password);
-                if (res.password == data.password) {
-                  setData('userFF', JSON.stringify(res));
-                  intentPage('/');
+               if(res.role !== 'customer') {
+                 if (res.password == data.password ) {
+                  setData('adminFF', JSON.stringify(res));
+                  intentPage('/admin');
                 } else {
                   this.message = 'Sai mật khẩu. Vui lòng kiểm tra lại';
                 }
+               } else {
+                this.message = 'Tài khoản của bạn không có trong hệ thống. Vui lòng liên hệ quản trị để truy cập !';
+               }
               } else {
                 this.message = 'Đăng nhập thất bại, vui lòng thử lại';
               }
@@ -71,26 +74,6 @@ export default class Login extends React.Component {
           this.message = 'Tài khoản hoặc mật khẩu không được rỗng';
         }
         break;
-      case 'loginFBHRC':
-        loginFB(res => {
-          login(Config.api.path.base.loginF, res.authResponse.accessToken)
-            .then(res => {
-              this.store.setLogin(res, Config.role.user);
-            })
-            .catch(e => {
-              this.message = 'err';
-            });
-        });
-        break;
-      case 'loginGHRC':
-        login(Config.api.path.base.loginG, data.tokenObj.access_token)
-          .then(res => {
-            this.store.setLogin(res, Config.role.user);
-          })
-          .catch(e => {
-            this.message = 'err';
-          });
-        break;
 
       default:
         break;
@@ -99,9 +82,7 @@ export default class Login extends React.Component {
   render() {
     return (
       <div className="signup font">
-        <HeaderComponent />
-        <LoginComponent callBack={this.callBack} message={this.message} load={this.load} />
-        <FooterComponent />
+        <LoginAdminComponent callBack={this.callBack} message={this.message} load={this.load} />
       </div>
     );
   }

@@ -17,6 +17,16 @@ routes
     pattern: '/admin/detail-product',
     page: 'DetailProductMana'
   })
+  .add({
+    name: 'UsersMana',
+    pattern: '/admin/users',
+    page: 'UsersMana'
+  })
+  .add({
+    name: 'DetailUserMana',
+    pattern: '/admin/detail-user',
+    page: 'DetailUserMana'
+  })
   .add({ name: 'OrderMana', pattern: '/admin/orders', page: 'OrderMana' })
   .add({
     name: 'DetailOrderMana',
@@ -30,6 +40,9 @@ routes
     pattern: '/detail-products',
     page: 'DetailProduct'
   })
-  .add({ name: 'Order', pattern: '/order', page: 'Order' });
+  .add({ name: 'Order', pattern: '/order', page: 'Order' })
+  .add({ name: 'login', pattern: '/login', page: 'Login' })
+  .add({ name: 'LoginAdmin', pattern: '/admin/login', page: 'LoginAdmin' })
+  .add({ name: 'signup', pattern: '/signup', page: 'SignUp' });
 
 module.exports = routes;
