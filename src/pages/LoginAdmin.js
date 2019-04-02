@@ -48,7 +48,7 @@ export default class Login extends React.Component {
           getCustomerByEmail(data.email)
             .then(res => {
               if (res) {
-               if(res.role !== 'customer') {
+               if(res.role && res.role !== 'customer') {
                  if (res.password == data.password ) {
                   setData('adminFF', JSON.stringify(res));
                   intentPage('/admin');

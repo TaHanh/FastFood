@@ -19,9 +19,9 @@ export default class OrderMana extends React.Component {
   @observable limit = 5
   @observable totalPage = 0
   @observable isRender = false
-   @observable isSearch = false;
-  @observable query = '';
-    @observable search = {};
+  @observable isSearch = false
+  @observable query = ''
+  @observable search = {}
 
   constructor(props) {
     super(props)
@@ -29,12 +29,12 @@ export default class OrderMana extends React.Component {
     // this.props.store.getOrdersAPI()
     this.getOrder(this.page, this.limit)
     this.search = {
-       name: '',
-            phone: '',
-            timeStart: '',
-            timeEnd: '',
-            statusOrder: '',
-            statusShip: ''
+      name: '',
+      phone: '',
+      timeStart: '',
+      timeEnd: '',
+      statusOrder: '',
+      statusShip: ''
     }
   }
   componentDidMount() {
@@ -44,7 +44,7 @@ export default class OrderMana extends React.Component {
   getOrder = async (p, l, q) => {
     this.data = []
     this.isRender = false
-    const dataOrder = await queryOrder({ page: p, limit: l,query: q  })
+    const dataOrder = await queryOrder({ page: p, limit: l, query: q })
     this.totalPage = Math.ceil(dataOrder.count / this.limit)
 
     Promise.all(
@@ -53,7 +53,6 @@ export default class OrderMana extends React.Component {
         order = { ...order, customer: user }
         this.data.push(order)
         this.isRender = true
-
       })
     ).then(res => {
       this.isRender = true
@@ -71,29 +70,29 @@ export default class OrderMana extends React.Component {
         this.isRender = false
         this.getOrder(this.page, this.limit)
         break
-    case 'SEARCH':
+      case 'SEARCH':
+        this.isSearch = true
+        this.page = 1
+        this.query =
+          `${data.statusShip ? '&statusShip=' + `${data.statusShip}` : ''}` +
+          `${data.statusOrder ? '&statusOrder=' + data.statusOrder : ''}`
 
-      this.isSearch = true
-      this.page = 1
-       this.query =`${data.statusShip ? '&statusShip=' + `${data.statusShip}` : ''}` +
-       `${data.statusOrder ? '&statusOrder=' + data.statusOrder : ''}`
+        this.getOrder(this.page, this.limit, this.query)
+        break
+      case 'BACK_ALL':
+        this.page = 1
+        this.isSearch = false
+        this.search = {
+          name: '',
+          phone: '',
+          timeStart: '',
+          timeEnd: '',
+          statusOrder: '',
+          statusShip: ''
+        }
+        this.getOrder(this.page, this.limit)
 
-       this.getOrder(this.page, this.limit, this.query);
-          break;
-        case 'BACK_ALL':
-         this.page = 1
-         this.isSearch = false
-          this.search = {
-            name: '',
-            phone: '',
-            timeStart: '',
-            timeEnd: '',
-            statusOrder: '',
-            statusShip: ''
-          };
-         this.getOrder(this.page, this.limit);
-
-        break;
+        break
       default:
         break
     }
@@ -109,13 +108,15 @@ export default class OrderMana extends React.Component {
             <OrderProductComponent
               data={this.data}
               search={this.search}
-               isSearch={this.isSearch}
+              isSearch={this.isSearch}
               totalPage={this.totalPage}
               page={this.page}
               callBack={this.callBack}
             />
           ) : (
-            <LoadComponent />
+            <div style={{ minHeight: '100vh' }}>
+              <LoadComponent />
+            </div>
           )}
         </div>
       </div>

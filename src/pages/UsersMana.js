@@ -20,7 +20,7 @@ export default class UsersMana extends React.Component {
   @observable isSearch = false
   @observable query = ''
   @observable search = {}
-   @observable statusNotify = false
+  @observable statusNotify = false
   @observable title = 0
   constructor(props) {
     super(props)
@@ -61,20 +61,22 @@ export default class UsersMana extends React.Component {
   callBack = (key, data) => {
     switch (key) {
       case 'DEL_ITEM':
-        deleteCustomer(data.item.id).then(res => {
-           this.data.rows.splice(data.index, 1)
-this.statusNotify = true
-this.title = 0
-setTimeout(() => {
-          this.statusNotify = false
-        }, 2000)
-        }).catch(res =>{
-          this.statusNotify = true
-this.title = 1
-setTimeout(() => {
-          this.statusNotify = false
-        }, 2000)
-        })
+        deleteCustomer(data.item.id)
+          .then(res => {
+            this.data.rows.splice(data.index, 1)
+            this.statusNotify = true
+            this.title = 0
+            setTimeout(() => {
+              this.statusNotify = false
+            }, 2000)
+          })
+          .catch(res => {
+            this.statusNotify = true
+            this.title = 1
+            setTimeout(() => {
+              this.statusNotify = false
+            }, 2000)
+          })
 
         break
       case 'NEXT_PAGE':
@@ -110,30 +112,32 @@ setTimeout(() => {
         this.isSearch = false
         this.search = {
           name: '',
-      phone: '',
-      email: '',
-      role: ''
+          phone: '',
+          email: '',
+          role: ''
         }
         this.getUsers(this.page, this.limit)
 
         break
-        case 'CHANGE_ROLE':
- this.data.rows[data.data.index].role = data.role
-updateCustomer(this.data.rows[data.data.index]).then(res => {
-console.log(JSON.stringify(res))
+      case 'CHANGE_ROLE':
+        this.data.rows[data.data.index].role = data.role
+        updateCustomer(this.data.rows[data.data.index])
+          .then(res => {
+            console.log(JSON.stringify(res))
 
-        this.statusNotify = true
-this.title = 0
-setTimeout(() => {
-          this.statusNotify = false
-        }, 2000)
-        }).catch(res =>{
-          this.statusNotify = true
-this.title = 1
-setTimeout(() => {
-          this.statusNotify = false
-        }, 2000)
-        })
+            this.statusNotify = true
+            this.title = 0
+            setTimeout(() => {
+              this.statusNotify = false
+            }, 2000)
+          })
+          .catch(res => {
+            this.statusNotify = true
+            this.title = 1
+            setTimeout(() => {
+              this.statusNotify = false
+            }, 2000)
+          })
         break
 
       default:
@@ -157,23 +161,21 @@ setTimeout(() => {
               callBack={this.callBack}
             />
           ) : (
-            <LoadComponent />
+            <div style={{ minHeight: '100vh' }}>
+              <LoadComponent />
+            </div>
           )}
-            {this.statusNotify ? (
-              <div
-                className={
-                  this.title == 0
-                    ? 'alert alert-success'
-                    : 'alert alert-false'
-                }
-                role="alert"
-                style={{ position: 'fixed', top: 100, right: 20 }}
-              >
-                {this.title == 0
-                  ? 'Thành công !'
-                  : 'Không thành công !'}
-              </div>
-            ) : null}
+          {this.statusNotify ? (
+            <div
+              className={
+                this.title == 0 ? 'alert alert-success' : 'alert alert-false'
+              }
+              role="alert"
+              style={{ position: 'fixed', top: 100, right: 20 }}
+            >
+              {this.title == 0 ? 'Thành công !' : 'Không thành công !'}
+            </div>
+          ) : null}
         </div>
       </div>
     )

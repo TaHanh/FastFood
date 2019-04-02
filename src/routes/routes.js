@@ -1,4 +1,4 @@
-const routes = require('next-routes')();
+const routes = require('next-routes')()
 
 routes
   .add({ name: 'index', pattern: '/', page: 'Index' })
@@ -33,6 +33,12 @@ routes
     pattern: '/admin/detail-order',
     page: 'DetailOrderMana'
   })
+  .add({
+    name: 'Dashboard',
+    pattern: '/admin/dashboard',
+    page: 'Dashboard'
+  })
+
   .add({ name: 'Products', pattern: '/products', page: 'Products' })
   .add({ name: 'ProductsF', pattern: '/products/:id', page: 'Products' })
   .add({
@@ -41,8 +47,10 @@ routes
     page: 'DetailProduct'
   })
   .add({ name: 'Order', pattern: '/order', page: 'Order' })
-  .add({ name: 'login', pattern: '/login', page: 'Login' })
-  .add({ name: 'LoginAdmin', pattern: '/admin/login', page: 'LoginAdmin' })
-  .add({ name: 'signup', pattern: '/signup', page: 'SignUp' });
+  .add({ name: 'Profile', pattern: '/user/profile', page: 'Profile' })
 
-module.exports = routes;
+  .add({ name: 'LoginAdmin', pattern: '/admin/login', page: 'LoginAdmin' })
+  .add({ name: 'login', pattern: '/login', page: 'Login' })
+  .add({ name: 'signup', pattern: '/signup', page: 'SignUp' })
+
+module.exports = routes

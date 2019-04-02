@@ -1,43 +1,48 @@
-import React from 'react';
-import { observable } from 'mobx';
-import { inject, observer } from 'mobx-react';
-import { Link, Router } from '../../routes/routes';
-import { intentPageString, getPathName, intentPage } from '../../utils/RouterUtils';
-import '../general/style.scss';
-import './header.scss';
+import React from 'react'
+import { observable } from 'mobx'
+import { inject, observer } from 'mobx-react'
+import { Link, Router } from '../../routes/routes'
+import {
+  intentPageString,
+  getPathName,
+  intentPage
+} from '../../utils/RouterUtils'
+import '../general/style.scss'
+import './header.scss'
 @inject('store')
 @observer
 export default class HeaderComponent extends React.Component {
-  @observable isRender = false;
-  @observable path = '';
+  @observable isRender = false
+  @observable path = ''
   constructor(props) {
-    super(props);
+    super(props)
   }
   componentDidMount() {
-    this.path = getPathName();
-    this.isRender = true;
+    this.path = getPathName()
+    this.isRender = true
     if (localStorage.getItem('userFF')) {
-      console.log(JSON.parse(localStorage.userFF));
-      this.props.store.user = JSON.parse(localStorage.userFF);
+      console.log(JSON.parse(localStorage.userFF))
+      this.props.store.user = JSON.parse(localStorage.userFF)
+    }
+    if (localStorage.getItem('myCartFF')) {
+      this.props.store.myCart = JSON.parse(localStorage.myCartFF)
     }
   }
   delMyProduct = data => {
-    this.props.store.myCart.splice(data.index, 1);
-    localStorage['myCartFF'] = JSON.stringify(this.props.store.myCart);
-  };
+    this.props.store.myCart.splice(data.index, 1)
+    localStorage['myCartFF'] = JSON.stringify(this.props.store.myCart)
+  }
   render() {
     return (
       <div className="row justify-content-between header w-100 font">
         <div className="col-10">
           <nav className="navbar navbar-expand-lg navbar-light">
-            <Link route="/">
-              <a className="navbar-brand colorWhite p-0">
-                <img
-                  style={{ width: 100, height: 60, objectFit: 'contain' }}
-                  src="../../static/images/logo.png"
-                />
-              </a>
-            </Link>
+            <a className="navbar-brand colorWhite p-0" href="/">
+              <img
+                style={{ width: 100, height: 60, objectFit: 'contain' }}
+                src="../../static/images/logo.png"
+              />
+            </a>
             <button
               className="navbar-toggler"
               type="button"
@@ -72,7 +77,10 @@ export default class HeaderComponent extends React.Component {
                             {item.name}
                           </a>
                         </Link>
-                        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <div
+                          className="dropdown-menu"
+                          aria-labelledby="navbarDropdown"
+                        >
                           {item.children.map((e, i) => {
                             return (
                               <Link
@@ -82,11 +90,11 @@ export default class HeaderComponent extends React.Component {
                               >
                                 <a className="dropdown-item">{e.name}</a>
                               </Link>
-                            );
+                            )
                           })}
                         </div>
                       </li>
-                    );
+                    )
                   }
                   return (
                     <Link href={item.directional}>
@@ -101,7 +109,7 @@ export default class HeaderComponent extends React.Component {
                         {item.name}
                       </a>
                     </Link>
-                  );
+                  )
                 })}
               </ul>
             </div>
@@ -111,7 +119,10 @@ export default class HeaderComponent extends React.Component {
           {this.path == '/login' || this.path == '/signup' ? null : (
             <div className="row">
               <div className="col-4">
-                <div className="cart float-left" style={{ width: 30, position: 'relative' }}>
+                <div
+                  className="cart float-left"
+                  style={{ width: 30, position: 'relative' }}
+                >
                   <img
                     src="../../static/images/shopping-cart-2.png"
                     className="pt-2 cursor"
@@ -127,7 +138,11 @@ export default class HeaderComponent extends React.Component {
                       top: 5
                     }}
                   >
-                    <small>{this.props.store.myCart ? this.props.store.myCart.length : 0}</small>
+                    <small>
+                      {this.props.store.myCart
+                        ? this.props.store.myCart.length
+                        : 0}
+                    </small>
                   </span>
                   {this.props.store.myCart.length > 0 ? (
                     <div className="myCart font">
@@ -160,7 +175,10 @@ export default class HeaderComponent extends React.Component {
                                     height: '35px',
                                     objectFit: 'cover'
                                   }}
-                                  src={item.image[0] || '../../static/images/logo.png'}
+                                  src={
+                                    item.image[0] ||
+                                    '../../static/images/logo.png'
+                                  }
                                 />
                               </div>
                               <div className="col-7">
@@ -179,17 +197,19 @@ export default class HeaderComponent extends React.Component {
                                 <br />
                                 <small>
                                   {item.typeSize
-                                    ? item.typeSize.find(e => e.status == true).name
+                                    ? item.typeSize.find(e => e.status == true)
+                                        .name
                                     : null}
                                 </small>
                               </div>
                               <div className="col-3 px-0 mb-2">
                                 <p className="mb-0">
-                                  {item.price}đ <small> x {item.amount || 1}</small>
+                                  {item.price}đ{' '}
+                                  <small> x {item.amount || 1}</small>
                                 </p>
                                 <button
                                   onClick={() => {
-                                    this.delMyProduct({ item, index });
+                                    this.delMyProduct({ item, index })
                                   }}
                                   className="cursor colorWhite mt-1"
                                   style={{ backgroundColor: 'red' }}
@@ -198,7 +218,7 @@ export default class HeaderComponent extends React.Component {
                                 </button>
                               </div>
                             </div>
-                          );
+                          )
                         })}
                       </div>
                       <div className="row justify-content-end mx-3 my-2">
@@ -320,7 +340,7 @@ export default class HeaderComponent extends React.Component {
                   <button
                     class="btn btn-outline-light"
                     onClick={() => {
-                      intentPage('/login');
+                      intentPage('/login')
                     }}
                   >
                     Đăng nhập
@@ -331,6 +351,6 @@ export default class HeaderComponent extends React.Component {
           )}
         </div>
       </div>
-    );
+    )
   }
 }

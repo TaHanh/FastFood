@@ -1,32 +1,32 @@
-import React from 'react';
-import { Link, Router } from '../../routes/routes';
-import './login.scss';
+import React from 'react'
+import { Link, Router } from '../../routes/routes'
+import './login.scss'
 
-import GoogleLogin from 'react-google-login';
-import { inject, observer } from 'mobx-react';
-import { observable } from 'mobx';
-import LoadCheckComponent from '../general/LoadCheckComponent';
+import GoogleLogin from 'react-google-login'
+import { inject, observer } from 'mobx-react'
+import { observable } from 'mobx'
+import LoadCheckComponent from '../general/LoadCheckComponent'
 @observer
 export default class LoginComponent extends React.Component {
   @observable user = {
     email: '',
     password: ''
-  };
+  }
   constructor(props) {
-    super(props);
+    super(props)
   }
   componentDidMount() {}
 
   changeInput = event => {
-    const { value, name } = event.target;
-    const newState = this.user;
-    newState[name] = value;
-    this.user = newState;
+    const { value, name } = event.target
+    const newState = this.user
+    newState[name] = value
+    this.user = newState
     // this.setState(newState)
-  };
+  }
 
   render() {
-    const { message } = this.props;
+    const { message } = this.props
 
     return (
       <div id="login" style={{ height: '100vh' }}>
@@ -50,7 +50,7 @@ export default class LoginComponent extends React.Component {
                   onChange={this.changeInput}
                   onKeyPress={({ charCode }) => {
                     if (charCode === 13) {
-                      this.props.callBack('LogIn', this.user);
+                      this.props.callBack('LogIn', this.user)
                     }
                   }}
                 />
@@ -66,24 +66,23 @@ export default class LoginComponent extends React.Component {
                   onChange={this.changeInput}
                   onKeyPress={({ charCode }) => {
                     if (charCode === 13) {
-                      this.props.callBack('LogIn', this.user);
+                      this.props.callBack('LogIn', this.user)
                     }
                   }}
                 />
                 <p className="error font">{message}</p>
-                
+
                 <button
                   className="btn-login btn-login-res mb-0"
                   onClick={() => this.props.callBack('LogIn', this.user)}
                 >
-                {this.props.load ? <LoadCheckComponent /> : ' ĐĂng Nhập'}
-                 
+                  {this.props.load ? <LoadCheckComponent /> : ' ĐĂng Nhập'}
                 </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    );
+    )
   }
 }

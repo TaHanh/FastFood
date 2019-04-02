@@ -39,8 +39,9 @@ export const getCustomer = id => {
 }
 export const getCustomerByEmail = email => {
   return new Promise((resolve, reject) => {
-    const url = `${Config.api.host.base}${Config.api.path.base.customers}${'/check-email/' +
-    email}`
+    const url = `${Config.api.host.base}${
+      Config.api.path.base.customers
+    }${'/check-email/' + email}`
     return Alamofire.request(url, 'GET', {}, {})
       .then(response => {
         resolve(response)

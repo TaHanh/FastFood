@@ -8,6 +8,12 @@ export const unixToTime = time => {
 export const unixToDateMonthYear = time => {
   return moment(new Date(time * 1000)).format('YYYY-MM-DD')
 }
+export const unixToMonth = time => {
+  return moment(new Date(time * 1000)).format('MM')
+}
+export const unixToYear = time => {
+  return moment(new Date(time * 1000)).format('YYYY')
+}
 export function longTimeToDay(time) {
   return moment(new Date(time * 1000)).format('YYYY-MM-DD')
 }

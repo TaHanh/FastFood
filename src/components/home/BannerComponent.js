@@ -28,49 +28,51 @@ export default class BannerComponent extends React.Component {
             left: 0,
             width: '100%',
             height: 300,
-            backgroundColor: 'rgba(0, 0, 0, 0.2)'
+            backgroundColor: 'rgba(0, 0, 0, 0.1)'
           }}
         >
-          <div
-            className="row w-100 justify-content-center limit"
-            style={{ position: 'absolute', top: '30%', left: 0 }}
-          >
-            <div className="col-12 text-center">
-              <h3 className="colorWhite py-3">
-                Logo - Đặt hàng nhanh chóng - Chất lượng tuyệt vời
-              </h3>
-            </div>
-            <div className="col-6">
-              <input
-                className="w-100 input borderR p-2"
-                type="text"
-                placeholder="Bạn tìm gì ?"
-                style={{ height: 40 }}
-                value={this.textSearch}
-                onChange={e => {
-                  this.textSearch = e.target.value
-                }}
-                onKeyPress={({ charCode }) => {
-                  if (charCode === 13) {
+          <div className="limit">
+            <div
+              className="row w-100 justify-content-center"
+              style={{ position: 'absolute', top: '30%', left: 0 }}
+            >
+              <div className="col-12 text-center">
+                <h3 className="colorWhite py-3">
+                  Logo - Đặt hàng nhanh chóng - Chất lượng tuyệt vời
+                </h3>
+              </div>
+              <div className="col-6">
+                <input
+                  className="w-100 input borderR p-2"
+                  type="text"
+                  placeholder="Bạn tìm gì ?"
+                  style={{ height: 40 }}
+                  value={this.textSearch}
+                  onChange={e => {
+                    this.textSearch = e.target.value
+                  }}
+                  onKeyPress={({ charCode }) => {
+                    if (charCode === 13) {
+                      this.props.callBack('SEARCH', this.textSearch)
+                    }
+                  }}
+                />
+              </div>
+              <div className="col-2">
+                <button
+                  onClick={() => {
                     this.props.callBack('SEARCH', this.textSearch)
-                  }
-                }}
-              />
-            </div>
-            <div className="col-2">
-              <button
-                onClick={() => {
-                  this.props.callBack('SEARCH', this.textSearch)
-                }}
-                className="btn-search borderR w-100 bgDefault colorWhite cursor"
-                style={{
-                  height: '40px',
-                  lineHeight: '40px',
-                  fontWeight: 'bold'
-                }}
-              >
-                TÌM KIẾM
-              </button>
+                  }}
+                  className="btn-search borderR w-100 bgDefault colorWhite cursor"
+                  style={{
+                    height: '40px',
+                    lineHeight: '40px',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  TÌM KIẾM
+                </button>
+              </div>
             </div>
           </div>
         </div>
