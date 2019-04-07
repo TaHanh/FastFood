@@ -47,18 +47,14 @@ export default class DetailUserComponent extends React.Component {
     return (
       <div className="py-4 detail-product">
         <div className="px-4 font">
-          <h5 className="mb-3">{this.data.userName != '' ? this.data.userName : this.data.name}</h5>
-
           <div className="row  align-items-center">
             <div className="col-8">
-
-               <div className="row align-items-center mb-3">
+              <div className="row align-items-center mb-3">
                 <div className="col-3 px-0">
-                 <span className="font">Tên người dùng</span>
-
+                  <span className="font">Tên người dùng</span>
                 </div>
                 <div className="col-8">
-                <input
+                  <input
                     name="name"
                     type="text"
                     value={this.data.name}
@@ -68,34 +64,32 @@ export default class DetailUserComponent extends React.Component {
                     className="w-75 form-control font"
                     style={{}}
                   />
-
                 </div>
               </div>
-               <div className="row align-items-center mb-3 ">
-                    <div className="col-3 px-0">
-                      <span className="font">Email</span>
-                    </div>
-                    <div className="col-8">
-                      <input
-                        name="email"
-                        type="text"
-                        value={this.data.email}
-                        className="w-75 form-control font"
-                        style={{}}
-                        onChange={e => {
-                          this.changeInput(e)
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                     <div className="row align-items-center mb-3">
+              <div className="row align-items-center mb-3 ">
                 <div className="col-3 px-0">
-                 <span className="font">Số điện thoại</span>
-
+                  <span className="font">Email</span>
                 </div>
                 <div className="col-8">
-                <input
+                  <input
+                    name="email"
+                    type="text"
+                    value={this.data.email}
+                    className="w-75 form-control font"
+                    style={{}}
+                    onChange={e => {
+                      this.changeInput(e)
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="row align-items-center mb-3">
+                <div className="col-3 px-0">
+                  <span className="font">Số điện thoại</span>
+                </div>
+                <div className="col-8">
+                  <input
                     name="phone"
                     type="text"
                     value={this.data.phone}
@@ -105,80 +99,83 @@ export default class DetailUserComponent extends React.Component {
                     className="w-75 form-control font"
                     style={{}}
                   />
-
                 </div>
               </div>
               <div className="row align-items-center mb-3">
                 <div className="col-3 px-0">
-                 <span className="font">Phân quyền</span>
-
+                  <span className="font">Phân quyền</span>
                 </div>
                 <div className="col-8">
-            <select
+                  <select
                     type="text"
                     className="w-75 custom-select font"
                     name="role"
                     onChange={e => {
-                      this.changeInput(e);
+                      this.changeInput(e)
                     }}
                   >
-                    <option selected={this.data.role == 'customer' ? true : false} value="customer">
-                     Khách hàng
+                    <option
+                      selected={this.data.role == 'customer' ? true : false}
+                      value="customer"
+                    >
+                      Khách hàng
                     </option>
-                    <option selected={this.data.role == 'employee' ? true : false} value="employee">
-                    Nhân viên
+                    <option
+                      selected={this.data.role == 'employee' ? true : false}
+                      value="employee"
+                    >
+                      Nhân viên
                     </option>
-                     <option selected={this.data.role == 'admin' ? true : false} value="admin">
+                    <option
+                      selected={this.data.role == 'admin' ? true : false}
+                      value="admin"
+                    >
                       Quản trị
                     </option>
                   </select>
-
                 </div>
               </div>
-              {this.data.role !== 'customer' ? <div>
- <div className="row align-items-center mb-3">
-                <div className="col-3 px-0">
-                 <span className="font">Tên đăng nhập</span>
-
+              {this.data.role !== 'customer' ? (
+                <div>
+                  {/* <div className="row align-items-center mb-3">
+                    <div className="col-3 px-0">
+                      <span className="font">Tên đăng nhập</span>
+                    </div>
+                    <div className="col-8">
+                      <input
+                        name="userName"
+                        type="text"
+                        value={this.data.userName}
+                        onChange={e => {
+                          this.changeInput(e)
+                        }}
+                        className="w-75 form-control font"
+                        style={{}}
+                      />
+                    </div>
+                  </div> */}
+                  <div className="row align-items-center mb-3">
+                    <div className="col-3 px-0">
+                      <span className="font">Mật khẩu</span>
+                    </div>
+                    <div className="col-8">
+                      <input
+                        name="password"
+                        type="text"
+                        value={this.data.password}
+                        onChange={e => {
+                          this.changeInput(e)
+                        }}
+                        className="w-75 form-control font"
+                        style={{}}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="col-8">
-                <input
-                    name="userName"
-                    type="text"
-                    value={this.data.userName}
-                    onChange={e => {
-                      this.changeInput(e)
-                    }}
-                    className="w-75 form-control font"
-                    style={{}}
-                  />
-
-                </div>
-              </div>
-               <div className="row align-items-center mb-3">
-                <div className="col-3 px-0">
-                 <span className="font">Mật khẩu</span>
-
-                </div>
-                <div className="col-8">
-                <input
-                    name="password"
-                    type="text"
-                    value={this.data.password}
-                    onChange={e => {
-                      this.changeInput(e)
-                    }}
-                    className="w-75 form-control font"
-                    style={{}}
-                  />
-
-                </div>
-              </div>
-                </div> :  null }
-
+              ) : null}
             </div>
             <div className="col-4">
-               {/*<img
+              {/*<img
 
             className="cursor rounded-circle border border-secondary "
             style={{ width: 100, height: 100, }}
@@ -186,42 +183,43 @@ export default class DetailUserComponent extends React.Component {
           />*/}
             </div>
           </div>
-           <div className="row  align-items-center mb-3">
+          <div className="row  align-items-center mb-3">
             <div className="col-2">
               <span className="font">Địa chỉ</span>
             </div>
             <div className="col-10">
               <input
-                    name="address"
-                    type="text"
-                    value={this.data.address}
-                    onChange={e => {
-                      this.changeInput(e)
-                    }}
-                    className="w-75 form-control font"
-                    style={{}}
-                  />
-
-              </div>
+                name="address"
+                type="text"
+                value={this.data.address}
+                onChange={e => {
+                  this.changeInput(e)
+                }}
+                className="w-75 form-control font"
+                style={{}}
+              />
             </div>
-{ this.data.id ? <div><div className="row align-items-center mb-3">
-                  <div className="col-2">
-                   <span className="font">Số lần mua hàng</span>
-
-                  </div>
-                  <div className="col-8">
-                 <span>{this.data.type}</span>
-                  </div>
+          </div>
+          {this.data.id ? (
+            <div>
+              <div className="row align-items-center mb-3">
+                <div className="col-2">
+                  <span className="font">Số lần mua hàng</span>
                 </div>
-                <div className="row align-items-center mb-3">
-                  <div className="col-2">
-                   <span className="font">Ngày tạo tài khoản</span>
-
-                  </div>
-                  <div className="col-8">
-                 <span>{this.data.createdAt}</span>
-                  </div>
-                </div> </div> : null}
+                <div className="col-8">
+                  <span>{this.data.type}</span>
+                </div>
+              </div>
+              <div className="row align-items-center mb-3">
+                <div className="col-2">
+                  <span className="font">Ngày tạo tài khoản</span>
+                </div>
+                <div className="col-8">
+                  <span>{this.data.createdAt}</span>
+                </div>
+              </div>{' '}
+            </div>
+          ) : null}
           <div className="row justify-content-center mb-4 pr-5">
             {this.data.id != undefined && this.data.id != '' ? (
               <button

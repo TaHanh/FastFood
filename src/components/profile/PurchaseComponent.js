@@ -3,8 +3,7 @@ import { observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import { Link, Router } from '../../routes/routes'
 import LoadComponent from '../general/LoadComponent'
-import ItemProductComponent from '../products/ItemProductComponent'
-import './order.scss'
+import './profile.scss'
 
 @inject('store')
 @observer
@@ -19,13 +18,15 @@ export default class PurchaseComponent extends React.Component {
     {
       name: 'Đang giao',
       key: 'ordering'
-    },{
+    },
+    {
       name: 'Đã nhận',
       key: 'receive'
-    },{
+    },
+    {
       name: 'Đã hủy',
       key: 'cancel'
-    },
+    }
   ]
   @observable user = {}
   @observable total = 0
@@ -49,31 +50,45 @@ export default class PurchaseComponent extends React.Component {
     // alert(JSON.stringify(this.data));
     this.user[name] = value
   }
-  changeData = (key) => {
-  
-  }
+  changeData = key => {}
   render() {
     return (
       <div className="purchase w-100">
-      <div>
-        <ul className="nav">
-          {this.list.map(l => {
-            return <li onClick={()=>{
-this.changeData(item.key)
-            }}>{l.name}</li>
-          })}
-         
+        <div>
+          <ul className="nav">
+            {this.list.map(l => {
+              return (
+                <li
+                  onClick={() => {
+                    this.changeData(item.key)
+                  }}
+                >
+                  {l.name}
+                </li>
+              )
+            })}
           </ul>
-      </div>
-        {this.isRender ? this.data && this.data.length > 0 ? (
-         <div>
-           {this.data.map(e =>{
-             return <div>name</div>
-           })}
-           </div>
-        ) : <div style={{}}>
-          <img src="../../static/pen.png" style={{width: '100px', height: '100px',     objectFit: 'contain'}} />
-        </div> : (
+        </div>
+        {this.isRender ? (
+          this.data && this.data.length > 0 ? (
+            <div>
+              {this.data.map(e => {
+                return <div>name</div>
+              })}
+            </div>
+          ) : (
+            <div style={{}}>
+              <img
+                src="../../static/pen.png"
+                style={{
+                  width: '100px',
+                  height: '100px',
+                  objectFit: 'contain'
+                }}
+              />
+            </div>
+          )
+        ) : (
           <LoadComponent />
         )}
       </div>

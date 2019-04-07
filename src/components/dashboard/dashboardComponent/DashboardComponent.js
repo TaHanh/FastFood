@@ -79,14 +79,21 @@ export default class DashboardComponent extends React.Component {
   }
   componentDidMount() {}
   render() {
-    const { timeNow, order, usersNew } = this.props
+    const {
+      timeNow,
+      order,
+      usersNew,
+      usersFriendly,
+      employee,
+      custommer
+    } = this.props
     return (
       <div className="dashboard">
         <div className="row">
           <div className="col-lg-3 col-sm-6 col-12">
             <div className="one">
               <h5>Tổng doanh thu tháng {timeNow} </h5>
-              <div className="number">12</div>
+              <div className="number">{order.totalMoney}</div>
               <select
                 onChange={e => {
                   this.months.map(m => {
@@ -115,11 +122,11 @@ export default class DashboardComponent extends React.Component {
               <div className="row two-user">
                 <div className="col-6">
                   <p>Khách hàng</p>
-                  <b>54</b>
+                  <b>{custommer}</b>
                 </div>
                 <div className="col-6">
                   <p>Hệ thống</p>
-                  <b>54</b>
+                  <b>{employee}</b>
                 </div>
               </div>
             </div>
@@ -127,13 +134,15 @@ export default class DashboardComponent extends React.Component {
           <div className="col-lg-3 col-sm-6 col-12">
             <div className="three">
               <h5>Tổng số sản phẩm </h5>
-              <div className="number">12</div>
+              <div className="number">
+                {this.props.store.dataProducts.length}
+              </div>
             </div>
           </div>
           <div className="col-lg-3 col-sm-6 col-12">
             <div className="four">
               <h5>Tổng số đơn hàng </h5>
-              <div className="number">12</div>
+              <div className="number">{order.totalIndex}</div>
               <select
                 onChange={e => {
                   this.months.map(m => {
@@ -165,7 +174,7 @@ export default class DashboardComponent extends React.Component {
                   {usersNew.map(user => {
                     return (
                       <p>
-                        <a href={'/admin/detail-user' + user._id}>
+                        <a href={'/admin/detail-user?id=' + user.id}>
                           {user.email} - {user.role} <br /> {user.createdAt}
                         </a>
                       </p>
@@ -176,6 +185,16 @@ export default class DashboardComponent extends React.Component {
               <div className="col-lg-6 col-12 pr-0">
                 <div className="left">
                   <h5>Khách hàng thân thiết</h5>
+                  {usersFriendly.map(user => {
+                    return (
+                      <p>
+                        <a href={'/admin/detail-user?id=' + user.id}>
+                          {user.email} - {user.type} <br />
+                          {user.name}
+                        </a>
+                      </p>
+                    )
+                  })}
                 </div>
               </div>
             </div>
@@ -185,9 +204,11 @@ export default class DashboardComponent extends React.Component {
               <h5>Đơn hàng chưa xử lý</h5>
               <div className="number">
                 {12 > 0 ? (
-                  <span style={{ color: 'red' }}>12</span>
+                  <span style={{ color: 'red' }}>{order.statusOrder.wait}</span>
                 ) : (
-                  <span style={{ color: '#000' }}>12</span>
+                  <span style={{ color: '#000' }}>
+                    {order.statusOrder.wait}
+                  </span>
                 )}
               </div>
             </div>
@@ -196,23 +217,21 @@ export default class DashboardComponent extends React.Component {
               <div className="number">
                 {' '}
                 {12 > 0 ? (
-                  <span style={{ color: 'blue' }}>12</span>
+                  <span style={{ color: 'blue' }}>{order.statusShip.wait}</span>
                 ) : (
-                  <span style={{ color: '#000' }}>12</span>
+                  <span style={{ color: '#000' }}>{order.statusShip.wait}</span>
                 )}
               </div>
             </div>
 
             <div className="right">
               <p>
-                <b>Đơn hàng bị hủy</b> :<span>12</span>
+                <b>Đơn hàng bị hủy</b> :<span>{order.statusOrder.cancel}</span>
               </p>
               <p>
-                <b>Giao hàng bị hủy</b> :<span>12</span>
+                <b>Giao hàng bị hủy</b> :<span>{order.statusShip.cancel}</span>
               </p>
             </div>
-
-            <div className="right" />
           </div>
         </div>
       </div>

@@ -17,14 +17,14 @@ export default class ItemProductComponent extends React.Component {
     return (
       <div className="product-item w-100 m-auto text-center">
         <div className="product-item-cover">
-          <Link href={{ pathname: '/detail-products', query: { id: item.id } }}>
+          <a href={'/detail-products?id=' + item.id}>
             <img src={item.image[0] || '../../static/images/logo.png'} />
-          </Link>
+          </a>
         </div>
         <div className="text-center px-1">
-          <Link href={{ pathname: '/detail-products', query: { id: item.id } }}>
+          <a href={'/detail-products?id=' + item.id}>
             <p className="my-2">{item.name}</p>
-          </Link>
+          </a>
           <p className="mb-1" style={{ color: 'red' }}>
             {item.price}đ
           </p>

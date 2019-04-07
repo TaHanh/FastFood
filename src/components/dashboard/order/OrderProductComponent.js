@@ -18,16 +18,13 @@ class Item extends React.Component {
           //   callBack('CLICK_ITEM', { index, item });
           // }}
         >
-          <Link
+          <a
             href={{ pathname: '/admin/detail-order', query: { id: item.id } }}
+            className="colorDefault cursor"
+            style={{ textDecoration: 'none' }}
           >
-            <a
-              className="colorDefault cursor"
-              style={{ textDecoration: 'none' }}
-            >
-              {item.id}
-            </a>
-          </Link>
+            {item.id}
+          </a>
         </td>
 
         <td>

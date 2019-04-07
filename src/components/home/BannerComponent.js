@@ -19,7 +19,7 @@ export default class BannerComponent extends React.Component {
       <div className="banner w-100 font" style={{ position: 'relative' }}>
         <img
           style={{ width: '100%', height: 300, objectFit: 'cover' }}
-          src="../../static/images/bannerHome.jpg"
+          src="../../static/images/bannerHome9.jpg"
         />
         <div
           style={{
@@ -27,8 +27,8 @@ export default class BannerComponent extends React.Component {
             top: 0,
             left: 0,
             width: '100%',
-            height: 300,
-            backgroundColor: 'rgba(0, 0, 0, 0.1)'
+            height: 300
+            // backgroundColor: 'rgba(0, 0, 0, 0.1)'
           }}
         >
           <div className="limit">
@@ -37,8 +37,8 @@ export default class BannerComponent extends React.Component {
               style={{ position: 'absolute', top: '30%', left: 0 }}
             >
               <div className="col-12 text-center">
-                <h3 className="colorWhite py-3">
-                  Logo - Đặt hàng nhanh chóng - Chất lượng tuyệt vời
+                <h3 className="py-3" style={{ color: 'black' }}>
+                  Fast Food - Đặt hàng nhanh chóng - Chất lượng tuyệt vời
                 </h3>
               </div>
               <div className="col-6">

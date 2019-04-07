@@ -11,13 +11,13 @@ body {
     cursor: pointer;
   }
   .colorDefault {
-    color: #4ea950 !important;
+    color: #ff4b4a !important;
   }
   .colorBlack {
     color: #000 !important;
   }
   .bgDefault {
-    background: #4ea950;
+    background: #ff4b4a;
   }
   .borderR {
     border-radius: 5px;
@@ -255,8 +255,8 @@ body {
     margin-left: -10px;
     border-radius: 100%;
     background: #3cb371;
-    box-shadow: 0 -15px 0 0 rgba(255, 255, 255, 0.15), 0 -10px 0 0 rgba(255, 255, 255, 0.1),
-      0 -5px 0 0 rgba(255, 255, 255, 0.05);
+    box-shadow: 0 -15px 0 0 rgba(255, 255, 255, 0.15),
+      0 -10px 0 0 rgba(255, 255, 255, 0.1), 0 -5px 0 0 rgba(255, 255, 255, 0.05);
   }
 
   .circle {
@@ -343,7 +343,8 @@ body {
     }
     75%,
     100% {
-      box-shadow: 0 -15px 0 0 rgba(255, 255, 255, 0.15), 0 -10px 0 0 rgba(255, 255, 255, 0.1),
+      box-shadow: 0 -15px 0 0 rgba(255, 255, 255, 0.15),
+        0 -10px 0 0 rgba(255, 255, 255, 0.1),
         0 -5px 0 0 rgba(255, 255, 255, 0.05);
       transform: translatey(30px);
       opacity: 0;
@@ -379,7 +380,8 @@ body {
     }
     75%,
     100% {
-      box-shadow: 0 -15px 0 0 rgba(255, 255, 255, 0.15), 0 -10px 0 0 rgba(255, 255, 255, 0.1),
+      box-shadow: 0 -15px 0 0 rgba(255, 255, 255, 0.15),
+        0 -10px 0 0 rgba(255, 255, 255, 0.1),
         0 -5px 0 0 rgba(255, 255, 255, 0.05);
       -webkit-transform: translatey(30px);
       opacity: 0;

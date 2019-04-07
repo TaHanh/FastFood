@@ -117,11 +117,9 @@ export default class LoginComponent extends React.Component {
               <p>
                 Bạn chưa có tài khoản?
                 <br className="d-lg-none d-block" />
-                <Link route="/signup">
-                  <a href="" className="sign-dn ml-1">
+                  <a href="/signup" className="sign-dn ml-1">
                     Đăng ký ngay nào !
                   </a>
-                </Link>
               </p>
 
               {/* <p className="forget">

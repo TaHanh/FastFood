@@ -28,17 +28,13 @@ class Item extends React.Component {
         </td>
         <td>
           {' '}
-          <Link
-            href={{ pathname: '/admin/detail-user', query: { id: item.id } }}
-          >
-          <img
-
-            className="cursor rounded-circle border border-secondary "
-            style={{ width: 30, height: 30, }}
-            src={item.avatar || '../../../static/images/ava.jpg'}
-          />
-
-          </Link>{' '}
+          <a href={{ pathname: '/admin/detail-user', query: { id: item.id } }}>
+            <img
+              className="cursor rounded-circle border border-secondary "
+              style={{ width: 30, height: 30 }}
+              src={item.avatar || '../../../static/images/ava.jpg'}
+            />
+          </a>{' '}
         </td>
         <td
           className=""
@@ -46,37 +42,38 @@ class Item extends React.Component {
           //   callBack('CLICK_ITEM', { index, item });
           // }}
         >
-          <Link
+          <a
             href={{ pathname: '/admin/detail-user', query: { id: item.id } }}
+            className="colorDefault cursor"
+            style={{ textDecoration: 'none' }}
           >
-            <a
-              className="colorDefault cursor"
-              style={{ textDecoration: 'none' }}
-            >
-              {item.userName ? (
-                <span>
-                  {item.userName} <br />
-                </span>
-              ) : null}
-              {item.name ? item.name : null}
-            </a>
-          </Link>
+            {item.userName ? (
+              <span>
+                {item.userName} <br />
+              </span>
+            ) : null}
+            {item.name ? item.name : null}
+          </a>
         </td>
         <td>{item.phone || ''}</td>
         <td>{item.email || ''}</td>
         <td>
-        <span className="colorDefault cursor"  data-toggle="modal"
+          <span
+            className="colorDefault cursor"
+            data-toggle="modal"
             data-target="#changeRoleModalCenter"
             onClick={() => {
               this.props.clickRole({ item, index }, item.role)
-            }}>
-          {item.role && item.role == 'customer'
-            ? 'Khách hàng'
-            : item.role == 'employee'
-            ? 'Nhân viên'
-            : item.role == 'admin'
-            ? 'Admin'
-            : ''}</span>
+            }}
+          >
+            {item.role && item.role == 'customer'
+              ? 'Khách hàng'
+              : item.role == 'employee'
+              ? 'Nhân viên'
+              : item.role == 'admin'
+              ? 'Admin'
+              : ''}
+          </span>
         </td>
 
         <td>{item.password ? <span>Thay đổi mật khẩu</span> : null}</td>
@@ -145,11 +142,13 @@ export default class ListUserComponent extends React.Component {
           <div className="py-4 font">
             <div className="px-5">
               <button className="bgDefault  p-2 px-3 rounded cursor">
-                <Link route="/admin/detail-user">
-                  <a className="colorWhite" style={{ textDecoration: 'none' }}>
-                    Thêm người dùng
-                  </a>
-                </Link>
+                <a
+                  href="/admin/detail-user"
+                  className="colorWhite"
+                  style={{ textDecoration: 'none' }}
+                >
+                  Thêm người dùng
+                </a>
               </button>
               <div className="row pt-4">
                 <div className="col-6 px-0">
@@ -224,13 +223,17 @@ export default class ListUserComponent extends React.Component {
                         </option>
                         <option
                           value="customer"
-                          selected={this.search.role == 'customer' ? true : false}
+                          selected={
+                            this.search.role == 'customer' ? true : false
+                          }
                         >
                           Khách hàng
                         </option>
                         <option
                           value="employee"
-                          selected={this.search.role == 'employee' ? true : false}
+                          selected={
+                            this.search.role == 'employee' ? true : false
+                          }
                         >
                           Nhân viên{' '}
                         </option>
@@ -320,12 +323,11 @@ export default class ListUserComponent extends React.Component {
                 role="document"
               >
                 <div className="modal-content">
-
                   <div className="modal-body pt-5 pb-4 text-center">
                     Bạn có chắc chắn muốn xóa tài khoản người dùng này !
                   </div>
                   <div className="modal-footer">
-                   <button
+                    <button
                       onClick={() => {
                         this.props.callBack('DEL_ITEM', this.clickItem)
                       }}
@@ -342,14 +344,12 @@ export default class ListUserComponent extends React.Component {
                     >
                       Hủy
                     </button>
-
                   </div>
                 </div>
               </div>
             </div>
 
-
-             <div
+            <div
               ref="myModal"
               className="modal fade"
               id="changeRoleModalCenter"
@@ -363,33 +363,61 @@ export default class ListUserComponent extends React.Component {
                 role="document"
               >
                 <div className="modal-content">
-
                   <div className="modal-body row pt-4 px-4">
-
                     <div className="col-6 mb-3">
-                    <input id="customer" value="customer" name="role" type="radio" checked={this.role == 'customer' ? true : false} onChange={e => {
+                      <input
+                        id="customer"
+                        value="customer"
+                        name="role"
+                        type="radio"
+                        checked={this.role == 'customer' ? true : false}
+                        onChange={e => {
                           this.role = e.target.value
-                        }} />
-                     <label className="ml-2 mb-0" for="customer">Khách hàng</label>
-                  </div>
-                  <div className="col-6 mb-3">
-                    <input id="employee" value="employee" name="role" type="radio" checked={this.role == 'employee' ? true : false} onChange={e => {
+                        }}
+                      />
+                      <label className="ml-2 mb-0" for="customer">
+                        Khách hàng
+                      </label>
+                    </div>
+                    <div className="col-6 mb-3">
+                      <input
+                        id="employee"
+                        value="employee"
+                        name="role"
+                        type="radio"
+                        checked={this.role == 'employee' ? true : false}
+                        onChange={e => {
                           this.role = e.target.value
-                        }} />
-                     <label className="ml-2 mb-0" for="employee">Nhân viên</label>
-                  </div>
-                  <div className="col-6">
-                    <input id="admin" value="admin" name="role" type="radio" checked={this.role == 'admin' ? true : false} onChange={e => {
+                        }}
+                      />
+                      <label className="ml-2 mb-0" for="employee">
+                        Nhân viên
+                      </label>
+                    </div>
+                    <div className="col-6">
+                      <input
+                        id="admin"
+                        value="admin"
+                        name="role"
+                        type="radio"
+                        checked={this.role == 'admin' ? true : false}
+                        onChange={e => {
                           this.role = e.target.value
-                        }} />
-                     <label className="ml-2 mb-0" for="admin">Quản trị</label>
-                  </div>
+                        }}
+                      />
+                      <label className="ml-2 mb-0" for="admin">
+                        Quản trị
+                      </label>
+                    </div>
                   </div>
                   <div className="modal-footer">
-                   <button
-                   data-dismiss="modal"
+                    <button
+                      data-dismiss="modal"
                       onClick={() => {
-                      this.props.callBack('CHANGE_ROLE',{role: this.role, data: this.clickItem} )
+                        this.props.callBack('CHANGE_ROLE', {
+                          role: this.role,
+                          data: this.clickItem
+                        })
                       }}
                       data-dismiss="modal"
                       type="button"
@@ -404,7 +432,6 @@ export default class ListUserComponent extends React.Component {
                     >
                       Hủy
                     </button>
-
                   </div>
                 </div>
               </div>

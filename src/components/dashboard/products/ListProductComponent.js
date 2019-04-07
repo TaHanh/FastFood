@@ -32,16 +32,13 @@ class Item extends React.Component {
           //   callBack('CLICK_ITEM', { index, item });
           // }}
         >
-          <Link
+          <a
             href={{ pathname: '/admin/detail-product', query: { id: item.id } }}
+            className="colorDefault cursor"
+            style={{ textDecoration: 'none' }}
           >
-            <a
-              className="colorDefault cursor"
-              style={{ textDecoration: 'none' }}
-            >
-              {item.name || ''}
-            </a>
-          </Link>
+            {item.name || ''}
+          </a>
         </td>
         <td> {item.highlight == 0 ? 'true' : 'false'} </td>
         <td style={{}}>
@@ -158,11 +155,13 @@ export default class ListProductComponent extends React.Component {
           <div className="py-4 font">
             <div className="px-5">
               <button className="bgDefault  p-2 px-3 rounded cursor">
-                <Link route="/admin/detail-product">
-                  <a className="colorWhite" style={{ textDecoration: 'none' }}>
-                    Thêm món
-                  </a>
-                </Link>
+                <a
+                  href="/admin/detail-product"
+                  className="colorWhite"
+                  style={{ textDecoration: 'none' }}
+                >
+                  Thêm món
+                </a>
               </button>
               <div className="row pt-4">
                 <div className="col-6 px-0">
@@ -329,12 +328,11 @@ export default class ListProductComponent extends React.Component {
                 role="document"
               >
                 <div className="modal-content">
-
                   <div className="modal-body pt-5 pb-4 text-center">
                     Bạn có chắc chắn muốn xóa sản phẩm này !
                   </div>
                   <div className="modal-footer">
-                   <button
+                    <button
                       onClick={() => {
                         this.props.callBack('DEL_ITEM', this.clickItem)
                       }}
@@ -351,7 +349,6 @@ export default class ListProductComponent extends React.Component {
                     >
                       Hủy
                     </button>
-
                   </div>
                 </div>
               </div>

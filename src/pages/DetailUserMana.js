@@ -33,7 +33,6 @@ export default class DetailUserMana extends React.Component {
   }
   constructor(props) {
     super(props)
-
   }
   componentDidMount() {
     let pathName = getPathName()
@@ -49,26 +48,29 @@ export default class DetailUserMana extends React.Component {
         this.data = res
 
         this.isRender = true
-        console.log( JSON.stringify(this.data))
+        console.log(JSON.stringify(this.data))
       })
     } else {
       this.isRender = true
     }
-
   }
   callBack = (key, data) => {
-
     switch (key) {
       case 'ADD_IMG':
         break
       case 'UPDATE_USER':
-        if(data.role != 'customer' ) {
-          if (data.name == '' || data.phone == ''|| data.email == ''|| data.userName == ''|| data.password == '')
-          return alert('Bạn phải nhập đầy đủ thông tin')
-      } else {
-        if (data.name == '' || data.phone == '' )
-          return alert('Bạn phải nhập đầy đủ thông tin')
-      }
+        if (data.role != 'customer') {
+          if (
+            data.name == '' ||
+            data.phone == '' ||
+            data.email == '' ||
+            data.password == ''
+          )
+            return alert('Bạn phải nhập đầy đủ thông tin')
+        } else {
+          if (data.name == '' || data.phone == '')
+            return alert('Bạn phải nhập đầy đủ thông tin')
+        }
         updateCustomer(data).then(res => {
           if (res) {
             this.titleAddCart = 1
@@ -81,23 +83,27 @@ export default class DetailUserMana extends React.Component {
         })
         break
 
-         case 'CREATE_USER':
-         if(data.role != 'customer' ) {
-          if (data.name == '' || data.phone == ''|| data.email == ''|| data.userName == ''|| data.password == '')
-          return alert('Bạn phải nhập đầy đủ thông tin')
-      } else {
-        if (data.name == '' || data.phone == '' )
-          return alert('Bạn phải nhập đầy đủ thông tin')
-      }
-
-
+      case 'CREATE_USER':
+        if (data.role != 'customer') {
+          if (
+            data.name == '' ||
+            data.phone == '' ||
+            data.email == '' ||
+            data.password == ''
+          )
+            return alert('Bạn phải nhập đầy đủ thông tin')
+        } else {
+          if (data.name == '' || data.phone == '')
+            return alert('Bạn phải nhập đầy đủ thông tin')
+        }
+        data.type = 0
         createCustomer(data).then(res => {
           this.titleAddCart = 0
-            this.statusAddCart = true
-            setTimeout(() => {
-              this.statusAddCart = false
-            }, 1000)
-              console.log(JSON.stringify(res))
+          this.statusAddCart = true
+          setTimeout(() => {
+            this.statusAddCart = false
+          }, 1000)
+          console.log(JSON.stringify(res))
         })
 
         break

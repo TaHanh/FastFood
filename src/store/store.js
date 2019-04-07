@@ -152,14 +152,18 @@ class Store {
 
   @action
   getAllProductsAPI(callBack) {
-    getAllProducts().then(res => {
-      if (res) {
-        this.dataProducts = res.rows
-        callBack(this.dataProducts)
-      } else {
-        console.log(res)
-      }
-    })
+    if (this.dataProducts.length > 0) {
+      callBack(this.dataProducts)
+    } else {
+      getAllProducts().then(res => {
+        if (res) {
+          this.dataProducts = res.rows
+          callBack(this.dataProducts)
+        } else {
+          console.log(res)
+        }
+      })
+    }
   }
 
   @action

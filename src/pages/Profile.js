@@ -14,6 +14,7 @@ import { getAllCustomers, createCustomer } from '../api/Customer'
 import { createOrder } from '../api/Order'
 import * as moment from 'moment'
 import { unitTimeNow, unixToTime } from '../utils/convertTime'
+import HeaderComponent from '../components/header/HeaderComponent'
 @inject('store')
 @observer
 export default class Profile extends React.Component {
@@ -126,7 +127,12 @@ export default class Profile extends React.Component {
   }
   render() {
     return this.isRender ? (
-      <div>
+      <div style={{ backgroundColor: '#f5f5f5' }}>
+        {/* <div style={{ height: '80px', background: 'lightgreen' }}>
+          {' '} */}
+          <HeaderComponent />
+        {/* </div> */}
+
         <div className="row">
           <div className="col-2">
             <MenuProfileComponent />

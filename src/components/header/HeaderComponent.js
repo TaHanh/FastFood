@@ -37,9 +37,9 @@ export default class HeaderComponent extends React.Component {
       <div className="row justify-content-between header w-100 font">
         <div className="col-10">
           <nav className="navbar navbar-expand-lg navbar-light">
-            <a className="navbar-brand colorWhite p-0" href="/">
+            <a className="navbar-brand p-0" href="/">
               <img
-                style={{ width: 100, height: 60, objectFit: 'contain' }}
+                style={{ width: 'auto', height: '35px', objectFit: 'contain' }}
                 src="../../static/images/logo.png"
               />
             </a>
@@ -60,36 +60,34 @@ export default class HeaderComponent extends React.Component {
                   if (item.children && item.children.length > 0) {
                     return (
                       <li className="menu" style={{ position: 'relative' }}>
-                        <Link href={item.directional}>
-                          <a
-                            key={index}
-                            className={
-                              item.active
-                                ? 'nav-link cursor colorDefault dropdown-toggle'
-                                : 'nav-link cursor colorWhite dropdown-toggle'
-                            }
-                            id="navbarDropdown"
-                            role="button"
-                            data-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                          >
-                            {item.name}
-                          </a>
-                        </Link>
+                        <a
+                          href={item.directional}
+                          key={index}
+                          className={
+                            item.active
+                              ? 'nav-link cursor colorDefault dropdown-toggle'
+                              : 'nav-link cursor colorBlack dropdown-toggle'
+                          }
+                          id="navbarDropdown"
+                          role="button"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          {item.name}
+                        </a>
                         <div
                           className="dropdown-menu"
                           aria-labelledby="navbarDropdown"
                         >
                           {item.children.map((e, i) => {
                             return (
-                              <Link
-                                href={{
-                                  pathname: '/products/' + e.key
-                                }}
+                              <a
+                                href={'/products/' + e.key}
+                                className="dropdown-item"
                               >
-                                <a className="dropdown-item">{e.name}</a>
-                              </Link>
+                                {e.name}
+                              </a>
                             )
                           })}
                         </div>
@@ -97,18 +95,17 @@ export default class HeaderComponent extends React.Component {
                     )
                   }
                   return (
-                    <Link href={item.directional}>
-                      <a
-                        key={index}
-                        className={
-                          item.active
-                            ? 'nav-link cursor colorDefault '
-                            : 'nav-link cursor colorWhite '
-                        }
-                      >
-                        {item.name}
-                      </a>
-                    </Link>
+                    <a
+                      href={item.directional}
+                      key={index}
+                      className={
+                        item.active
+                          ? 'nav-link cursor colorDefault '
+                          : 'nav-link cursor colorBlack '
+                      }
+                    >
+                      {item.name}
+                    </a>
                   )
                 })}
               </ul>
@@ -124,7 +121,7 @@ export default class HeaderComponent extends React.Component {
                   style={{ width: 30, position: 'relative' }}
                 >
                   <img
-                    src="../../static/images/shopping-cart-2.png"
+                    src="../../static/images/shopping-cart-1.png"
                     className="pt-2 cursor"
                     style={{ width: '100%' }}
                   />
@@ -222,14 +219,14 @@ export default class HeaderComponent extends React.Component {
                         })}
                       </div>
                       <div className="row justify-content-end mx-3 my-2">
-                        <Link route="/order">
+                        <a href="/order">
                           <button
                             className="cursor colorWhite px-3  d-block bgDefault float-right"
                             style={{ height: '35px' }}
                           >
                             Xem giỏ hàng
                           </button>
-                        </Link>
+                        </a>
                       </div>
                     </div>
                   ) : (
@@ -324,13 +321,19 @@ export default class HeaderComponent extends React.Component {
                       >
                         <ul class="nav flex-column">
                           <li class="nav-item">
-                            <a class="nav-link">Hồ sơ</a>
+                            <a href="/user/profile" class="nav-link">
+                              Hồ sơ
+                            </a>
                           </li>
                           <li class="nav-item">
-                            <a class="nav-link">Lịch sử giao dịch</a>
+                            <a href="/user/purchase" class="nav-link">
+                              Lịch sử giao dịch
+                            </a>
                           </li>
                           <li class="nav-item">
-                            <a class="nav-link">Đăng xuất</a>
+                            <a href="/login" class="nav-link">
+                              Đăng xuất
+                            </a>
                           </li>
                         </ul>
                       </div>
@@ -338,7 +341,7 @@ export default class HeaderComponent extends React.Component {
                   </div>
                 ) : (
                   <button
-                    class="btn btn-outline-light"
+                    class="btn btn-outline-dark"
                     onClick={() => {
                       intentPage('/login')
                     }}

@@ -18,34 +18,34 @@ class Item extends React.Component {
   render() {
     const { item, index } = this.props
     return (
-      <div className="col-3 product-item-home mb-4" style={{ height: 200 }}>
+      <div className="col-2 product-item-home mb-4" style={{ height: 200 }}>
         <div
           className="product-item-cover "
           style={{ height: '100%', width: '100%' }}
         >
-          <Link href={{ pathname: '/detail-products', query: { id: item.id } }}>
+          <a href={'/detail-products?id=' + item.id}>
             <img
               className="cursor"
               src={item.image[0] || '../../static/images/bannerHome.jpg'}
               style={{ objectFit: 'cover', height: '100%', width: '100%' }}
             />
-          </Link>
+          </a>
         </div>
         <div className="row product-item-txt w-100 pr-4">
-          <div className="col-8">
+          <div className="col-12">
             <h5 className="font-weight-bold  cursor">
-              <Link
-                href={{ pathname: '/detail-products', query: { id: item.id } }}
+              <a
+                href={'/detail-products?id=' + item.id}
+                className="colorWhite"
+                style={{ textDecoration: 'none' }}
               >
-                <a className="colorWhite" style={{ textDecoration: 'none' }}>
-                  {item.name}
-                </a>
-              </Link>
+                {item.name}
+              </a>
             </h5>
 
             <p className="colorWhite">{item.price}đ</p>
           </div>
-          <div className="col-4 align-self-center text-right">
+          {/* <div className="col-4 align-self-center text-right">
             <button
               className="cursor"
               onClick={() => {
@@ -61,9 +61,8 @@ class Item extends React.Component {
                 src="../../static/images/icons-add-shopping-cart.png"
                 title="Thêm vào giỏ"
               />
-              {/* <small className="">Thêm vào giỏ</small> */}
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     )
@@ -90,59 +89,116 @@ export default class HomeComponent extends React.Component {
             <div className="limit">
               <div className="mx-4 my-3">
                 {this.props.dataFavourite.length > 0 ? (
-                  <h4 style={{ color: 'red' }}>Sản phẩm được yêu thích</h4>
+                  <h4 style={{ color: '' }}>Hôm nay ăn gì ?</h4>
                 ) : null}
               </div>
-              <div className="row pb-3">
+              <div className="row">
                 {this.props.dataFavourite.map((e, i) => {
-                  if (i < 8)
+                  if (i < 6)
                     return (
                       <Item item={e} index={i} callBack={this.props.callBack} />
                     )
                 })}
-              </div>
+              </div>{' '}
+              {this.props.dataFavourite.length > 6 ? (
+                <a
+                  href="/"
+                  className="text-right w-100 d-inline-block px-3"
+                  style={{ color: 'gray' }}
+                >
+                  Xem thêm
+                </a>
+              ) : null}
             </div>
 
             <div className="limit">
-              {this.data.map((item, index) => {
-                if (item.data && item.data.length > 0)
-                  return (
-                    <div>
-                      <div className="mx-4">
-                        <h4>{item.title}</h4>
-                        <hr className="my-1" />
-                      </div>
-                      <div className="row py-3">
-                        {item.data.map((e, i) => {
-                          if (i < 10)
-                            return (
-                              <div className="p-3" style={{ width: '20%' }}>
-                                <ItemProductComponent
-                                  item={e}
-                                  index={i}
-                                  callBack={this.props.callBack}
-                                />
-                              </div>
-                            )
-                          return null
-                        })}
-                      </div>
-                      {item.data.length > 10 ? (
-                        <div className="view-more mr-5 mb-4 text-right">
-                          <Link
-                            route={'/products/' + item.query}
-                            // href={{ pathname: item.query.pathname, query: { name: item.query.name } }}
+              <div className="row">
+                <div className="col-2">
+                  <h5 class="navbar-brand">
+                    <b>Danh mục</b>
+                  </h5>
+                  <ul class="nav flex-column">
+                    {this.props.store.dataCategory.map(e => {
+                      return (
+                        <li class="nav-item">
+                          <a class="nav-link px-0 " href={'/products/' + e.key}>
+                            {e.name}
+                          </a>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                  <h5 class="navbar-brand">
+                    <b>Gợi ý tìm kiếm</b>
+                  </h5>
+                  <ul class="nav flex-column">
+                    {[
+                      {
+                        name: 'Trà sữa',
+                        key: ''
+                      }
+                    ].map(e => {
+                      return (
+                        <li class="nav-item">
+                          <a
+                            class="nav-link px-0 "
+                            href={'/products?search=' + e.key}
                           >
-                            <a>
-                              <i className="colorDefault">Xem thêm</i>
-                            </a>
-                          </Link>
+                            {e.name}
+                          </a>
+                        </li>
+                      )
+                    })}
+                    <li class="nav-item">
+                      <i className="d-block my-3">Khoảng giá</i>
+                      <p className="">
+                        <span className="float-left w-25">Từ </span>{' '}
+                        <input type="text" className="form-control w-75" />
+                      </p>
+                      <p>
+                        <span className="float-left w-25">Đến </span>{' '}
+                        <input type="text" className="form-control w-75" />
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+                <div className="col-10">
+                  {this.data.map((item, index) => {
+                    if (item.data && item.data.length > 0)
+                      return (
+                        <div>
+                          <div className="mx-4">
+                            <h4>{item.title}</h4>
+                            <hr className="my-1" />
+                          </div>
+                          <div className="row py-3">
+                            {item.data.map((e, i) => {
+                              if (i < 10)
+                                return (
+                                  <div className="p-3" style={{ width: '20%' }}>
+                                    <ItemProductComponent
+                                      item={e}
+                                      index={i}
+                                      callBack={this.props.callBack}
+                                    />
+                                  </div>
+                                )
+                              return null
+                            })}
+                          </div>
+                          {item.data.length > 10 ? (
+                            <div className="view-more mr-5 mb-4 text-right">
+                              <a href={'/products/' + item.query}>
+                                <i className="colorDefault">Xem thêm</i>
+                              </a>
+                            </div>
+                          ) : null}
                         </div>
-                      ) : null}
-                    </div>
-                  )
-                return null
-              })}
+                      )
+                    return null
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         ) : (

@@ -5,7 +5,7 @@ routes
   .add({
     name: 'IndexMana',
     pattern: '/admin',
-    page: 'ProductsMana'
+    page: 'Dashboard'
   })
   .add({
     name: 'ProductsMana',
@@ -48,6 +48,12 @@ routes
   })
   .add({ name: 'Order', pattern: '/order', page: 'Order' })
   .add({ name: 'Profile', pattern: '/user/profile', page: 'Profile' })
+  .add({
+    name: 'ProfileAddress',
+    pattern: '/user/address',
+    page: 'ProfileAddress'
+  })
+  .add({ name: 'Purchase', pattern: '/user/purchase', page: 'Purchase' })
 
   .add({ name: 'LoginAdmin', pattern: '/admin/login', page: 'LoginAdmin' })
   .add({ name: 'login', pattern: '/login', page: 'Login' })

@@ -216,9 +216,7 @@ export default class SignUpComponent extends React.Component {
                   </button>
                   Bạn đã có tài khoản?
                   <span className="forget">
-                    <Link route="/login">
-                      <a href=""> Đăng nhập ngay!</a>
-                    </Link>
+                      <a href="/login"> Đăng nhập ngay!</a>
                   </span>
                 </div>
               </div>

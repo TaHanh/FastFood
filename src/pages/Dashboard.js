@@ -11,7 +11,7 @@ import {
   unitTimeNow,
   unixToDateMonthYear
 } from '../utils/convertTime'
-import LoadComponent from '../components/general/LoadCheckComponent'
+import LoadComponent from '../components/general/LoadComponent'
 import MenuLeftComponent from '../components/dashboard/MenuLeftComponent'
 import DashboardComponent from '../components/dashboard/dashboardComponent/DashboardComponent'
 @inject('store')
@@ -34,14 +34,31 @@ export default class Dashboard extends React.Component {
   }
   @observable timeNow = ''
   @observable usersNew = []
+  @observable usersFriendly = []
+  @observable users = []
+  @observable usersFriendly = []
+  @observable custommer = 0
+  @observable employee = 0
   constructor(props) {
     super(props)
   }
   componentDidMount() {
     this.timeNow = unixToMonth(unitTimeNow())
+    this.props.store.getAllProductsAPI(() => {})
     this.props.store.getAllCustomerAPI(res => {
       console.log(res)
       this.usersNew = res.slice(0, 6)
+      this.usersFriendly = res.sort(function(a, b) {
+        return b.type - a.type
+      })
+      for (let index = 0; index < res.length; index++) {
+        const element = res[index]
+        if (element.role !== 'customer') {
+          this.employee++
+        } else {
+          this.custommer++
+        }
+      }
     })
     this.thongKeDonHang(this.timeNow)
   }
@@ -91,6 +108,9 @@ export default class Dashboard extends React.Component {
               timeNow={this.timeNow}
               order={this.order}
               usersNew={this.usersNew}
+              usersFriendly={this.usersFriendly}
+              custommer={this.custommer}
+              employee={this.employee}
               callBack={this.callBack}
             />
           ) : (

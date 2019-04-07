@@ -67,9 +67,7 @@ export default class ResetPasswordComponent extends React.Component {
 
               <p className="forget">
                 Bạn muốn đăng nhập vào tải khoản khác?
-                <Link route="/log-in">
-                  <a href=""> Đăng nhập ngay!</a>
-                </Link>
+                  <a href="/log-in"> Đăng nhập ngay!</a>
               </p>
             </div>
           </div>

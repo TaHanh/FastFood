@@ -58,7 +58,7 @@ export default class OrderComponent extends React.Component {
                     <tr>
                       <th scope="row">
                         <div className="row">
-                          <Link
+                          <a
                             href={{
                               pathname: '/detail-products',
                               query: { id: item.id }
@@ -77,15 +77,13 @@ export default class OrderComponent extends React.Component {
                                 item.image[0] || '../../static/images/logo.png'
                               }
                             />
-                          </Link>
+                          </a>
                           <div className="">
-                            <Link
-                              href={{
+                           
+                              <a href={{
                                 pathname: '/detail-products',
                                 query: { id: item.id }
                               }}
-                            >
-                              <a
                                 className="cursor colorDefault"
                                 style={{
                                   overflow: 'hidden',
@@ -98,7 +96,6 @@ export default class OrderComponent extends React.Component {
                               >
                                 {item.name}
                               </a>
-                            </Link>
                             <br />
                             <small>Đơn gía : {item.price}đ</small>
                           </div>

@@ -5,10 +5,10 @@ import { Link, Router } from '../../routes/routes'
 import LoadComponent from '../general/LoadComponent'
 import ItemProductComponent from '../products/ItemProductComponent'
 import './profile.scss'
-
+import $ from 'jquery'
 @inject('store')
 @observer
-export default class MenuLeftComponent extends React.Component {
+export default class MenuProfileComponent extends React.Component {
   @observable menuProfile = [
     {
       name: 'Tài khoản của tôi',
@@ -43,11 +43,12 @@ export default class MenuLeftComponent extends React.Component {
   ]
   @observable user = {}
   @observable total = 0
-
+  @observable isRender = false
   constructor(props) {
     super(props)
   }
   componentDidMount() {
+    this.isRender = true
     $('#leftside-navigation .sub-menu > a').click(function(e) {
       $('#leftside-navigation ul ul').slideUp(),
         $(this)
@@ -80,13 +81,17 @@ export default class MenuLeftComponent extends React.Component {
               {this.menuProfile.map((item, index) => {
                 return (
                   <li className={item.active ? 'sub-menu active' : 'sub-menu'}>
-                    <a href={item.path}>
-                      <span>{item.name}</span>
-
-                      {item.children && item.children.length > 0 ? (
+                    {item.children && item.children.length > 0 ? (
+                      <a href="#">
+                        <span>{item.name}</span>
                         <i className="arrow fa fa-angle-right pull-right" />
-                      ) : null}
-                    </a>
+                      </a>
+                    ) : (
+                      <a href={item.path}>
+                        <span>{item.name}</span>
+                      </a>
+                    )}
+
                     {item.children && item.children.length > 0 ? (
                       <ul>
                         {item.children.map((e, i) => {
