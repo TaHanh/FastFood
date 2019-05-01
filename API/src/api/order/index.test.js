@@ -14,7 +14,7 @@ beforeEach(async () => {
 test('POST /orders 201', async () => {
   const { status, body } = await request(app())
     .post(`${apiRoot}`)
-    .send({ name: 'test', description: 'test', statusOrder: 'test', statusShip: 'test', message: 'test', products: 'test', idUser: 'test' })
+    .send({ name: 'test', description: 'test', statusOrder: 'test', statusShip: 'test', message: 'test', products: 'test', idUser: 'test', user: 'test' })
   expect(status).toBe(201)
   expect(typeof body).toEqual('object')
   expect(body.name).toEqual('test')
@@ -24,6 +24,7 @@ test('POST /orders 201', async () => {
   expect(body.message).toEqual('test')
   expect(body.products).toEqual('test')
   expect(body.idUser).toEqual('test')
+  expect(body.user).toEqual('test')
 })
 
 test('GET /orders 200', async () => {
@@ -51,7 +52,7 @@ test('GET /orders/:id 404', async () => {
 test('PUT /orders/:id 200', async () => {
   const { status, body } = await request(app())
     .put(`${apiRoot}/${order.id}`)
-    .send({ name: 'test', description: 'test', statusOrder: 'test', statusShip: 'test', message: 'test', products: 'test', idUser: 'test' })
+    .send({ name: 'test', description: 'test', statusOrder: 'test', statusShip: 'test', message: 'test', products: 'test', idUser: 'test', user: 'test' })
   expect(status).toBe(200)
   expect(typeof body).toEqual('object')
   expect(body.id).toEqual(order.id)
@@ -62,12 +63,13 @@ test('PUT /orders/:id 200', async () => {
   expect(body.message).toEqual('test')
   expect(body.products).toEqual('test')
   expect(body.idUser).toEqual('test')
+  expect(body.user).toEqual('test')
 })
 
 test('PUT /orders/:id 404', async () => {
   const { status } = await request(app())
     .put(apiRoot + '/123456789098765432123456')
-    .send({ name: 'test', description: 'test', statusOrder: 'test', statusShip: 'test', message: 'test', products: 'test', idUser: 'test' })
+    .send({ name: 'test', description: 'test', statusOrder: 'test', statusShip: 'test', message: 'test', products: 'test', idUser: 'test', user: 'test' })
   expect(status).toBe(404)
 })
 

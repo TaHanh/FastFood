@@ -3,28 +3,30 @@ import mongoose, { Schema } from 'mongoose'
 const customerSchema = new Schema(
   {
     name: {
-      type: String
+      type: String,
+      text: true
     },
     avatar: {
       type: String
     },
     phone: {
-      type: String
+      type: String,
+      text: true
     },
     email: {
-      type: String
+      type: String,
+      text: true
     },
     type: {
       type: String
     },
     role: {
-      type: String
+      type: String,
+      text: true
     },
     address: {
-      type: String
-    },
-    userName: {
-      type: String
+      type: String,
+      text: true
     },
     password: {
       type: String
@@ -53,7 +55,7 @@ customerSchema.methods = {
       type: this.type,
       role: this.role,
       address: this.address,
-      userName: this.userName,
+
       password: this.password,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
@@ -69,6 +71,8 @@ customerSchema.methods = {
 }
 
 const model = mongoose.model('Customer', customerSchema)
-
+customerSchema.plugin(require('mongoose-keywords'), {
+  paths: ['name', 'phone', 'email', 'role', 'address']
+})
 export const schema = model.schema
 export default model

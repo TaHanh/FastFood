@@ -14,7 +14,7 @@ beforeEach(async () => {
 test('POST /products 201', async () => {
   const { status, body } = await request(app())
     .post(`${apiRoot}`)
-    .send({ name: 'test', type: 'test', image: 'test', price: 'test', status: 'test', description: 'test', category: 'test', highlight: 'test' })
+    .send({ name: 'test', type: 'test', image: 'test', price: 'test', status: 'test', description: 'test', category: 'test', highlight: 'test', topBuy: 'test' })
   expect(status).toBe(201)
   expect(typeof body).toEqual('object')
   expect(body.name).toEqual('test')
@@ -25,6 +25,7 @@ test('POST /products 201', async () => {
   expect(body.description).toEqual('test')
   expect(body.category).toEqual('test')
   expect(body.highlight).toEqual('test')
+  expect(body.topBuy).toEqual('test')
 })
 
 test('GET /products 200', async () => {
@@ -52,7 +53,7 @@ test('GET /products/:id 404', async () => {
 test('PUT /products/:id 200', async () => {
   const { status, body } = await request(app())
     .put(`${apiRoot}/${product.id}`)
-    .send({ name: 'test', type: 'test', image: 'test', price: 'test', status: 'test', description: 'test', category: 'test', highlight: 'test' })
+    .send({ name: 'test', type: 'test', image: 'test', price: 'test', status: 'test', description: 'test', category: 'test', highlight: 'test', topBuy: 'test' })
   expect(status).toBe(200)
   expect(typeof body).toEqual('object')
   expect(body.id).toEqual(product.id)
@@ -64,12 +65,13 @@ test('PUT /products/:id 200', async () => {
   expect(body.description).toEqual('test')
   expect(body.category).toEqual('test')
   expect(body.highlight).toEqual('test')
+  expect(body.topBuy).toEqual('test')
 })
 
 test('PUT /products/:id 404', async () => {
   const { status } = await request(app())
     .put(apiRoot + '/123456789098765432123456')
-    .send({ name: 'test', type: 'test', image: 'test', price: 'test', status: 'test', description: 'test', category: 'test', highlight: 'test' })
+    .send({ name: 'test', type: 'test', image: 'test', price: 'test', status: 'test', description: 'test', category: 'test', highlight: 'test', topBuy: 'test' })
   expect(status).toBe(404)
 })
 

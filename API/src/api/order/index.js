@@ -1,12 +1,21 @@
-import { Router } from 'express';
-import { middleware as query } from 'querymen';
-import { middleware as body } from 'bodymen';
-import { create, index, show, update, destroy } from './controller';
-import { schema } from './model';
-export Order, { schema } from './model';
+import { Router } from 'express'
+import { middleware as query } from 'querymen'
+import { middleware as body } from 'bodymen'
+import { create, index, show, update, destroy } from './controller'
+import { schema } from './model'
+export Order, { schema } from './model'
 
-const router = new Router();
-const { name, description, statusOrder, statusShip, message, products, idUser } = schema.tree;
+const router = new Router()
+const {
+  name,
+  description,
+  statusOrder,
+  statusShip,
+  message,
+  products,
+  idUser,
+  user
+} = schema.tree
 
 /**
  * @api {post} /orders Create order
@@ -19,15 +28,25 @@ const { name, description, statusOrder, statusShip, message, products, idUser } 
  * @apiParam message Order's message.
  * @apiParam products Order's products.
  * @apiParam idUser Order's idUser.
+ * @apiParam user Order's user.
  * @apiSuccess {Object} order Order's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Order not found.
  */
 router.post(
   '/',
-  body({ name, description, statusOrder, statusShip, message, products, idUser }),
+  body({
+    name,
+    description,
+    statusOrder,
+    statusShip,
+    message,
+    products,
+    idUser,
+    user
+  }),
   create
-);
+)
 
 /**
  * @api {get} /orders Retrieve orders
@@ -41,25 +60,12 @@ router.post(
 router.get(
   '/',
   query({
-    statusShip: {
-      paths: ['statusShip.status']
-    },
-    statusOrder: {
-      paths: ['statusOrder.status']
-    },
-    createdAt: {
-      type: Date,
-      paths: ['createdAt'],
-      operator: '$eq'
-    },
-    updatedAt: {
-      type: Date,
-      paths: ['updatedAt'],
-      operator: '$eq'
-    }
+    user,
+    statusOrder,
+    statusShip
   }),
   index
-);
+)
 
 /**
  * @api {get} /orders/:id Retrieve order
@@ -69,7 +75,8 @@ router.get(
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Order not found.
  */
-router.get('/:id', show);
+
+router.get('/:id', show)
 
 /**
  * @api {put} /orders/:id Update order
@@ -82,15 +89,25 @@ router.get('/:id', show);
  * @apiParam message Order's message.
  * @apiParam products Order's products.
  * @apiParam idUser Order's idUser.
+ * @apiParam user Order's user.
  * @apiSuccess {Object} order Order's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Order not found.
  */
 router.put(
   '/:id',
-  body({ name, description, statusOrder, statusShip, message, products, idUser }),
+  body({
+    name,
+    description,
+    statusOrder,
+    statusShip,
+    message,
+    products,
+    idUser,
+    user
+  }),
   update
-);
+)
 
 /**
  * @api {delete} /orders/:id Delete order
@@ -99,6 +116,6 @@ router.put(
  * @apiSuccess (Success 204) 204 No Content.
  * @apiError 404 Order not found.
  */
-router.delete('/:id', destroy);
+router.delete('/:id', destroy)
 
-export default router;
+export default router

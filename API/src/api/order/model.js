@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose'
 
 const orderSchema = new Schema(
   {
@@ -15,7 +15,8 @@ const orderSchema = new Schema(
           status: { type: Number },
           time: { type: String }
         }
-      ]
+      ],
+      text: true
     },
     statusShip: {
       type: [
@@ -24,7 +25,8 @@ const orderSchema = new Schema(
           status: { type: Number },
           time: { type: String }
         }
-      ]
+      ],
+      text: true
     },
     message: {
       type: String
@@ -38,6 +40,9 @@ const orderSchema = new Schema(
     },
     idUser: {
       type: String
+    },
+    user: {
+      text: true
     }
   },
   {
@@ -45,11 +50,11 @@ const orderSchema = new Schema(
     toJSON: {
       virtuals: true,
       transform: (obj, ret) => {
-        delete ret._id;
+        delete ret._id
       }
     }
   }
-);
+)
 
 orderSchema.methods = {
   view(full) {
@@ -63,20 +68,25 @@ orderSchema.methods = {
       message: this.message,
       products: this.products,
       idUser: this.idUser,
+      user: this.user,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
-    };
+    }
 
     return full
       ? {
           ...view
           // add properties for a full view
         }
-      : view;
+      : view
   }
-};
+}
 
-const model = mongoose.model('Order', orderSchema);
+orderSchema.plugin(require('mongoose-keywords'), {
+  paths: ['statusShip', 'statusOrder', 'idUser']
+})
 
-export const schema = model.schema;
-export default model;
+const model = mongoose.model('Order', orderSchema)
+
+export const schema = model.schema
+export default model

@@ -12,9 +12,21 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     .then(count =>
       Product.find(query, select, cursor).then(products => ({
         count,
-        query,
         rows: products.map(product => product.view())
       }))
+    )
+    .then(success(res))
+    .catch(next);
+
+export const indexTopBuy = ({ querymen: { query, select, cursor } }, res, next) =>
+  Customer.count(query)
+    .then(count =>
+      Customer.find(query, select, cursor)
+        .sort('desc')
+        .then(customers => ({
+          count,
+          rows: customers.map(customer => customer.view())
+        }))
     )
     .then(success(res))
     .catch(next);
@@ -26,6 +38,23 @@ export const show = ({ params }, res, next) =>
     .then(success(res))
     .catch(next);
 
+export const searchProduct = ({ querymen: { query, select, cursor } }, res, next) => {
+  let name = query.name ? query.name + ' ' : '';
+  let category = query.category ? query.category + ' ' : '';
+  let description = query.description ? query.description + ' ' : '';
+  Product.count(query)
+    .then(count =>
+      Product.find({ $text: { $search: name } }, select, cursor).then(
+        products => ({
+          count,
+          query,
+          rows: products.map(product => product.view())
+        })
+      )
+    )
+    .then(success(res))
+    .catch(next);
+};
 export const update = ({ bodymen: { body }, params }, res, next) =>
   Product.findById(params.id)
     .then(notFound(res))

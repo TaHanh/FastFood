@@ -1,48 +1,51 @@
-import mongoose, { Schema } from 'mongoose';
-mongoose.set('useCreateIndex', true);
-// import mongooseKeywords from 'mongoose-keywords';
-const productSchema = new Schema(
-  {
-    name: {
-      type: String
-    },
-    type: {
-      type: []
-    },
-    image: {
-      type: []
-    },
-    price: {
-      type: String
-    },
-    status: {
-      type: Number,
-      default: 0
-    },
-    description: {
-      type: String
-    },
-    category: {
-      type: String
-    },
-    highlight: {
-      type: Number,
-      default: 1
-    }
+import mongoose, { Schema } from 'mongoose'
+
+const productSchema = new Schema({
+  name: {
+    type: String,
+    text: true
   },
-  {
-    timestamps: true,
-    toJSON: {
-      virtuals: true,
-      transform: (obj, ret) => {
-        delete ret._id;
-      }
-    }
+  type: {
+    type: []
+  },
+  image: {
+    type: []
+  },
+  price: {
+    type: String,
+    coordinates: [Number] 
+  },
+  status: {
+    type: Number,
+    text: true
+    // default: 0 có hàng / 1 hết hàng
+  },
+  description: {
+    type: String,
+    text: true
+  },
+  category: {
+    type: String,
+    text: true
+  },
+  highlight: {
+    type: Number
+    // default: 1  nổi bật/ 0 không trong list nổi bật
+  },
+  topBuy: {
+    type: Number,
+    default: 0
   }
-);
+}, {
+  timestamps: true,
+  toJSON: {
+    virtuals: true,
+    transform: (obj, ret) => { delete ret._id }
+  }
+})
 
 productSchema.methods = {
-  view(full) {
+  view (full) {
     const view = {
       // simple view
       id: this.id,
@@ -54,24 +57,19 @@ productSchema.methods = {
       description: this.description,
       category: this.category,
       highlight: this.highlight,
+      topBuy: this.topBuy,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
-    };
+    }
 
-    return full
-      ? {
-          ...view
-          // add properties for a full view
-        }
-      : view;
+    return full ? {
+      ...view
+      // add properties for a full view
+    } : view
   }
-};
+}
 
-productSchema.plugin(require('mongoose-keywords'), {
-  paths: ['name', 'category', 'status']
-});
+const model = mongoose.model('Product', productSchema)
 
-const Model = mongoose.model('Product', productSchema);
-
-export const schema = Model.schema;
-export default Model;
+export const schema = model.schema
+export default model

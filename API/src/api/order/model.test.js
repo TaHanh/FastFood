@@ -3,7 +3,7 @@ import { Order } from '.'
 let order
 
 beforeEach(async () => {
-  order = await Order.create({ name: 'test', description: 'test', statusOrder: 'test', statusShip: 'test', message: 'test', products: 'test', idUser: 'test' })
+  order = await Order.create({ name: 'test', description: 'test', statusOrder: 'test', statusShip: 'test', message: 'test', products: 'test', idUser: 'test', user: 'test' })
 })
 
 describe('view', () => {
@@ -18,6 +18,7 @@ describe('view', () => {
     expect(view.message).toBe(order.message)
     expect(view.products).toBe(order.products)
     expect(view.idUser).toBe(order.idUser)
+    expect(view.user).toBe(order.user)
     expect(view.createdAt).toBeTruthy()
     expect(view.updatedAt).toBeTruthy()
   })
@@ -33,6 +34,7 @@ describe('view', () => {
     expect(view.message).toBe(order.message)
     expect(view.products).toBe(order.products)
     expect(view.idUser).toBe(order.idUser)
+    expect(view.user).toBe(order.user)
     expect(view.createdAt).toBeTruthy()
     expect(view.updatedAt).toBeTruthy()
   })

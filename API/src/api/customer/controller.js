@@ -1,11 +1,21 @@
 import { success, notFound } from '../../services/response/';
 import { Customer } from '.';
 
-export const create = ({ bodymen: { body } }, res, next) =>
+export const create = ({ bodymen: { body } }, res, next) => {
+  // const user = body
+  // bcrypt.hash(user.password, 10, function(err, hash) {
+  //   if (err) {
+  //     return next(err)
+  //   }
+  //   user.password = hash
+  //   next()
+  // })
+
   Customer.create(body)
     .then(customer => customer.view(true))
     .then(success(res, 201))
     .catch(next);
+};
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
   Customer.count(query)
@@ -17,6 +27,35 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     )
     .then(success(res))
     .catch(next);
+
+export const indexNew = ({ querymen: { query, select, cursor } }, res, next) =>
+  Customer.count(query)
+    .then(count =>
+      Customer.find(query, select, cursor)
+        .sort('desc')
+        .then(customers => ({
+          count,
+          rows: customers.map(customer => customer.view())
+        }))
+    )
+    .then(success(res))
+    .catch(next);
+
+export const searchCustomer = ({ querymen: { query, select, cursor } }, res, next) => {
+  let name = query.name ? query.name + ' ' : '';
+  let phone = query.phone ? query.phone + ' ' : '';
+  let email = query.email ? query.email + ' ' : '';
+  let role = query.role ? query.role + ' ' : '';
+  Customer.count(query)
+    .then(count =>
+      Customer.find({ $text: { $search: name } }, select, cursor).then(customers => ({
+        count,
+        rows: customers.map(customer => customer.view())
+      }))
+    )
+    .then(success(res))
+    .catch(next);
+};
 
 export const show = ({ params }, res, next) =>
   Customer.findById(params.id)
