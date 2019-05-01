@@ -13,7 +13,7 @@ class MyApp extends App {
     super(props)
     this.pageContext = getPageContext()
 
-    this.props.mobxStore.initApp()
+    // this.props.mobxStore.initApp()
   }
 
   pageContext = null
@@ -31,7 +31,7 @@ class MyApp extends App {
     return (
       <html>
         <head>
-          <link
+          {/* <link
             href="//use.fontawesome.com/releases/v5.2.0/css/all.css"
             rel="stylesheet"
           />
@@ -46,7 +46,7 @@ class MyApp extends App {
           <link
             href="//stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"
             rel="stylesheet"
-          />
+          /> */}
         </head>
         <Container>
           <Provider store={mobxStore}>

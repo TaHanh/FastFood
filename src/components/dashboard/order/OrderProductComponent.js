@@ -1,40 +1,39 @@
-import React from 'react'
-import { observable } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import { Link, Router } from '../../../routes/routes'
-import './order.scss'
-import moment from 'moment'
-import { unixToTime } from '../../../utils/convertTime'
+import React from 'react';
+import { observable } from 'mobx';
+import { inject, observer } from 'mobx-react';
+import { Link, Router } from '../../../routes/routes';
+import './order.scss';
+import moment from 'moment';
+import { unixToTime } from '../../../utils/convertTime';
 @inject('store')
 @observer
 class Item extends React.Component {
   render() {
-    const { index, item, callBack } = this.props
+    const { index, item, callBack } = this.props;
     return (
       <tr>
-        <td
-          className=""
-          // onClick={() => {
-          //   callBack('CLICK_ITEM', { index, item });
-          // }}
-        >
+        <td className="" style={{ maxWidth: 150, textOverflow: 'ellipsis', overflow: 'hidden' }}>
           <a
-            href={{ pathname: '/admin/detail-order', query: { id: item.id } }}
+            title={item.id}
+            href={'/admin/detail-order?id=' + item.id}
             className="colorDefault cursor"
             style={{ textDecoration: 'none' }}
           >
             {item.id}
           </a>
         </td>
-
-        <td>
-          {item.customer.name}{' '}
-          {item.customer.type == 0 ? (
-            <img src="../../../static/images/icon-christmas-star.png" />
-          ) : null}
+        <td style={{ maxWidth: 150, textOverflow: 'ellipsis', overflow: 'hidden' }}>
+          {item.idUser ? (
+            <a href={'/admin/detail-user?id=' + item.idUser} title={item.idUser ? item.idUser : ''}>
+              {item.idUser}{' '}
+            </a>
+          ) : (
+            'Khách hàng chưa có tài khoản'
+          )}
         </td>
-        <td>{item.customer.phone}</td>
-        <td>{item.customer.address}</td>
+        <td>{item.user.name ? item.user.name : null}</td>
+        <td>{item.user.phone ? item.user.phone : null}</td>
+        <td>{item.user.address ? item.user.address : null}</td>
 
         <td>
           {item.products.map((e, i) => {
@@ -42,15 +41,13 @@ class Item extends React.Component {
               <p className="mb-0">
                 {e.name} - {e.amount}
                 {e.typeSize ? ' - ' : null}
-                {e.typeSize
-                  ? e.typeSize.find(e => e.status == true).name
-                  : null}
+                {e.typeSize ? e.typeSize.find(e => e.status == true).name : null}
                 {/* {e.size.map(size => {
                   return { size };
                 })} */}
                 {/* {JSON.stringify(e.typeSize)} */}
               </p>
-            )
+            );
           })}
         </td>
         <td>{item.message}</td>
@@ -59,24 +56,21 @@ class Item extends React.Component {
             if (e.status == 0) {
               return (
                 <p className="mb-0">
-                  Đang chờ xử lý - {unixToTime(e.time)}{' '}
-                  {e.name != '' ? ' - ' + e.name : null}
+                  Đang chờ xử lý - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
                 </p>
-              )
+              );
             } else if (e.status == 1) {
               return (
                 <p className="mb-0">
-                  Xác nhận - {unixToTime(e.time)}{' '}
-                  {e.name != '' ? ' - ' + e.name : null}
+                  Xác nhận - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
                 </p>
-              )
+              );
             } else {
               return (
                 <p className="mb-0">
-                  Hủy đơn - {unixToTime(e.time)}{' '}
-                  {e.name != '' ? ' - ' + e.name : null}
+                  Hủy đơn - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
                 </p>
-              )
+              );
             }
           })}
         </td>
@@ -85,31 +79,27 @@ class Item extends React.Component {
             if (e.status == 0) {
               return (
                 <p className="mb-0">
-                  Đang giao - {unixToTime(e.time)}{' '}
-                  {e.name != '' ? ' - ' + e.name : null}
+                  Đang giao - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
                 </p>
-              )
+              );
             } else if (e.status == 1) {
               return (
                 <p className="mb-0">
-                  Đã nhận -{unixToTime(e.time)}{' '}
-                  {e.name != '' ? ' - ' + e.name : null}
+                  Đã nhận -{unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
                 </p>
-              )
+              );
             } else if (e.status == 2) {
               return (
                 <p className="mb-0">
-                  Hủy đơn - {unixToTime(e.time)}{' '}
-                  {e.name != '' ? ' - ' + e.name : null}
+                  Hủy đơn - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
                 </p>
-              )
+              );
             } else {
               return (
                 <p className="mb-0">
-                  Đang chờ xử lý - {unixToTime(e.time)}{' '}
-                  {e.name != '' ? ' - ' + e.name : null}
+                  Đang chờ xử lý - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
                 </p>
-              )
+              );
             }
           })}
         </td>
@@ -117,7 +107,7 @@ class Item extends React.Component {
         <td>
           <img
             onClick={() => {
-              callBack('DEL_ITEM', { index, item })
+              callBack('DEL_ITEM', { index, item });
             }}
             className="cursor"
             style={{ width: 25 }}
@@ -125,56 +115,54 @@ class Item extends React.Component {
           />
         </td>
       </tr>
-    )
+    );
   }
 }
 
 @inject('store')
 @observer
 export default class OrderProductComponent extends React.Component {
-  @observable isRender = false
-  @observable data = []
-  @observable search = {}
+  @observable isRender = false;
+  @observable data = [];
+  @observable search = {};
   constructor(props) {
-    super(props)
-    this.data = this.props.data
-    this.search = this.props.search
+    super(props);
+    this.data = this.props.data;
+    this.search = this.props.search;
   }
   componentDidMount() {
-    this.isRender = true
+    this.isRender = true;
   }
   pagination = () => {
-    let pagi = []
+    let pagi = [];
     for (let index = 0; index < this.props.totalPage; index++) {
       if (this.props.page == index + 1) {
         pagi.push(
-          <span className="border bgDefault colorWhite rounded py-1 px-2 mx-1">
-            {index + 1}
-          </span>
-        )
+          <span className="border bgDefault colorWhite rounded py-1 px-2 mx-1">{index + 1}</span>
+        );
       } else {
         pagi.push(
           <span
             className="border border-dark rounded p-1 py-1 px-2 mx-1 cursor"
             onClick={() => {
-              this.props.callBack('NEXT_PAGE', index + 1)
+              this.props.callBack('NEXT_PAGE', index + 1);
             }}
           >
             {index + 1}
           </span>
-        )
+        );
       }
     }
-    return pagi
-  }
+    return pagi;
+  };
   render() {
-    const { callBack } = this.props
+    const { callBack } = this.props;
     return (
       <div>
         {this.isRender ? (
-          <div className="py-4 font">
-            <div className="px-5">
-              <div className="row pt-4">
+          <div className="font">
+            {/*  <div className="px-5">
+             <div className="row pt-4">
                 <div className="col-5 px-0">
                   <div className="row  align-items-center mb-3 ">
                     <div className="col-3 px-0">
@@ -182,11 +170,16 @@ export default class OrderProductComponent extends React.Component {
                     </div>
                     <div className="col-9">
                       <input
+                        name="name"
                         type="text"
                         className="w-75 form-control font"
                         style={{}}
+                        onChange={e => {
+                          this.search.name = e.target.value;
+                        }}
                         onKeyPress={({ charCode }) => {
                           if (charCode === 13) {
+                            callBack('SEARCH', this.search);
                           }
                         }}
                       />
@@ -201,8 +194,12 @@ export default class OrderProductComponent extends React.Component {
                         type="text"
                         className="w-75 form-control font"
                         style={{}}
+                        onChange={e => {
+                          this.search.phone = e.target.value;
+                        }}
                         onKeyPress={({ charCode }) => {
                           if (charCode === 13) {
+                            callBack('SEARCH', this.search);
                           }
                         }}
                       />
@@ -212,40 +209,6 @@ export default class OrderProductComponent extends React.Component {
                 <div className="col-7">
                   <div className="row align-items-center mb-3">
                     <div className="col-3 px-0">
-                      <span className="font">Thời gian</span>
-                    </div>
-                    <div className="col-9 align-items-center">
-                      <div className="float-left w-50" style={{}}>
-                        <span
-                          style={{ lineHeight: '40px' }}
-                          className="float-left pr-2"
-                        >
-                          Từ
-                        </span>{' '}
-                        <input
-                          type="date"
-                          style={{ fontSize: 10 }}
-                          className="w-75 form-control font pr-0"
-                          style={{}}
-                        />
-                      </div>
-                      <div className="float-left w-50">
-                        <span
-                          style={{ lineHeight: '40px' }}
-                          className="float-left pr-2"
-                        >
-                          Đến
-                        </span>{' '}
-                        <input
-                          type="date"
-                          className="w-75 form-control font pr-0"
-                          style={{}}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row align-items-center mb-3">
-                    <div className="col-3 px-0">
                       <span className="font">Tình trạng</span>
                     </div>
                     <div className="col-8">
@@ -253,39 +216,19 @@ export default class OrderProductComponent extends React.Component {
                         type="text"
                         className="w-75 custom-select font"
                         onChange={e => {
-                          this.search.statusOrder = e.target.value
+                          this.search.statusOrder = e.target.value;
                         }}
                       >
-                        <option
-                          value=""
-                          selected={
-                            this.search.statusOrder == '' ? true : false
-                          }
-                        >
+                        <option value="" selected={this.search.statusOrder == '' ? true : false}>
                           -----
                         </option>
-                        <option
-                          value="0"
-                          selected={
-                            this.search.statusOrder == '0' ? true : false
-                          }
-                        >
+                        <option value="0" selected={this.search.statusOrder == '0' ? true : false}>
                           Đang chờ xử lý
                         </option>
-                        <option
-                          value="1"
-                          selected={
-                            this.search.statusOrder == '1' ? true : false
-                          }
-                        >
+                        <option value="1" selected={this.search.statusOrder == '1' ? true : false}>
                           Xác nhận
                         </option>
-                        <option
-                          value="2"
-                          selected={
-                            this.search.statusOrder == '2' ? true : false
-                          }
-                        >
+                        <option value="2" selected={this.search.statusOrder == '2' ? true : false}>
                           Hủy đơn
                         </option>
                       </select>
@@ -300,45 +243,22 @@ export default class OrderProductComponent extends React.Component {
                         type="text"
                         className="w-75 custom-select font"
                         onChange={e => {
-                          this.search.statusShip = e.target.value
+                          this.search.statusShip = e.target.value;
                         }}
                       >
-                        <option
-                          value=""
-                          selected={this.search.statusShip == '' ? true : false}
-                        >
+                        <option value="" selected={this.search.statusShip == '' ? true : false}>
                           -----
                         </option>
-                        <option
-                          value="0"
-                          selected={
-                            this.search.statusShip == '0' ? true : false
-                          }
-                        >
+                        <option value="0" selected={this.search.statusShip == '0' ? true : false}>
                           Đang giao
                         </option>
-                        <option
-                          value="1"
-                          selected={
-                            this.search.statusShip == '1' ? true : false
-                          }
-                        >
+                        <option value="1" selected={this.search.statusShip == '1' ? true : false}>
                           Đã nhận
                         </option>
-                        <option
-                          value="2"
-                          selected={
-                            this.search.statusShip == '2' ? true : false
-                          }
-                        >
+                        <option value="2" selected={this.search.statusShip == '2' ? true : false}>
                           Hủy đơn
                         </option>
-                        <option
-                          value="3"
-                          selected={
-                            this.search.statusShip == '3' ? true : false
-                          }
-                        >
+                        <option value="3" selected={this.search.statusShip == '3' ? true : false}>
                           Đang chờ xử lý
                         </option>
                       </select>
@@ -350,7 +270,7 @@ export default class OrderProductComponent extends React.Component {
                 <button
                   className="bgDefault colorWhite p-2 px-3 mr-3 rounded cursor"
                   onClick={() => {
-                    callBack('SEARCH', this.search)
+                    callBack('SEARCH', this.search);
                   }}
                 >
                   Tìm kiếm
@@ -358,7 +278,7 @@ export default class OrderProductComponent extends React.Component {
                 {this.props.isSearch ? (
                   <button
                     onClick={() => {
-                      callBack('BACK_ALL')
+                      callBack('BACK_ALL');
                     }}
                     className="bgDefault colorWhite p-2 px-3 rounded cursor"
                   >
@@ -366,16 +286,14 @@ export default class OrderProductComponent extends React.Component {
                   </button>
                 ) : null}
               </div>
-            </div>
+            </div> */}
             <div className="w-100" style={{ overflowX: 'scroll' }}>
-              <table
-                className="table table-bordered text-center font"
-                style={{ minWidth: 1500 }}
-              >
+              <table className="table table-bordered text-center font" style={{ minWidth: 1200 }}>
                 <thead className="thead-light">
                   <tr>
-                    <th scope="col">id</th>
-                    <th scope="col">Tên KH</th>
+                    <th scope="col">Mã đơn hàng</th>
+                    <th scope="col">Mã tài khoản</th>
+                    <th scope="col">Tên người nhận</th>
                     <th scope="col">SĐT</th>
                     <th scope="col">Địa chỉ</th>
                     <th scope="col">Sản phẩm</th>
@@ -388,13 +306,9 @@ export default class OrderProductComponent extends React.Component {
                 </thead>
                 <tbody>
                   {this.data.map((item, index) => {
-                    return (
-                      <Item item={item} index={index} callBack={callBack} />
-                    )
+                    return <Item item={item} index={index} callBack={callBack} />;
                   })}
-                  {this.data.length == 0 ? (
-                    <td colSpan="10">Không có sản phẩm nào</td>
-                  ) : null}
+                  {this.data.length == 0 ? <td colSpan="10">Không có sản phẩm nào</td> : null}
                 </tbody>
               </table>
             </div>{' '}
@@ -402,6 +316,6 @@ export default class OrderProductComponent extends React.Component {
           </div>
         ) : null}
       </div>
-    )
+    );
   }
 }

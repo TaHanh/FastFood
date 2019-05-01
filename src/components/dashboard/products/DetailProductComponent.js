@@ -3,81 +3,24 @@ import { observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import { Link, Router } from '../../../routes/routes'
 
-import CKEditor from 'react-ckeditor-component'
+// import CKEditor from 'react-ckeditor-component'
 import './product.scss'
-import './quill.snow.scss'
+// import './quill.snow.scss'
 // import * as ReactQuill from 'react-quill'
-import MultiSelect from '@khanacademy/react-multi-select'
-import ReactSummernote from 'react-summernote'
-import 'bootstrap/js/dist/modal'
-import 'bootstrap/js/dist/dropdown'
-import 'bootstrap/js/dist/tooltip'
+// import MultiSelect from '@khanacademy/react-multi-select'
+// import ReactSummernote from 'react-summernote'
+// import 'bootstrap/js/dist/modal'
+// import 'bootstrap/js/dist/dropdown'
+// import 'bootstrap/js/dist/tooltip'
 import { upLoad } from '../../../api/upLoad'
 
-const Editor = props => {
-  if (typeof window != 'undefined') {
-    const CKEditor = require('@ckeditor/ckeditor5-react')
-    const ClassicEditor = require('@ckeditor/ckeditor5-build-classic')
-
-    function MyCustomUploadAdapterPlugin(editor) {
-      console.log('editor ' + editor)
-    }
-    ClassicEditor.create(document.querySelector('#editor'), {
-      extraPlugins: [MyCustomUploadAdapterPlugin],
-
-      ckfinder: {
-        uploadUrl:
-          '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
-      }
-    })
-      .then()
-      .catch()
-    return (
-      <div>
-        <div className="editor" />
-        <CKEditor
-          editor={ClassicEditor}
-          config={{
-            filebrowserUploadUrl: '/admin/upload/upload_editor_image'
-          }}
-          {...props}
-        />
-      </div>
-    )
-  } else {
-    return ''
-  }
-}
-
-class ItemRenderer extends Component {
-  render() {
-    const { checked, option, onClick } = this.props
-
-    return (
-      <span>
-        <span>{option.label}</span>
-        <input
-          type="checkbox"
-          onChange={onClick}
-          value={option.label}
-          checked={checked}
-          tabIndex="-1"
-          style={{ float: 'right' }}
-        />
-      </span>
-    )
-  }
-}
 @inject('store')
 @observer
 export default class DetailProductComponent extends React.Component {
   @observable typeProduct = []
-  @observable editorTxt =
-    '<img style="width: 100%;" src="https://image.winudf.com/v2/image1/ZnJlZS52cG4udW5ibG9jay5wcm94eS52cG5wcm9fc2NyZWVuXzBfMTU1MDgyNDM2M18wNDQ/screen-0.jpg?h=960&fakeurl=1&type=.jpg" />'
   @observable data = {}
   @observable size = ''
   @observable image = ''
-  @observable CKEditor = ''
   @observable isRender = false
   @observable selected = []
   constructor(props) {
@@ -85,7 +28,7 @@ export default class DetailProductComponent extends React.Component {
     this.data = this.props.data
     this.addImg = React.createRef()
     if (typeof window !== 'undefined') {
-      this.ReactSummernote = require('react-summernote').default
+      // this.ReactSummernote = require('react-summernote').default
     }
   }
   componentDidMount() {
@@ -138,92 +81,92 @@ export default class DetailProductComponent extends React.Component {
   }
   render() {
     const { callBack } = this.props
-    const ReactSummernote = this.ReactSummernote
-    if (typeof window !== 'undefined' && ReactSummernote) {
-      return (
-        <ReactSummernote
-          value="Default value"
-          options={{
-            height: 350,
-            dialogsInBody: true,
-            toolbar: [
-              ['style', ['style']],
-              ['font', ['bold', 'underline', 'clear']],
-              ['fontname', ['fontname']],
-              ['para', ['ul', 'ol', 'paragraph']],
-              ['table', ['table']],
-              ['insert', ['link', 'picture', 'video']],
-              ['view', ['fullscreen', 'codeview']]
-            ]
-          }}
-          onChange={this.onChange}
-        />
-      )
-    } else {
-      return <textarea />
-    }
+    // const ReactSummernote = this.ReactSummernote
+    // if (typeof window !== 'undefined' && ReactSummernote) {
+    //   return (
+    //     <ReactSummernote
+    //       value="Default value"
+    //       options={{
+    //         height: 350,
+    //         dialogsInBody: true,
+    //         toolbar: [
+    //           ['style', ['style']],
+    //           ['font', ['bold', 'underline', 'clear']],
+    //           ['fontname', ['fontname']],
+    //           ['para', ['ul', 'ol', 'paragraph']],
+    //           ['table', ['table']],
+    //           ['insert', ['link', 'picture', 'video']],
+    //           ['view', ['fullscreen', 'codeview']]
+    //         ]
+    //       }}
+    //       onChange={this.onChange}
+    //     />
+    //   )
+    // } else {
+    //   return <textarea />
+    // }
 
-    return (
-      <div>
-        {/* <Editor
-          onInit={editor => {
-            // You can store the "editor" and use when it is needed.
-            console.log('Editor is ready to use!', editor)
-          }}
-          onChange={(event, editor) => {
-            this.editorTxt = editor.getData()
-            console.log({ event, editor })
-          }}
-          onBlur={editor => {
-            console.log('Blur.', editor)
-          }}
-          onFocus={editor => {
-            console.log('Focus.', editor)
-          }}
-        /> */}
-        <ReactSummernote
-          value="Default value"
-          options={{
-            height: 350,
-            dialogsInBody: true,
-            toolbar: [
-              ['style', ['style']],
-              ['font', ['bold', 'underline', 'clear']],
-              ['fontname', ['fontname']],
-              ['para', ['ul', 'ol', 'paragraph']],
-              ['table', ['table']],
-              ['insert', ['link', 'picture', 'video']],
-              ['view', ['fullscreen', 'codeview']]
-            ]
-          }}
-          onChange={e => {
-            console.log(e)
-          }}
-        />
-        <MultiSelect
-          options={[
-            { label: 'Brian Genisio', value: 'Genisio', _id: 'dsfr' },
-            { label: 'John Doe', value: 'John', _id: 'dsfr' },
-            { label: 'Jane Doe', value: 'Jane', _id: 'dsfr' }
-          ]}
-          onSelectedChanged={selected => {
-            this.selected = selected
-            console.log('selected ' + selected)
-          }}
-          selected={this.selected}
-          // valueRenderer={this.valueRenderer}
-          ItemRenderer={ItemRenderer}
-          // isLoading={true}
-          filterOptions={this.filterOptions}
-          overrideStrings={{
-            selectSomeItems: 'SeLeCt SoMe iTeMs...',
-            allItemsAreSelected: 'ALl ItEmS aRe SeLeCtEd',
-            selectAll: 'Chọn tất cả',
-            search: 'Tìm kiếm'
-          }}
-        />
-      </div>
-    )
+    // return (
+    //   <div>
+    //     {/* <Editor
+    //       onInit={editor => {
+    //         // You can store the "editor" and use when it is needed.
+    //         console.log('Editor is ready to use!', editor)
+    //       }}
+    //       onChange={(event, editor) => {
+    //         this.editorTxt = editor.getData()
+    //         console.log({ event, editor })
+    //       }}
+    //       onBlur={editor => {
+    //         console.log('Blur.', editor)
+    //       }}
+    //       onFocus={editor => {
+    //         console.log('Focus.', editor)
+    //       }}
+    //     /> */}
+    //     <ReactSummernote
+    //       value="Default value"
+    //       options={{
+    //         height: 350,
+    //         dialogsInBody: true,
+    //         toolbar: [
+    //           ['style', ['style']],
+    //           ['font', ['bold', 'underline', 'clear']],
+    //           ['fontname', ['fontname']],
+    //           ['para', ['ul', 'ol', 'paragraph']],
+    //           ['table', ['table']],
+    //           ['insert', ['link', 'picture', 'video']],
+    //           ['view', ['fullscreen', 'codeview']]
+    //         ]
+    //       }}
+    //       onChange={e => {
+    //         console.log(e)
+    //       }}
+    //     />
+    //     <MultiSelect
+    //       options={[
+    //         { label: 'Brian Genisio', value: 'Genisio', _id: 'dsfr' },
+    //         { label: 'John Doe', value: 'John', _id: 'dsfr' },
+    //         { label: 'Jane Doe', value: 'Jane', _id: 'dsfr' }
+    //       ]}
+    //       onSelectedChanged={selected => {
+    //         this.selected = selected
+    //         console.log('selected ' + selected)
+    //       }}
+    //       selected={this.selected}
+    //       // valueRenderer={this.valueRenderer}
+    //       ItemRenderer={ItemRenderer}
+    //       // isLoading={true}
+    //       filterOptions={this.filterOptions}
+    //       overrideStrings={{
+    //         selectSomeItems: 'SeLeCt SoMe iTeMs...',
+    //         allItemsAreSelected: 'ALl ItEmS aRe SeLeCtEd',
+    //         selectAll: 'Chọn tất cả',
+    //         search: 'Tìm kiếm'
+    //       }}
+    //     />
+    //   </div>
+    // )
 
     return (
       <div className="py-4 detail-product">
@@ -330,7 +273,7 @@ export default class DetailProductComponent extends React.Component {
                           >
                             ----
                           </option>
-                          ;
+
                           {this.props.store.dataCategory.map((item, index) => {
                             // if (this.data.category.key != undefined) {
                             //   return (
@@ -432,7 +375,7 @@ export default class DetailProductComponent extends React.Component {
                   this.data.image.map((item, index) => {
                     return (
                       <div
-                        className="border cursor mr-2 float-left img-product"
+                        className="border cursor mr-2 mb-2 float-left img-product"
                         style={{
                           width: 100,
                           height: 100,
@@ -467,46 +410,58 @@ export default class DetailProductComponent extends React.Component {
                       </div>
                     )
                   })}
-
-                {/* <img
-                onClick={() => {
-                  this.addImg.current.click();
-                }}
-                className="border cursor"
-                style={{ width: 100, height: 100, objectFit: 'cover' }}
-                src="../../../static/images/add-image.png"
-              />
-              <input
-                style={{ display: 'none' }}
-                type="file"
-                name="upCover"
-                ref={this.addImg}
-                id="input-cover"
-                onChange={event => {
-                  console.log(event.target.files[0]);
-                  upLoad(event).then(res => {
-                    console.log(res, 'restimg');
-                    // if (res.code == 1) {
-                    //   this.data.company.avatar = 'https://local.aib.vn:280/uploads/' + res.data[0];
-                    // }
-                  });
-                }}
-              /> */}
-                <p className="d-inline-block w-50">
+                <div
+                  className="border cursor mr-2 mb-2 float-left img-product"
+                  style={{
+                    width: 100,
+                    height: 100,
+                    position: 'relative'
+                  }}
+                >
+                  <img
+                    onClick={() => {
+                      this.addImg.current.click()
+                    }}
+                    style={{ width: 100, height: 100, objectFit: 'cover' }}
+                    src="../../../static/images/add-image.png"
+                  />
+                </div>
+                <input
+                  style={{ display: 'none' }}
+                  type="file"
+                  name="upCover"
+                  ref={this.addImg}
+                  id="input-cover"
+                  onChange={event => {
+                    console.log(event.target.files[0])
+                    upLoad(event.target.files[0]).then(res => {
+                      console.log(res, 'restimg')
+                      this.image = res.data[0]
+                      this.data.image.push(this.image)
+                      this.image = ''
+                    })
+                  }}
+                />
+                <p className="d-inline-block w-25 ml-3">
                   <input
                     type="text"
-                    className="w-50 form-control font float-left mr-3"
+                    className="w-100 form-control font  mr-3 mb-2"
                     style={{}}
                     value={this.image}
                     name="image"
+                    placeholder="Thêm link ảnh ... "
                     onChange={e => {
                       this.image = e.target.value
                     }}
                   />
                   <button
                     onClick={() => {
-                      this.data.image.push(this.image)
-                      this.image = ''
+                      if(this.image != '') {
+                        this.data.image.push(this.image)
+                         this.image = ''
+                      }
+                      
+                     
                     }}
                     className="bgDefault colorWhite p-2 px-3 rounded cursor"
                   >

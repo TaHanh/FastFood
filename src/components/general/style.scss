@@ -1,5 +1,5 @@
 body {
-  background: #fff;
+  background-color: #fff !important;
   .limit {
     max-width: 1300px;
     margin: auto;
@@ -135,6 +135,21 @@ body {
 }
 
 .footer {
+  background-color: rgb(245, 245, 245);
+  // border-top: 1px solid gray;
+  hr {
+    border: 1px solid gray;
+  }
+  .navbar-brand {
+    color: #ff4b4a;
+  }
+  ul {
+    li {
+      a {
+        color: black;
+      }
+    }
+  }
   .social-icons {
     text-align: right;
   }

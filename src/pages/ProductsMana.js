@@ -5,7 +5,7 @@ import { inject, observer } from 'mobx-react'
 import { getPathName } from '../utils/RouterUtils'
 import { Link, Router } from '../routes/routes'
 import Config from '../config/env'
-import { deleteProduct, queryProduct } from '../api/Product'
+import { deleteProduct, queryProduct, searchProduct } from '../api/Product'
 import MenuLeftComponent from '../components/dashboard/MenuLeftComponent'
 import ListProductComponent from '../components/dashboard/products/ListProductComponent'
 import LoadComponent from '../components/general/LoadComponent'
@@ -48,16 +48,22 @@ export default class ProductsMana extends React.Component {
       }
     })
   }
-  search = (query, data) => {
-    let text = query.toLowerCase()
-    let arr = []
-    data.map(function(item) {
-      let nana = item.name.toLowerCase()
-      if (nana.indexOf(text) != -1) {
-        arr.push(item)
-      }
-    })
-    return arr
+  searchProductByName = (page, limit, query) => {
+    this.isRender = false
+    searchProduct({ page: page, limit: limit, query: query })
+      .then(res => {
+        if (res) {
+          console.log(res)
+          this.data = res
+          this.totalPage = Math.ceil(res.rows.length / this.limit)
+          this.isRender = true
+        }
+      })
+      .catch(err => {
+        this.data = []
+        this.isRender = true
+        console.log(err)
+      })
   }
   callBack = (key, data) => {
     switch (key) {
@@ -83,7 +89,11 @@ export default class ProductsMana extends React.Component {
           `${data.name ? '&name=' + `${data.name}` : ''}` +
           `${data.status ? '&status=' + data.status : ''}` +
           `${data.category ? '&category=' + data.category : ''}`
-        this.getProduct(this.page, this.limit, this.query)
+        if (data.name != '') {
+          this.searchProductByName(this.page, this.limit, data.name)
+        } else {
+          this.getProduct(this.page, this.limit, this.query)
+        }
 
         // console.log(JSON.stringify(q))
         // if (data.name != '') {

@@ -18,8 +18,12 @@ export default class MenuLeftComponent extends React.Component {
   }
   constructor(props) {
     super(props)
+   
   }
   componentDidMount() {
+    this.props.store.checkUser('admin', ()=>{
+    })
+    
     // unixToMonth(unitTime('2019-03-07T09:16:47.737+0000'))
 
     $('#leftside-navigation .sub-menu > a').click(function(e) {
@@ -59,9 +63,24 @@ export default class MenuLeftComponent extends React.Component {
           <div id="leftside-navigation" className="nano">
             <ul className="nano-content">
               {this.props.store.dataMenuDashboard.map((item, index) => {
+                
                 return (
                   <li className={item.active ? 'sub-menu active' : 'sub-menu'}>
-                    <a href={item.directional}>
+                  {item.key == 'Profile' ? 
+                    <a href={item.directional + '?id=' +  this.props.store.admin.id}>
+                      <span>{item.name}</span>
+                     
+                    </a> : null }
+                    {item.key == 'User' && this.props.store.admin.role == 'admin' ? 
+                   (<a href={item.directional}>
+                    <span>{item.name}</span>
+                   
+
+                    {item.children && item.children.length > 0 ? (
+                      <i className="arrow fa fa-angle-right pull-right" />
+                    ) : null}
+                  </a> ): null}
+                    {item.key !== 'Profile' && item.key !== 'User' ? (<a href={item.directional}>
                       <span>{item.name}</span>
                       {item.key == 'DonHang' ? (
                         <span
@@ -85,7 +104,7 @@ export default class MenuLeftComponent extends React.Component {
                       {item.children && item.children.length > 0 ? (
                         <i className="arrow fa fa-angle-right pull-right" />
                       ) : null}
-                    </a>
+                    </a> ) : null}
                     {item.children && item.children.length > 0 ? (
                       <ul>
                         {item.children.map((e, i) => {
@@ -100,6 +119,16 @@ export default class MenuLeftComponent extends React.Component {
                   </li>
                 )
               })}
+              <li className={'sub-menu active'} onClick={()=>{
+                this.props.store.logout('admin', () => {})
+              }}>
+               
+                    <a href={'/admin/login'}>
+                      <span>Đăng xuất</span>
+                    </a>
+                   
+                   
+                  </li>
             </ul>
             <p
               style={{

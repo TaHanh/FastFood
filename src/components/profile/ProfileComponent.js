@@ -4,6 +4,7 @@ import { inject, observer } from 'mobx-react'
 import { Link, Router } from '../../routes/routes'
 import LoadComponent from '../general/LoadComponent'
 import { upLoad } from '../../api/upLoad'
+import $ from 'jquery'
 import './profile.scss'
 
 @inject('store')
@@ -13,12 +14,18 @@ export default class ProfileComponent extends React.Component {
   @observable data = []
   @observable user = {}
   @observable total = 0
+  @observable password = {
+    passwordOld: '',
+    passwordNew: '',
+    passwordConfig: ''
+  }
 
   constructor(props) {
     super(props)
 
     this.image = React.createRef()
     this.user = this.props.store.user
+    console.log(this.user)
   }
   componentDidMount() {
     this.isRender = true
@@ -26,10 +33,33 @@ export default class ProfileComponent extends React.Component {
 
   changeInput = data => {
     const { value, name } = data.target
-    let newState = this.user
+    let newState = { ...this.user }
+    switch (name) {
+      case 'upFile':
+        console.log(data.target.files[0])
+        upLoad(data.target.files[0])
+          .then(res => {
+            if (res) {
+              console.log(res)
+              newState.avatar = res.data[0]
+              console.log(newState.avatar)
+              //   Config.api.host.upload +
+              //   Config.api.path.upload.upFile +
+              //   res.data[0]
+              this.user.avatar = newState.avatar
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        break
 
+      default:
+        newState[name] = value
+        break
+    }
     // alert(JSON.stringify(this.data));
-    newState[name] = value
+
     this.user = newState
   }
   render() {
@@ -52,7 +82,7 @@ export default class ProfileComponent extends React.Component {
                       className="w-100
                       
                       form-control"
-                      value={this.user.email}
+                      value={this.user.email ? this.user.email : ''}
                       onChange={this.changeInput}
                     />
                   </div>
@@ -115,7 +145,7 @@ export default class ProfileComponent extends React.Component {
                 </div>
               </div>
               <div className="col-md-4">
-                <div className="w-50">
+                <div className="text-center">
                   <img
                     src={
                       this.user.avatar
@@ -124,38 +154,33 @@ export default class ProfileComponent extends React.Component {
                     }
                     className="rounded-circle"
                     style={{
-                      width: '100px',
-                      height: '100px',
+                      width: '200px',
+                      height: '200px',
                       objectFit: 'cover'
                     }}
                   />
-                </div>
+                  <input
+                    name="upFile"
+                    type="file"
+                    style={{ visibility: 'hidden' }}
+                    ref={this.image}
+                    onChange={this.changeInput}
+                    // onChange={event => {
 
-                <input
-                  type="file"
-                  style={{ visibility: 'hidden' }}
-                  ref={this.image}
-                  onChange={event => {
-                    console.log(event.target.files[0])
-                    // upLoad(event.target.files[0]).then(res => {
-                    //   if (res.code == 1) {
-                    //     this.data.image =
-                    //       Config.api.host.upload +
-                    //       Config.api.path.upload.upFile +
-                    //       res.data[0]
-                    //   }
-                    // })
-                  }}
-                />
-                <button
-                  type="button"
-                  class="btn btn-outline-danger"
-                  onClick={() => {
-                    this.image.current.click()
-                  }}
-                >
-                  Thay ảnh
-                </button>
+                    // }}
+                  />
+                  <div className="w-100 m-auto text-center">
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger"
+                      onClick={() => {
+                        this.image.current.click()
+                      }}
+                    >
+                      Thay ảnh
+                    </button>
+                  </div>
+                </div>
               </div>
               <div className="col-12">
                 <button
@@ -171,6 +196,9 @@ export default class ProfileComponent extends React.Component {
               <div
                 class="modal fade"
                 id="exampleModalCenter"
+                ref={ref => {
+                  this.exampleModal = ref
+                }}
                 tabindex="-1"
                 role="dialog"
                 aria-labelledby="exampleModalCenterTitle"
@@ -194,7 +222,7 @@ export default class ProfileComponent extends React.Component {
                     <div class="modal-body">
                       <div class="form-group row">
                         <label
-                          for="inputPassword"
+                          for="inputPasswordOld"
                           class="col-sm-4 col-form-label"
                         >
                           Mật khẩu cũ
@@ -203,14 +231,17 @@ export default class ProfileComponent extends React.Component {
                           <input
                             type="password"
                             class="form-control"
-                            id="inputPassword"
+                            id="inputPasswordOld"
                             placeholder="Password"
+                            onChange={e => {
+                              this.password.passwordOld = e.target.value
+                            }}
                           />
                         </div>
                       </div>
                       <div class="form-group row my-3">
                         <label
-                          for="inputPassword"
+                          for="inputPasswordNew"
                           class="col-sm-4 col-form-label"
                         >
                           Mật khẩu mới
@@ -219,8 +250,11 @@ export default class ProfileComponent extends React.Component {
                           <input
                             type="password"
                             class="form-control"
-                            id="inputPassword"
+                            id="inputPasswordNew"
                             placeholder="Password"
+                            onChange={e => {
+                              this.password.passwordNew = e.target.value
+                            }}
                           />
                         </div>
                       </div>
@@ -237,6 +271,9 @@ export default class ProfileComponent extends React.Component {
                             class="form-control"
                             id="inputPassword"
                             placeholder="Password"
+                            onChange={e => {
+                              this.password.passwordConfig = e.target.value
+                            }}
                           />
                         </div>
                       </div>
@@ -249,7 +286,37 @@ export default class ProfileComponent extends React.Component {
                       >
                         Hủy
                       </button>
-                      <button type="button" class="btn btn-primary">
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        onClick={() => {
+                          if (
+                            this.password.passwordOld == '' ||
+                            this.password.passwordNew == '' ||
+                            this.password.passwordConfig == ''
+                          ) {
+                            return alert('Bạn phải nhập đầy đủ trường ...')
+                          }
+                          if (
+                            this.password.passwordOld !==
+                            this.props.store.user.password
+                          ) {
+                            return alert(
+                              'Mật khẩu cũ không đúng. vui lòng nhập lại'
+                            )
+                          }
+                          if (
+                            this.password.passwordNew !==
+                            this.password.passwordConfig
+                          ) {
+                            return alert(
+                              'Mật khẩu mới không trùng khớp. Vui lòng nhập lại !'
+                            )
+                          }
+                          this.props.callBack('CHANGE_PASSWORD', this.password)
+                          this.exampleModal.click()
+                        }}
+                      >
                         Lưu thay đổi
                       </button>
                     </div>

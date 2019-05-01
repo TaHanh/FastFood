@@ -1,19 +1,19 @@
-import React from 'react';
-import { Link, Router } from '../../routes/routes';
-import './login.scss';
+import React from 'react'
+import { Link, Router } from '../../routes/routes'
+import './login.scss'
 
-import GoogleLogin from 'react-google-login';
-import { inject, observer } from 'mobx-react';
-import { observable } from 'mobx';
-import LoadCheckComponent from '../general/LoadCheckComponent';
+import GoogleLogin from 'react-google-login'
+import { inject, observer } from 'mobx-react'
+import { observable } from 'mobx'
+import LoadCheckComponent from '../general/LoadCheckComponent'
 @observer
 export default class LoginComponent extends React.Component {
   @observable user = {
     email: '',
     password: ''
-  };
+  }
   constructor(props) {
-    super(props);
+    super(props)
     // this.state = {
     //   user: '',
     //   password: ''
@@ -22,21 +22,21 @@ export default class LoginComponent extends React.Component {
   componentDidMount() {}
 
   changeInput = event => {
-    const { value, name } = event.target;
-    const newState = this.user;
-    newState[name] = value;
-    this.user = newState;
+    const { value, name } = event.target
+    const newState = this.user
+    newState[name] = value
+    this.user = newState
     // this.setState(newState)
-  };
+  }
   loginFBHRC = () => {
-    this.props.callBack('loginFBHRC');
-  };
+    this.props.callBack('loginFBHRC')
+  }
   loginGHRC = response => {
-    this.props.callBack('loginGHRC', response);
-  };
+    this.props.callBack('loginGHRC', response)
+  }
 
   render() {
-    const { message } = this.props;
+    const { message } = this.props
     return (
       <div id="login">
         <div className="opa" />
@@ -45,8 +45,8 @@ export default class LoginComponent extends React.Component {
           <div className="col-xl-6 col-lg-8 col-md-10 col-12 px-0">
             <div className="login pad-login">
               <div className="head">
-                <h4>Đăng nhập</h4>
-                <small>Đăng nhập với</small>
+                <h4 className="mb-4">Đăng nhập</h4>
+                {/* <small>Đăng nhập với</small> */}
                 {/* <p>
                   <button
                     className="fb font mr-md-5 mr-1"
@@ -71,7 +71,7 @@ export default class LoginComponent extends React.Component {
                   />
                 </p> */}
               </div>
-              <small className="or">hoặc</small>
+              {/* <small className="or">hoặc</small> */}
               <div className="another px-sm-5 px-3">
                 <input
                   style={
@@ -85,7 +85,7 @@ export default class LoginComponent extends React.Component {
                   onChange={this.changeInput}
                   onKeyPress={({ charCode }) => {
                     if (charCode === 13) {
-                      this.props.callBack('LogIn', this.user);
+                      this.props.callBack('LogIn', this.user)
                     }
                   }}
                 />
@@ -101,7 +101,7 @@ export default class LoginComponent extends React.Component {
                   onChange={this.changeInput}
                   onKeyPress={({ charCode }) => {
                     if (charCode === 13) {
-                      this.props.callBack('LogIn', this.user);
+                      this.props.callBack('LogIn', this.user)
                     }
                   }}
                 />
@@ -117,9 +117,9 @@ export default class LoginComponent extends React.Component {
               <p>
                 Bạn chưa có tài khoản?
                 <br className="d-lg-none d-block" />
-                  <a href="/signup" className="sign-dn ml-1">
-                    Đăng ký ngay nào !
-                  </a>
+                <a href="/signup" className="sign-dn ml-1">
+                  Đăng ký ngay nào !
+                </a>
               </p>
 
               {/* <p className="forget">
@@ -131,6 +131,6 @@ export default class LoginComponent extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }

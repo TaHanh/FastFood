@@ -66,7 +66,7 @@ export default class SignUp extends React.Component {
           createCustomer({ ...data, type: 1, address: '', role: 'customer' })
             .then(res => {
               console.log(res)
-              localStorage['userFF'] = JSON.stringify(res)
+              localStorage['userFF'] = res.id
               this.props.store.user = res
 
               Router.pushRoute('index')

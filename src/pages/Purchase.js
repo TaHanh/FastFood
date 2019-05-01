@@ -11,115 +11,99 @@ import PurchaseComponent from '../components/profile/PurchaseComponent'
 import LoadComponent from '../components/general/LoadComponent'
 // import { getCategoriesAPI } from '../store/store'
 import { getAllCustomers, createCustomer } from '../api/Customer'
-import { createOrder } from '../api/Order'
+import { createOrder, getOrderByIdUser } from '../api/Order'
 import * as moment from 'moment'
 import { unitTimeNow, unixToTime } from '../utils/convertTime'
 import HeaderComponent from '../components/header/HeaderComponent'
+import FooterComponent from '../components/general/FooterComponent'
 @inject('store')
 @observer
 export default class Purchase extends React.Component {
   @observable isRender = false
+  @observable orderUser = []
   @observable data = []
-  @observable dataFavourite = []
   @observable statusAddCart = false
   @observable titleAddCart = 0
-  @observable user = {
-    name: '',
-    phone: '',
-    address: '',
-    email: '',
-    role: 'customer',
-    message: ''
-  }
 
   constructor(props) {
     super(props)
   }
   componentDidMount() {
-    this.isRender = true
+    this.getMyOrder()
   }
 
-  callBack = (key, data) => {
-    switch (key) {
-      case 'BUY_PRODUCTS':
-        if (
-          data.user.name == '' ||
-          data.user.phone == '' ||
-          data.user.address == ''
-        ) {
-          return alert('Bạn phải nhập đầy đủ thông tin thanh toán !')
-        }
+  getMyOrder = () => {
+    this.isRender = false
+    if (this.orderUser.length == 0) {
+      this.props.store.checkUser('customer', () => {
+        getOrderByIdUser(this.props.store.user.id)
+          .then(res => {
+            this.isRender = true
+            this.orderUser = res
 
-        // let obj = data.product;
-        // obj.map(e => {
-        //   if (e.typeSize) {
-        //     let name = e.typeSize.find(item => item.status == true).name;
-        //     e.typeSize = name;
-        //   }
-        // });
-        // console.log(JSON.stringify(obj));
-        let dataOrder = {
-          statusOrder: {
-            name: '',
-            status: 0,
-            time: unitTimeNow()
-          },
-          statusShip: {
-            name: '',
-            status: 3,
-            time: unitTimeNow()
-          },
-          message: data.user.message,
-          products: data.product
-        }
-        createCustomer({ ...data.user, type: data.product.length }).then(
-          res => {
-            this.setCookie('user', JSON.stringify(res))
-            // console.log(res.id + '--setCookie---' + JSON.stringify(data.user))
-            createOrder({ ...dataOrder, idUser: res.id }).then(res => {
-              if (res) {
-                this.statusAddCart = true
-                this.props.store.myCart = []
-                localStorage['myCartFF'] = JSON.stringify(
-                  this.props.store.myCart
-                )
-                setTimeout(() => {
-                  this.statusAddCart = false
-                  setTimeout(() => {
-                    intentPageString('/')
-                  }, 100)
-                }, 1000)
+            this.orderUser.rows.map(e => {
+              if (e.statusOrder[e.statusOrder.length - 1].status == 0) {
+                this.data.push(e)
               }
             })
+            // console.log(JSON.stringify(this.data))
+          })
+          .catch(err => {
+            this.isRender = true
+            console.log(err)
+          })
+      })
+    }
+  }
+  callBack = (key, data) => {
+    switch (key) {
+      case 'NEXT':
+        this.props.store.list.map(e => {
+          if (e.key == data) {
+            e.status = true
+          } else {
+            e.status = false
           }
-        )
-        // getAllCustomers().then(res => {
-        //   let findUser = res.rows.find(res => res.phone == data.user.phone)
-        //   if (findUser != undefined) {
-        //     createOrder({ ...dataOrder, idUser: findUser.id }).then(res => {
-        //       console.log(JSON.stringify(res))
-        //       if (res) {
-        //         this.statusAddCart = true
-        //         this.props.store.myCart = []
-        //         localStorage['myCartFF'] = JSON.stringify(
-        //           this.props.store.myCart
-        //         )
-        //         setTimeout(() => {
-        //           this.statusAddCart = false
-        //           setTimeout(() => {
-        //             intentPageString('/')
-        //           }, 2000)
-        //         }, 1000)
-        //       }
-        //     })
-        //   } else {
+        })
+        switch (data) {
+          case 'waiting':
+            this.data = []
+            this.orderUser.rows.map(e => {
+              if (e.statusOrder[e.statusOrder.length - 1].status == 0) {
+                this.data.push(e)
+              }
+            })
 
-        //   }
-        // })
+            break
+          case 'ordering':
+            this.data = []
+            this.orderUser.rows.map(e => {
+              if (e.statusShip[e.statusShip.length - 1].status == 0) {
+                this.data.push(e)
+              }
+            })
 
-        break
-      case 'SEARCH':
-        intentPage('/products', { search: data })
+            break
+          case 'receive':
+            this.data = []
+            this.orderUser.rows.map(e => {
+              if (e.statusShip[e.statusShip.length - 1].status == 1) {
+                this.data.push(e)
+              }
+            })
+
+            break
+          case 'cancel':
+            this.data = []
+            this.orderUser.rows.map(e => {
+              if (e.statusShip[e.statusShip.length - 1].status == 2) {
+                this.data.push(e)
+              }
+            })
+            break
+          default:
+            break
+        }
         break
       default:
         break
@@ -128,18 +112,16 @@ export default class Purchase extends React.Component {
   render() {
     return this.isRender ? (
       <div style={{ backgroundColor: '#f5f5f5' }}>
-        {/* <div style={{ height: '80px', background: 'lightgreen' }}> */}
-          {' '}
-          <HeaderComponent />
+        {/* <div style={{ height: '80px', background: 'lightgreen' }}> */}{' '}
+        <HeaderComponent />
         {/* </div> */}
-        <div className="row">
+        <div className="row pb-3" style={{ background: '#fafafa' }}>
           <div className="col-2">
             <MenuProfileComponent />
           </div>
           <div className="col-10">
-            <PurchaseComponent />
+            <PurchaseComponent callBack={this.callBack} data={this.data} />
           </div>
-          <div />
           {this.statusAddCart ? (
             <div
               className={
@@ -165,6 +147,7 @@ export default class Purchase extends React.Component {
             </div>
           ) : null}
         </div>
+        <FooterComponent />
       </div>
     ) : (
       <div>

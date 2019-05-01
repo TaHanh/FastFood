@@ -1,28 +1,26 @@
-import React from 'react'
-import { observable } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import { intentPageString } from '../../utils/RouterUtils'
-import { Link, Router } from '../../routes/routes'
-import LoadComponent from '../general/LoadComponent'
-import ItemProductComponent from '../products/ItemProductComponent'
-import '../products/products.scss'
-import './home.scss'
+import React from 'react';
+import { observable } from 'mobx';
+import { inject, observer } from 'mobx-react';
+import { intentPageString } from '../../utils/RouterUtils';
+import { Link, Router } from '../../routes/routes';
+import LoadComponent from '../general/LoadComponent';
+import ItemProductComponent from '../products/ItemProductComponent';
+import '../products/products.scss';
+import './home.scss';
+import CategoryLeftComponent from './CategoryLeftComponent';
 
 @observer
 class Item extends React.Component {
-  @observable isRender = false
+  @observable isRender = false;
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   render() {
-    const { item, index } = this.props
+    const { item, index } = this.props;
     return (
-      <div className="col-2 product-item-home mb-4" style={{ height: 200 }}>
-        <div
-          className="product-item-cover "
-          style={{ height: '100%', width: '100%' }}
-        >
+      <div className="col-3 product-item-home mb-4" style={{ height: 200 }}>
+        <div className="product-item-cover " style={{ height: '100%', width: '100%' }}>
           <a href={'/detail-products?id=' + item.id}>
             <img
               className="cursor"
@@ -65,20 +63,20 @@ class Item extends React.Component {
           </div> */}
         </div>
       </div>
-    )
+    );
   }
 }
 
 @inject('store')
 @observer
 export default class HomeComponent extends React.Component {
-  @observable isRender = false
-  @observable data = []
+  @observable isRender = false;
+  @observable data = [];
 
   constructor(props) {
-    super(props)
-    this.isRender = true
-    this.data = this.props.data
+    super(props);
+    this.isRender = true;
+    this.data = this.props.data;
   }
 
   render() {
@@ -94,15 +92,12 @@ export default class HomeComponent extends React.Component {
               </div>
               <div className="row">
                 {this.props.dataFavourite.map((e, i) => {
-                  if (i < 6)
-                    return (
-                      <Item item={e} index={i} callBack={this.props.callBack} />
-                    )
+                  if (i < 4) return <Item item={e} index={i} callBack={this.props.callBack} />;
                 })}
               </div>{' '}
-              {this.props.dataFavourite.length > 6 ? (
+              {this.props.dataFavourite.length > 4 ? (
                 <a
-                  href="/"
+                  href="/products/highlight"
                   className="text-right w-100 d-inline-block px-3"
                   style={{ color: 'gray' }}
                 >
@@ -110,59 +105,33 @@ export default class HomeComponent extends React.Component {
                 </a>
               ) : null}
             </div>
-
+            <div className="limit">
+              <div className="mx-4 my-3">
+                {this.props.store.productTopBuy.length > 0 ? (
+                  <h4 style={{ color: '' }}>Sản phẩm được mua nhiều nhất ?</h4>
+                ) : null}
+              </div>
+              <div className="row">
+                {this.props.store.productTopBuy.map((e, i) => {
+                  if (i < 8) return <Item item={e} index={i} callBack={this.props.callBack} />;
+                })}
+              </div>{' '}
+              {this.props.store.productTopBuy.length > 4 ? (
+                <a
+                  href="/products/topbuy"
+                  className="text-right w-100 d-inline-block px-3"
+                  style={{ color: 'gray' }}
+                >
+                  Xem thêm
+                </a>
+              ) : null}
+            </div>
             <div className="limit">
               <div className="row">
                 <div className="col-2">
-                  <h5 class="navbar-brand">
-                    <b>Danh mục</b>
-                  </h5>
-                  <ul class="nav flex-column">
-                    {this.props.store.dataCategory.map(e => {
-                      return (
-                        <li class="nav-item">
-                          <a class="nav-link px-0 " href={'/products/' + e.key}>
-                            {e.name}
-                          </a>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                  <h5 class="navbar-brand">
-                    <b>Gợi ý tìm kiếm</b>
-                  </h5>
-                  <ul class="nav flex-column">
-                    {[
-                      {
-                        name: 'Trà sữa',
-                        key: ''
-                      }
-                    ].map(e => {
-                      return (
-                        <li class="nav-item">
-                          <a
-                            class="nav-link px-0 "
-                            href={'/products?search=' + e.key}
-                          >
-                            {e.name}
-                          </a>
-                        </li>
-                      )
-                    })}
-                    <li class="nav-item">
-                      <i className="d-block my-3">Khoảng giá</i>
-                      <p className="">
-                        <span className="float-left w-25">Từ </span>{' '}
-                        <input type="text" className="form-control w-75" />
-                      </p>
-                      <p>
-                        <span className="float-left w-25">Đến </span>{' '}
-                        <input type="text" className="form-control w-75" />
-                      </p>
-                    </li>
-                  </ul>
+                  <CategoryLeftComponent />
                 </div>
-                <div className="col-10">
+                <div className="col-10  border-left border-secondary ">
                   {this.data.map((item, index) => {
                     if (item.data && item.data.length > 0)
                       return (
@@ -182,8 +151,8 @@ export default class HomeComponent extends React.Component {
                                       callBack={this.props.callBack}
                                     />
                                   </div>
-                                )
-                              return null
+                                );
+                              return null;
                             })}
                           </div>
                           {item.data.length > 10 ? (
@@ -194,8 +163,8 @@ export default class HomeComponent extends React.Component {
                             </div>
                           ) : null}
                         </div>
-                      )
-                    return null
+                      );
+                    return null;
                   })}
                 </div>
               </div>
@@ -205,6 +174,6 @@ export default class HomeComponent extends React.Component {
           <LoadComponent />
         )}
       </div>
-    )
+    );
   }
 }

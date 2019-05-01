@@ -1,23 +1,19 @@
-import React from 'react'
-import { observable } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import { Link, Router } from '../routes/routes'
+import React from 'react';
+import { observable } from 'mobx';
+import { inject, observer } from 'mobx-react';
+import { Link, Router } from '../routes/routes';
 
-import $ from 'jquery'
-import { intentPage } from '../utils/RouterUtils'
-import { getCustomersNew } from '../api/Customer'
-import {
-  unixToMonth,
-  unitTimeNow,
-  unixToDateMonthYear
-} from '../utils/convertTime'
-import LoadComponent from '../components/general/LoadComponent'
-import MenuLeftComponent from '../components/dashboard/MenuLeftComponent'
-import DashboardComponent from '../components/dashboard/dashboardComponent/DashboardComponent'
+import $ from 'jquery';
+import { intentPage } from '../utils/RouterUtils';
+import { getCustomersNew } from '../api/Customer';
+import { unixToMonth, unitTimeNow, unixToDateMonthYear } from '../utils/convertTime';
+import LoadComponent from '../components/general/LoadComponent';
+import MenuLeftComponent from '../components/dashboard/MenuLeftComponent';
+import DashboardComponent from '../components/dashboard/dashboardComponent/DashboardComponent';
 @inject('store')
 @observer
 export default class Dashboard extends React.Component {
-  @observable isRender = false
+  @observable isRender = false;
   @observable order = {
     statusOrder: {
       wait: 0,
@@ -31,71 +27,71 @@ export default class Dashboard extends React.Component {
     },
     totalIndex: 0,
     totalMoney: 0
-  }
-  @observable timeNow = ''
-  @observable usersNew = []
-  @observable usersFriendly = []
-  @observable users = []
-  @observable usersFriendly = []
-  @observable custommer = 0
-  @observable employee = 0
+  };
+  @observable timeNow = '';
+  @observable usersNew = [];
+  @observable usersFriendly = [];
+  @observable users = [];
+  @observable usersFriendly = [];
+  @observable custommer = 0;
+  @observable employee = 0;
   constructor(props) {
-    super(props)
+    super(props);
   }
   componentDidMount() {
-    this.timeNow = unixToMonth(unitTimeNow())
-    this.props.store.getAllProductsAPI(() => {})
+    this.timeNow = unixToMonth(unitTimeNow());
+    this.props.store.getAllProductsAPI(() => {});
     this.props.store.getAllCustomerAPI(res => {
-      console.log(res)
-      this.usersNew = res.slice(0, 6)
+      console.log(res);
+      this.usersNew = res.slice(0, 6);
       this.usersFriendly = res.sort(function(a, b) {
-        return b.type - a.type
-      })
+        return b.type - a.type;
+      });
       for (let index = 0; index < res.length; index++) {
-        const element = res[index]
+        const element = res[index];
         if (element.role !== 'customer') {
-          this.employee++
+          this.employee++;
         } else {
-          this.custommer++
+          this.custommer++;
         }
       }
-    })
-    this.thongKeDonHang(this.timeNow)
+    });
+    this.thongKeDonHang(this.timeNow);
   }
   thongKeDonHang = getTime => {
     this.props.store.getAllOrdersAPI(res => {
       if (res.length > 0) {
         res.map(e => {
           // if(res.createdAt)
-          this.order.totalIndex++
+          this.order.totalIndex++;
           if (e.statusOrder[e.statusOrder.length - 1].status == '0') {
-            this.order.statusOrder.wait++
+            this.order.statusOrder.wait++;
           } else if (e.statusOrder[e.statusOrder.length - 1].status == '1') {
-            this.order.statusOrder.success++
+            this.order.statusOrder.success++;
           } else {
-            this.order.statusOrder.cancel++
+            this.order.statusOrder.cancel++;
           }
           if (
             e.statusShip[e.statusShip.length - 1].status == '0' ||
             e.statusShip[e.statusShip.length - 1].status == '3'
           ) {
-            this.order.statusShip.wait++
+            this.order.statusShip.wait++;
           } else if (e.statusOrder[e.statusOrder.length - 1].status == '1') {
-            this.order.statusShip.success++
+            this.order.statusShip.success++;
           } else {
-            this.order.statusShip.cancel++
+            this.order.statusShip.cancel++;
           }
 
-          this.order.totalMoney = 0
+          this.order.totalMoney = 0;
           e.products.map(p => {
-            let obj = p.price * p.amount
-            this.order.totalMoney += obj
-          })
-        })
+            let obj = p.price * p.amount;
+            this.order.totalMoney += obj;
+          });
+        });
       }
-      this.isRender = true
-    })
-  }
+      this.isRender = true;
+    });
+  };
   render() {
     return (
       <div className="row">
@@ -120,6 +116,6 @@ export default class Dashboard extends React.Component {
           )}
         </div>
       </div>
-    )
+    );
   }
 }

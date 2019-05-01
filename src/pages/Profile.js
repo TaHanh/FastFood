@@ -10,11 +10,16 @@ import MenuProfileComponent from '../components/profile/MenuProfileComponent'
 import ProfileComponent from '../components/profile/ProfileComponent'
 import LoadComponent from '../components/general/LoadComponent'
 // import { getCategoriesAPI } from '../store/store'
-import { getAllCustomers, createCustomer } from '../api/Customer'
+import {
+  getAllCustomers,
+  createCustomer,
+  updateCustomer
+} from '../api/Customer'
 import { createOrder } from '../api/Order'
 import * as moment from 'moment'
 import { unitTimeNow, unixToTime } from '../utils/convertTime'
 import HeaderComponent from '../components/header/HeaderComponent'
+import FooterComponent from '../components/general/FooterComponent'
 @inject('store')
 @observer
 export default class Profile extends React.Component {
@@ -36,90 +41,56 @@ export default class Profile extends React.Component {
     super(props)
   }
   componentDidMount() {
-    this.isRender = true
+    this.props.store.checkUser('customer', () => {
+      this.isRender = true
+    })
   }
 
   callBack = (key, data) => {
     switch (key) {
-      case 'BUY_PRODUCTS':
-        if (
-          data.user.name == '' ||
-          data.user.phone == '' ||
-          data.user.address == ''
-        ) {
-          return alert('Bạn phải nhập đầy đủ thông tin thanh toán !')
-        }
-
-        // let obj = data.product;
-        // obj.map(e => {
-        //   if (e.typeSize) {
-        //     let name = e.typeSize.find(item => item.status == true).name;
-        //     e.typeSize = name;
-        //   }
-        // });
-        // console.log(JSON.stringify(obj));
-        let dataOrder = {
-          statusOrder: {
-            name: '',
-            status: 0,
-            time: unitTimeNow()
-          },
-          statusShip: {
-            name: '',
-            status: 3,
-            time: unitTimeNow()
-          },
-          message: data.user.message,
-          products: data.product
-        }
-        createCustomer({ ...data.user, type: data.product.length }).then(
-          res => {
-            this.setCookie('user', JSON.stringify(res))
-            // console.log(res.id + '--setCookie---' + JSON.stringify(data.user))
-            createOrder({ ...dataOrder, idUser: res.id }).then(res => {
-              if (res) {
-                this.statusAddCart = true
-                this.props.store.myCart = []
-                localStorage['myCartFF'] = JSON.stringify(
-                  this.props.store.myCart
-                )
-                setTimeout(() => {
-                  this.statusAddCart = false
-                  setTimeout(() => {
-                    intentPageString('/')
-                  }, 100)
-                }, 1000)
-              }
-            })
-          }
-        )
-        // getAllCustomers().then(res => {
-        //   let findUser = res.rows.find(res => res.phone == data.user.phone)
-        //   if (findUser != undefined) {
-        //     createOrder({ ...dataOrder, idUser: findUser.id }).then(res => {
-        //       console.log(JSON.stringify(res))
-        //       if (res) {
-        //         this.statusAddCart = true
-        //         this.props.store.myCart = []
-        //         localStorage['myCartFF'] = JSON.stringify(
-        //           this.props.store.myCart
-        //         )
-        //         setTimeout(() => {
-        //           this.statusAddCart = false
-        //           setTimeout(() => {
-        //             intentPageString('/')
-        //           }, 2000)
-        //         }, 1000)
-        //       }
-        //     })
-        //   } else {
-
-        //   }
-        // })
-
+      case 'CHANGE_PASSWORD':
+        this.props.store.user.password = data.passwordNew
+        updateCustomer(this.props.store.user)
+          .then(res => {
+            if (res) {
+              console.log(res)
+              this.titleAddCart = 0
+              this.statusAddCart = true
+              setTimeout(() => {
+                this.statusAddCart = false
+              }, 1000)
+            }
+          })
+          .catch(err => {
+            console.log(err)
+            this.titleAddCart = 1
+            this.statusAddCart = true
+            setTimeout(() => {
+              this.statusAddCart = false
+            }, 2000)
+          })
         break
-      case 'SEARCH':
-        intentPage('/products', { search: data })
+      case 'SAVE_PROFILE':
+        updateCustomer(data)
+          .then(res => {
+            if (res) {
+              this.props.store.user = res
+              console.log(res)
+              this.titleAddCart = 0
+              this.statusAddCart = true
+              setTimeout(() => {
+                this.statusAddCart = false
+              }, 1000)
+            }
+          })
+          .catch(err => {
+            console.log(err)
+            this.titleAddCart = 1
+            this.statusAddCart = true
+            setTimeout(() => {
+              this.statusAddCart = false
+            }, 2000)
+          })
         break
       default:
         break
@@ -130,17 +101,16 @@ export default class Profile extends React.Component {
       <div style={{ backgroundColor: '#f5f5f5' }}>
         {/* <div style={{ height: '80px', background: 'lightgreen' }}>
           {' '} */}
-          <HeaderComponent />
+        <HeaderComponent />
         {/* </div> */}
 
-        <div className="row">
+        <div className="row" style={{ background: '#fafafa' }}>
           <div className="col-2">
             <MenuProfileComponent />
           </div>
           <div className="col-10">
-            <ProfileComponent />
+            <ProfileComponent callBack={this.callBack} />
           </div>
-          <div />
           {this.statusAddCart ? (
             <div
               className={
@@ -161,10 +131,11 @@ export default class Profile extends React.Component {
               }}
             >
               {this.titleAddCart == 0
-                ? 'Mua hàng thành công !'
+                ? 'Cập nhật thành công !'
                 : 'Không thành công, vui lòng thử lại !'}
             </div>
           ) : null}
+          <FooterComponent />
         </div>
       </div>
     ) : (

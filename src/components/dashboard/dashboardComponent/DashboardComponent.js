@@ -1,15 +1,15 @@
-import React from 'react'
-import { observable } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import { Link, Router } from '../../../routes/routes'
+import React from 'react';
+import { observable } from 'mobx';
+import { inject, observer } from 'mobx-react';
+import { Link, Router } from '../../../routes/routes';
 
-import './dashboardComponent.scss'
-import $ from 'jquery'
+import './dashboardComponent.scss';
+import $ from 'jquery';
 
 @inject('store')
 @observer
 export default class DashboardComponent extends React.Component {
-  @observable isRender = false
+  @observable isRender = false;
   @observable months = [
     {
       name: 'Tháng 1',
@@ -71,22 +71,16 @@ export default class DashboardComponent extends React.Component {
       value: '12',
       status: false
     }
-  ]
+  ];
+
   constructor(props) {
-    super(props)
-    console.log(this.props.timeNow)
-    this.months.find(e => e.value == this.props.timeNow).status = true
+    super(props);
+    console.log(this.props.timeNow);
+    this.months.find(e => e.value == this.props.timeNow).status = true;
   }
   componentDidMount() {}
   render() {
-    const {
-      timeNow,
-      order,
-      usersNew,
-      usersFriendly,
-      employee,
-      custommer
-    } = this.props
+    const { timeNow, order, usersNew, usersFriendly, employee, custommer } = this.props;
     return (
       <div className="dashboard">
         <div className="row">
@@ -98,11 +92,11 @@ export default class DashboardComponent extends React.Component {
                 onChange={e => {
                   this.months.map(m => {
                     if (m.value == e.target.value) {
-                      m.status = true
+                      m.status = true;
                     } else {
-                      m.status = false
+                      m.status = false;
                     }
-                  })
+                  });
                 }}
               >
                 {this.months.map(m => {
@@ -110,7 +104,7 @@ export default class DashboardComponent extends React.Component {
                     <option value={m.value} selected={m.status}>
                       {m.name}
                     </option>
-                  )
+                  );
                 })}
               </select>
             </div>
@@ -134,9 +128,7 @@ export default class DashboardComponent extends React.Component {
           <div className="col-lg-3 col-sm-6 col-12">
             <div className="three">
               <h5>Tổng số sản phẩm </h5>
-              <div className="number">
-                {this.props.store.dataProducts.length}
-              </div>
+              <div className="number">{this.props.store.dataProducts.length}</div>
             </div>
           </div>
           <div className="col-lg-3 col-sm-6 col-12">
@@ -147,11 +139,11 @@ export default class DashboardComponent extends React.Component {
                 onChange={e => {
                   this.months.map(m => {
                     if (m.value == e.target.value) {
-                      m.status = true
+                      m.status = true;
                     } else {
-                      m.status = false
+                      m.status = false;
                     }
-                  })
+                  });
                 }}
               >
                 {this.months.map(m => {
@@ -159,7 +151,7 @@ export default class DashboardComponent extends React.Component {
                     <option value={m.value} selected={m.status}>
                       {m.name}
                     </option>
-                  )
+                  );
                 })}
               </select>
             </div>
@@ -170,15 +162,16 @@ export default class DashboardComponent extends React.Component {
             <div className="row">
               <div className="col-lg-6 col-12 pl-0">
                 <div className="left">
-                  <h5>Người dùng mới</h5>
-                  {usersNew.map(user => {
-                    return (
-                      <p>
-                        <a href={'/admin/detail-user?id=' + user.id}>
-                          {user.email} - {user.role} <br /> {user.createdAt}
-                        </a>
-                      </p>
-                    )
+                  <h5>Top sản phẩm mua nhiều</h5>
+                  {this.props.store.productTopBuy.map(e => {
+                    if (e.topBuy > 0)
+                      return (
+                        <p>
+                          <a href={'/admin/detail-product?id=' + e.id}>
+                            {e.name} - <b>{e.topBuy} </b> <br />
+                          </a>
+                        </p>
+                      );
                   })}
                 </div>
               </div>
@@ -189,11 +182,23 @@ export default class DashboardComponent extends React.Component {
                     return (
                       <p>
                         <a href={'/admin/detail-user?id=' + user.id}>
-                          {user.email} - {user.type} <br />
-                          {user.name}
+                          {user.name} - <b>{user.type} </b>sản phẩm từng mua <br />
+                          {user.email}
                         </a>
                       </p>
-                    )
+                    );
+                  })}
+                </div>
+                <div className="left">
+                  <h5>Người dùng mới</h5>
+                  {usersNew.map(user => {
+                    return (
+                      <p>
+                        <a href={'/admin/detail-user?id=' + user.id}>
+                          {user.email} - {user.role} <br /> {user.createdAt}
+                        </a>
+                      </p>
+                    );
                   })}
                 </div>
               </div>
@@ -206,9 +211,7 @@ export default class DashboardComponent extends React.Component {
                 {12 > 0 ? (
                   <span style={{ color: 'red' }}>{order.statusOrder.wait}</span>
                 ) : (
-                  <span style={{ color: '#000' }}>
-                    {order.statusOrder.wait}
-                  </span>
+                  <span style={{ color: '#000' }}>{order.statusOrder.wait}</span>
                 )}
               </div>
             </div>
@@ -235,6 +238,6 @@ export default class DashboardComponent extends React.Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }

@@ -19,11 +19,10 @@ export default class HeaderComponent extends React.Component {
   }
   componentDidMount() {
     this.path = getPathName()
-    this.isRender = true
-    if (localStorage.getItem('userFF')) {
-      console.log(JSON.parse(localStorage.userFF))
-      this.props.store.user = JSON.parse(localStorage.userFF)
-    }
+
+    this.props.store.checkUser('customer', () => {
+      this.isRender = true
+    })
     if (localStorage.getItem('myCartFF')) {
       this.props.store.myCart = JSON.parse(localStorage.myCartFF)
     }
@@ -258,23 +257,46 @@ export default class HeaderComponent extends React.Component {
                 {this.props.store.user ? (
                   <div
                     className="cart user float-left cursor rounded-circle mt-2"
-                    style={{
-                      width: 30,
-                      position: 'relative',
-                      background: '#fff'
-                    }}
+                    style={
+                      this.props.store.user.avatar
+                        ? {
+                            width: 40,
+                            height: 40,
+                            position: 'relative',
+                            background: '#fff'
+                            // backgroundImage: `url(${'../../static/images/ava.jpg'})`
+                            // backgroundImage: `url(${
+                            //   this.props.store.user.avatar
+                            // })`
+                          }
+                        : {
+                            width: 40,
+                            height: 40,
+                            position: 'relative'
+                            // background: '#fff',
+                            // backgroundImage: `url(${'../../static/images/ava.jpg'})`
+                          }
+                    }
                   >
                     {this.props.store.user.avatar ? (
                       <img
                         src={this.props.store.user.avatar}
-                        className="p-1"
-                        style={{ width: '100%' }}
+                        className="p-1 rounded-circle"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover'
+                        }}
                       />
                     ) : (
                       <img
                         src="../../static/images/ava.jpg"
-                        className="p-1"
-                        style={{ width: '100%' }}
+                        className="p-1 rounded-circle"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover'
+                        }}
                       />
                     )}
                     {/* <span
@@ -322,16 +344,22 @@ export default class HeaderComponent extends React.Component {
                         <ul class="nav flex-column">
                           <li class="nav-item">
                             <a href="/user/profile" class="nav-link">
-                              Hồ sơ
+                             Tài khoản của tôi
                             </a>
                           </li>
                           <li class="nav-item">
                             <a href="/user/purchase" class="nav-link">
-                              Lịch sử giao dịch
+                              Đơn mua
                             </a>
                           </li>
                           <li class="nav-item">
-                            <a href="/login" class="nav-link">
+                            <a
+                              href="/login"
+                              class="nav-link"
+                              onClick={() => {
+                                this.props.store.logout('customer', () => {})
+                              }}
+                            >
                               Đăng xuất
                             </a>
                           </li>

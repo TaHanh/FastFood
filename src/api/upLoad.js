@@ -4,10 +4,10 @@ import Config from '../config/env'
 import axios from 'axios'
 export const upLoad = e => {
   let formData = new FormData()
-  formData.append('file[]', file)
+  formData.append('file[]', e)
 
   return axios
-    .post(Config.api.host.base + '/uploads', formData, {
+    .post(Config.api.host.upload + Config.api.path.upload.upFile, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

@@ -15,23 +15,23 @@ export default class MenuProfileComponent extends React.Component {
       icon: '',
       key: 'account',
       active: false,
-      path: '/user/profile',
-      children: [
-        {
-          name: 'Hồ sơ của tôi',
-          icon: '',
-          key: 'profile',
-          active: false,
-          path: '/user/profile'
-        },
-        {
-          name: 'Địa chỉ nhận hàng',
-          icon: '',
-          key: 'address',
-          active: false,
-          path: '/user/address'
-        }
-      ]
+      path: '/user/profile'
+      // children: [
+      //   {
+      //     name: 'Hồ sơ của tôi',
+      //     icon: '',
+      //     key: 'profile',
+      //     active: false,
+      //     path: '/user/profile'
+      //   },
+      //   {
+      //     name: 'Địa chỉ nhận hàng',
+      //     icon: '',
+      //     key: 'address',
+      //     active: false,
+      //     path: '/user/address'
+      //   }
+      // ]
     },
     {
       name: 'Đơn mua',
@@ -74,7 +74,7 @@ export default class MenuProfileComponent extends React.Component {
   }
   render() {
     return (
-      <aside className="sidebar">
+      <aside className="sidebarProfile">
         {this.isRender ? (
           <div id="leftside-navigation" className="nano">
             <ul className="nano-content">

@@ -79,8 +79,8 @@ export default class SignUpComponent extends React.Component {
               <div className="head">
                 <h4 className="d-sm-block d-none">Đăng ký tài khoản</h4>
                 <h5 className="d-block d-sm-none">Đăng ký tài khoản</h5>
-                <small>Đăng ký qua</small>
-                <p>
+                {/* <small>Đăng ký qua</small> */}
+                {/* <p>
                   <button
                     onClick={this.loginFBHRC}
                     className="fb font mr-md-5 mr-1"
@@ -101,9 +101,9 @@ export default class SignUpComponent extends React.Component {
                       </button>
                     )}
                   />
-                </p>
+                </p> */}
               </div>
-              <small className="or">hoặc</small>
+              {/* <small className="or">hoặc</small> */}
               <div className="another row justify-content-center">
                 <div className="col-sm-6 col-12 pl-md-0 font">
                   <input
@@ -216,7 +216,7 @@ export default class SignUpComponent extends React.Component {
                   </button>
                   Bạn đã có tài khoản?
                   <span className="forget">
-                      <a href="/login"> Đăng nhập ngay!</a>
+                    <a href="/login"> Đăng nhập ngay!</a>
                   </span>
                 </div>
               </div>

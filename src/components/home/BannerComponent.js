@@ -1,25 +1,28 @@
-import React from 'react'
-import { observable } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import { Link, Router } from '../../routes/routes'
-import './home.scss'
+import React from 'react';
+import { observable } from 'mobx';
+import { inject, observer } from 'mobx-react';
+import { Link, Router } from '../../routes/routes';
+import './home.scss';
 @inject('store')
 @observer
 export default class BannerComponent extends React.Component {
-  @observable isRender = false
-  @observable textSearch = ''
+  @observable isRender = false;
+  @observable textSearch = '';
 
   constructor(props) {
-    super(props)
-    this.isRender = true
+    super(props);
+    this.isRender = true;
+    this.textSearch = this.props.searchTxt;
   }
-
+  search = () => {
+    this.props.callBack('SEARCH', this.textSearch);
+  };
   render() {
     return (
       <div className="banner w-100 font" style={{ position: 'relative' }}>
         <img
           style={{ width: '100%', height: 300, objectFit: 'cover' }}
-          src="../../static/images/bannerHome9.jpg"
+          src="../../static/images/bannerHome2.jpg"
         />
         <div
           style={{
@@ -41,7 +44,7 @@ export default class BannerComponent extends React.Component {
                   Fast Food - Đặt hàng nhanh chóng - Chất lượng tuyệt vời
                 </h3>
               </div>
-              <div className="col-6">
+              <div className="col-4">
                 <input
                   className="w-100 input borderR p-2"
                   type="text"
@@ -49,11 +52,11 @@ export default class BannerComponent extends React.Component {
                   style={{ height: 40 }}
                   value={this.textSearch}
                   onChange={e => {
-                    this.textSearch = e.target.value
+                    this.textSearch = e.target.value;
                   }}
                   onKeyPress={({ charCode }) => {
                     if (charCode === 13) {
-                      this.props.callBack('SEARCH', this.textSearch)
+                      this.search();
                     }
                   }}
                 />
@@ -61,7 +64,7 @@ export default class BannerComponent extends React.Component {
               <div className="col-2">
                 <button
                   onClick={() => {
-                    this.props.callBack('SEARCH', this.textSearch)
+                    this.props.callBack('SEARCH', this.textSearch);
                   }}
                   className="btn-search borderR w-100 bgDefault colorWhite cursor"
                   style={{
@@ -77,6 +80,6 @@ export default class BannerComponent extends React.Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }

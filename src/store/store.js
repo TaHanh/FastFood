@@ -20,6 +20,7 @@ class Store {
   @observable user = ''
   @observable dataProducts = []
   @observable dataProductLimit = []
+  @observable productTopBuy = []
   @observable dataMenu = [
     {
       name: 'Trang chủ',
@@ -39,7 +40,28 @@ class Store {
   ]
   @observable dataCategory = []
   @observable myCart = []
-
+  @observable list = [
+    {
+      name: 'Chờ lấy hàng',
+      key: 'waiting',
+      status: true
+    },
+    {
+      name: 'Đang giao',
+      key: 'ordering',
+      status: false
+    },
+    {
+      name: 'Đã nhận',
+      key: 'receive',
+      status: false
+    },
+    {
+      name: 'Đã hủy',
+      key: 'cancel',
+      status: false
+    }
+  ]
   // admin
   @observable admin = ''
   @observable dataMenuDashboard = [
@@ -72,6 +94,13 @@ class Store {
       key: 'User',
       active: false,
       directional: '/admin/users'
+    },
+    {
+      name: 'Tài khoản',
+      icon: '',
+      key: 'Profile',
+      active: false,
+      directional: '/admin/detail-user'
     }
   ]
   @observable dataOrdersDashboard = []
@@ -118,22 +147,62 @@ class Store {
   checkUser = (key, callBack) => {
     switch (key) {
       case 'admin':
-        if (localStorage.getItem('adminFF')) {
-          console.log(JSON.parse(localStorage.adminFF))
-          this.admin = JSON.parse(localStorage.adminFF)
+        if (this.admin != '') {
+        } else {
+          if (localStorage.getItem('adminFF')) {
+            console.log(JSON.parse(localStorage.adminFF))
+            this.admin = JSON.parse(localStorage.adminFF)
+          } else {
+            Router.pushRoute('/admin/login')
+            return
+          }
+        
         }
-        if (!this.admin) {
-          Router.pushRoute('/admin/login')
-          return
-        }
-        break
 
+        callBack()
+
+        break
+      case 'customer':
+        if (this.user != '') {
+          callBack()
+        } else {
+          if (localStorage.getItem('userFF')) {
+            console.log(localStorage.userFF)
+            getCustomer(localStorage.userFF)
+              .then(res => {
+                this.user = res
+                callBack()
+              })
+              .catch(err => {
+                console.log(err)
+                callBack()
+              })
+          } else {
+            callBack()
+          }
+        }
+
+        break
       default:
         break
     }
-    callBack()
   }
 
+  @action
+  logout = (key, callBack) => {
+    switch (key) {
+      case 'admin':
+        localStorage.removeItem('adminFF')
+
+        break
+      case 'customer':
+        localStorage.removeItem('userFF')
+
+        break
+      default:
+        break
+    }
+  }
   @action
   getCategoriesAPI(callBack) {
     getCategories().then(res => {
@@ -158,10 +227,15 @@ class Store {
       getAllProducts().then(res => {
         if (res) {
           this.dataProducts = res.rows
+          this.productTopBuy = this.dataProducts.sort(function(a, b) {
+            return b.topBuy - a.topBuy;
+          });
           callBack(this.dataProducts)
         } else {
           console.log(res)
         }
+      }).catch(err => {
+        console.log(err)
       })
     }
   }

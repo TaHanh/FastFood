@@ -16,11 +16,17 @@ export default class OrderComponent extends React.Component {
 
   constructor(props) {
     super(props)
-    this.isRender = true
-    this.data = this.props.data
-    this.user = this.props.user
+
+    
+    // this.user = this.props.user
   }
-  componentDidMount() {}
+  componentDidMount() {
+    this.data = this.props.data
+    this.props.store.checkUser('customer', ()=>{
+      this.user = this.props.store.user
+      this.isRender = true
+  })
+}
   totalPrice = () => {
     let total = 0
     this.data.map((item, index) => {
@@ -79,23 +85,23 @@ export default class OrderComponent extends React.Component {
                             />
                           </a>
                           <div className="">
-                           
-                              <a href={{
+                            <a
+                              href={{
                                 pathname: '/detail-products',
                                 query: { id: item.id }
                               }}
-                                className="cursor colorDefault"
-                                style={{
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  maxWidth: '100%',
-                                  whiteSpace: 'nowrap',
-                                  display: 'inline-block',
-                                  textDecoration: 'none'
-                                }}
-                              >
-                                {item.name}
-                              </a>
+                              className="cursor colorDefault"
+                              style={{
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                maxWidth: '100%',
+                                whiteSpace: 'nowrap',
+                                display: 'inline-block',
+                                textDecoration: 'none'
+                              }}
+                            >
+                              {item.name}
+                            </a>
                             <br />
                             <small>Đơn gía : {item.price}đ</small>
                           </div>
@@ -178,14 +184,22 @@ export default class OrderComponent extends React.Component {
             </h5>
             <div className=" pt-5">
               <div>
-                <h5>Thông tin thanh toán</h5>
+                <h4>Thông tin thanh toán</h4>
+                {this.props.store.user != '' ? null : (
+                  <p>
+                    {' '}
+                    Bạn đã có tài khoản? <a href="/login">Đăng nhập </a> ngay để
+                    nhận nhiều ưu đãi hơn hoặc <a href="/signup">Đăng ký</a>{' '}
+                    luôn nào !
+                  </p>
+                )}
                 <hr className="my-1" />
               </div>
               <div className="row py-3">
-                <div className="col-8 px-0">
+                <div className="col-7 px-0">
                   <div className="row mb-2">
-                    <div className="col-lg-2 px-0">Họ và tên</div>
-                    <div className="col-lg-10">
+                    <div className="col-lg-3 px-0">Người nhận hàng</div>
+                    <div className="col-lg-9">
                       <input
                         name="name"
                         value={this.user.name}
@@ -193,7 +207,7 @@ export default class OrderComponent extends React.Component {
                           this.changeInput(e)
                         }}
                         type="text"
-                        className="w-75 p-1"
+                        className="w-100 form-control"
                         style={{
                           borderRadius: 5,
                           border: '1px solid rgb(180, 180, 180)'
@@ -202,8 +216,8 @@ export default class OrderComponent extends React.Component {
                     </div>
                   </div>
                   <div className="row mb-2">
-                    <div className="col-lg-2 px-0">Số điện thoại</div>
-                    <div className="col-lg-10">
+                    <div className="col-lg-3 px-0">Số điện thoại</div>
+                    <div className="col-lg-9">
                       <input
                         name="phone"
                         value={this.user.phone}
@@ -211,7 +225,7 @@ export default class OrderComponent extends React.Component {
                           this.changeInput(e)
                         }}
                         type="text"
-                        className="w-75 p-1"
+                        className="w-100 form-control"
                         style={{
                           borderRadius: 5,
                           border: '1px solid rgb(180, 180, 180)'
@@ -220,8 +234,8 @@ export default class OrderComponent extends React.Component {
                     </div>
                   </div>{' '}
                   <div className="row mb-2">
-                    <div className="col-lg-2 px-0">Địa chỉ</div>
-                    <div className="col-lg-10">
+                    <div className="col-lg-3 px-0">Địa chỉ</div>
+                    <div className="col-lg-9">
                       <input
                         name="address"
                         value={this.user.address}
@@ -229,7 +243,7 @@ export default class OrderComponent extends React.Component {
                           this.changeInput(e)
                         }}
                         type="text"
-                        className="w-100 p-1"
+                        className="w-100 form-control"
                         style={{
                           borderRadius: 5,
                           border: '1px solid rgb(180, 180, 180)'
@@ -238,8 +252,8 @@ export default class OrderComponent extends React.Component {
                     </div>
                   </div>{' '}
                   <div className="row mb-2">
-                    <div className="col-lg-2 px-0">Email</div>
-                    <div className="col-lg-10">
+                    <div className="col-lg-3 px-0">Email</div>
+                    <div className="col-lg-9">
                       <input
                         name="email"
                         value={this.user.email}
@@ -247,7 +261,7 @@ export default class OrderComponent extends React.Component {
                           this.changeInput(e)
                         }}
                         type="text"
-                        className="w-75 p-1"
+                        className="w-100 form-control"
                         style={{
                           borderRadius: 5,
                           border: '1px solid rgb(180, 180, 180)'
@@ -256,8 +270,8 @@ export default class OrderComponent extends React.Component {
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-lg-2 px-0">Lời nhắn</div>
-                    <div className="col-lg-10">
+                    <div className="col-lg-3 px-0">Lời nhắn</div>
+                    <div className="col-lg-9">
                       <input
                         type="text"
                         name="message"
@@ -265,7 +279,7 @@ export default class OrderComponent extends React.Component {
                         onChange={e => {
                           this.changeInput(e)
                         }}
-                        className="w-100 p-1"
+                        className="w-100 form-control"
                         style={{
                           borderRadius: 5,
                           border: '1px solid rgb(180, 180, 180)'

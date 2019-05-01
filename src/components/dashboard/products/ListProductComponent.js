@@ -33,7 +33,7 @@ class Item extends React.Component {
           // }}
         >
           <a
-            href={{ pathname: '/admin/detail-product', query: { id: item.id } }}
+            href={'/admin/detail-product?id=' + item.id}
             className="colorDefault cursor"
             style={{ textDecoration: 'none' }}
           >
@@ -42,7 +42,8 @@ class Item extends React.Component {
         </td>
         <td> {item.highlight == 0 ? 'true' : 'false'} </td>
         <td style={{}}>
-          {item.image.map(e => {
+          {item.image.length} hình ảnh
+          {/* {item.image.map(e => {
             return (
               <p
                 className="mb-1"
@@ -57,7 +58,7 @@ class Item extends React.Component {
                 {e}
               </p>
             )
-          })}
+          })} */}
         </td>
         <td>{item.price}</td>
         <td style={{}}>

@@ -1,104 +1,122 @@
-import React from 'react'
+import React from 'react';
 
-import { observable } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import { getPathName } from '../utils/RouterUtils'
-import { Link, Router } from '../routes/routes'
-import Config from '../config/env'
-import { deleteCustomer, queryUser, updateCustomer } from '../api/Customer'
-import MenuLeftComponent from '../components/dashboard/MenuLeftComponent'
-import ListUserComponent from '../components/dashboard/user/ListUserComponent'
-import LoadComponent from '../components/general/LoadComponent'
+import { observable } from 'mobx';
+import { inject, observer } from 'mobx-react';
+import { getPathName } from '../utils/RouterUtils';
+import { Link, Router } from '../routes/routes';
+import Config from '../config/env';
+import { deleteCustomer, queryUser, updateCustomer, getAllCustomers } from '../api/Customer';
+import MenuLeftComponent from '../components/dashboard/MenuLeftComponent';
+import ListUserComponent from '../components/dashboard/user/ListUserComponent';
+import LoadComponent from '../components/general/LoadComponent';
 @inject('store')
 @observer
 export default class UsersMana extends React.Component {
-  @observable data = []
-  @observable page = 1
-  @observable limit = 5
-  @observable totalPage = 0
-  @observable isRender = false
-  @observable isSearch = false
-  @observable query = ''
-  @observable search = {}
-  @observable statusNotify = false
-  @observable title = 0
+  @observable data = [];
+  @observable page = 1;
+  @observable limit = 5;
+  @observable totalPage = 0;
+  @observable isRender = false;
+  @observable isSearch = false;
+  @observable query = '';
+  @observable search = {};
+  @observable statusNotify = false;
+  @observable title = 0;
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.getUsers(this.page, this.limit)
+    this.getUsers(this.page, this.limit);
     this.search = {
       name: '',
       phone: '',
       email: '',
       role: ''
-    }
+    };
   }
   componentDidMount() {
-    let pathName = getPathName()
+    let pathName = getPathName();
   }
   getUsers = (p, l, q) => {
-    this.isRender = false
-    queryUser({ page: p, limit: l, query: q }).then(res => {
-      if (res) {
-        this.data = res
-        this.totalPage = Math.ceil(this.data.count / this.limit)
-        this.isRender = true
-      } else {
-      }
-    })
-  }
+    this.isRender = false;
+    if (q) {
+      queryUser({ page: p, limit: l, query: q })
+        .then(res => {
+          if (res) {
+            this.data = res;
+            this.totalPage = Math.ceil(this.data.count / this.limit);
+            this.isRender = true;
+          } else {
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } else {
+      getAllCustomers()
+        .then(res => {
+          if (res) {
+            this.data = res;
+            this.totalPage = Math.ceil(this.data.count / this.limit);
+            this.isRender = true;
+          } else {
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  };
   search = (query, data) => {
-    let text = query.toLowerCase()
-    let arr = []
+    let text = query.toLowerCase();
+    let arr = [];
     data.map(function(item) {
-      let nana = item.name.toLowerCase()
+      let nana = item.name.toLowerCase();
       if (nana.indexOf(text) != -1) {
-        arr.push(item)
+        arr.push(item);
       }
-    })
-    return arr
-  }
+    });
+    return arr;
+  };
   callBack = (key, data) => {
     switch (key) {
       case 'DEL_ITEM':
         deleteCustomer(data.item.id)
           .then(res => {
-            this.data.rows.splice(data.index, 1)
-            this.statusNotify = true
-            this.title = 0
+            this.data.rows.splice(data.index, 1);
+            this.statusNotify = true;
+            this.title = 0;
             setTimeout(() => {
-              this.statusNotify = false
-            }, 2000)
+              this.statusNotify = false;
+            }, 2000);
           })
           .catch(res => {
-            this.statusNotify = true
-            this.title = 1
+            this.statusNotify = true;
+            this.title = 1;
             setTimeout(() => {
-              this.statusNotify = false
-            }, 2000)
-          })
+              this.statusNotify = false;
+            }, 2000);
+          });
 
-        break
+        break;
       case 'NEXT_PAGE':
-        this.page = data
-        console.log(JSON.stringify(this.page))
+        this.page = data;
+        console.log(JSON.stringify(this.page));
         if (this.isSearch) {
-          this.getUsers(this.page, this.limit, this.query)
+          this.getUsers(this.page, this.limit, this.query);
         } else {
-          this.getUsers(this.page, this.limit)
+          this.getUsers(this.page, this.limit);
         }
 
-        break
+        break;
       case 'SEARCH':
-        this.isSearch = true
-        this.page = 1
+        this.isSearch = true;
+        this.page = 1;
         this.query =
           `${data.name ? '&name=' + `${data.name}` : ''}` +
-          `${data.name ? '&userName=' + `${data.name}` : ''}` +
-          `${data.name ? '&phone=' + `${data.phone}` : ''}` +
+          `${data.phone ? '&phone=' + `${data.phone}` : ''}` +
           `${data.status ? '&email=' + data.email : ''}` +
-          `${data.category ? '&role=' + data.role : ''}`
-        this.getUsers(this.page, this.limit, this.query)
+          `${data.category ? '&role=' + data.role : ''}`;
+        this.getUsers(this.page, this.limit, this.query);
 
         // console.log(JSON.stringify(q))
         // if (data.name != '') {
@@ -106,44 +124,44 @@ export default class UsersMana extends React.Component {
         // }
 
         // console.log(JSON.stringify(this.data));
-        break
+        break;
       case 'BACK_ALL':
-        this.page = 1
-        this.isSearch = false
+        this.page = 1;
+        this.isSearch = false;
         this.search = {
           name: '',
           phone: '',
           email: '',
           role: ''
-        }
-        this.getUsers(this.page, this.limit)
+        };
+        this.getUsers(this.page, this.limit);
 
-        break
+        break;
       case 'CHANGE_ROLE':
-        this.data.rows[data.data.index].role = data.role
+        this.data.rows[data.data.index].role = data.role;
         updateCustomer(this.data.rows[data.data.index])
           .then(res => {
-            console.log(JSON.stringify(res))
+            console.log(JSON.stringify(res));
 
-            this.statusNotify = true
-            this.title = 0
+            this.statusNotify = true;
+            this.title = 0;
             setTimeout(() => {
-              this.statusNotify = false
-            }, 2000)
+              this.statusNotify = false;
+            }, 2000);
           })
           .catch(res => {
-            this.statusNotify = true
-            this.title = 1
+            this.statusNotify = true;
+            this.title = 1;
             setTimeout(() => {
-              this.statusNotify = false
-            }, 2000)
-          })
-        break
+              this.statusNotify = false;
+            }, 2000);
+          });
+        break;
 
       default:
-        break
+        break;
     }
-  }
+  };
   render() {
     return (
       <div className="row">
@@ -167,9 +185,7 @@ export default class UsersMana extends React.Component {
           )}
           {this.statusNotify ? (
             <div
-              className={
-                this.title == 0 ? 'alert alert-success' : 'alert alert-false'
-              }
+              className={this.title == 0 ? 'alert alert-success' : 'alert alert-false'}
               role="alert"
               style={{ position: 'fixed', top: 100, right: 20 }}
             >
@@ -178,6 +194,6 @@ export default class UsersMana extends React.Component {
           ) : null}
         </div>
       </div>
-    )
+    );
   }
 }

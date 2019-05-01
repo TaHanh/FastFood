@@ -14,7 +14,7 @@ export default class DetailUserComponent extends React.Component {
   constructor(props) {
     super(props)
     this.data = this.props.data
-    this.addImg = React.createRef()
+    this.image = React.createRef()
   }
   componentDidMount() {}
   changeInput = data => {
@@ -135,8 +135,8 @@ export default class DetailUserComponent extends React.Component {
                   </select>
                 </div>
               </div>
-              {this.data.role !== 'customer' ? (
-                <div>
+              {/* {this.data.role !== 'customer' ? (
+                <div> */}
                   {/* <div className="row align-items-center mb-3">
                     <div className="col-3 px-0">
                       <span className="font">Tên đăng nhập</span>
@@ -171,23 +171,13 @@ export default class DetailUserComponent extends React.Component {
                       />
                     </div>
                   </div>
-                </div>
-              ) : null}
-            </div>
-            <div className="col-4">
-              {/*<img
-
-            className="cursor rounded-circle border border-secondary "
-            style={{ width: 100, height: 100, }}
-            src={this.data.avatar || '../../../static/images/ava.jpg'}
-          />*/}
-            </div>
-          </div>
-          <div className="row  align-items-center mb-3">
-            <div className="col-2">
+                {/* </div>
+              ) : null} */}
+  <div className="row  align-items-center mb-3">
+            <div className="col-3 px-0">
               <span className="font">Địa chỉ</span>
             </div>
-            <div className="col-10">
+            <div className="col-9">
               <input
                 name="address"
                 type="text"
@@ -195,31 +185,86 @@ export default class DetailUserComponent extends React.Component {
                 onChange={e => {
                   this.changeInput(e)
                 }}
-                className="w-75 form-control font"
+                className="w-100 form-control font"
                 style={{}}
               />
             </div>
           </div>
           {this.data.id ? (
             <div>
-              <div className="row align-items-center mb-3">
-                <div className="col-2">
+              <div className="row align-items-center my-4">
+                <div className="col-3 px-0">
                   <span className="font">Số lần mua hàng</span>
                 </div>
-                <div className="col-8">
+                <div className="col-9">
                   <span>{this.data.type}</span>
                 </div>
               </div>
               <div className="row align-items-center mb-3">
-                <div className="col-2">
+                <div className="col-3 px-0">
                   <span className="font">Ngày tạo tài khoản</span>
                 </div>
-                <div className="col-8">
+                <div className="col-9">
                   <span>{this.data.createdAt}</span>
                 </div>
               </div>{' '}
             </div>
           ) : null}
+            </div>
+            <div className="col-4">
+            <div className="text-center">
+                  <img
+                    src={
+                      this.data.avatar
+                        ? this.data.avatar
+                        : '../../static/images/ava.jpg'
+                    }
+                    className="rounded-circle"
+                    style={{
+                      width: '200px',
+                      height: '200px',
+                      objectFit: 'cover'
+                    }}
+                  />
+                  <input
+                    name="upFile"
+                    type="file"
+                    style={{ visibility: 'hidden' }}
+                    ref={this.image}
+                    onChange={e => {
+                      console.log(e.target.files[0])
+                      upLoad(e.target.files[0])
+                        .then(res => {
+                          if (res) {
+                            console.log(res)
+                            let newState = this.data
+                            newState.avatar = res.data[0]
+                            console.log(newState.avatar)
+                            this.data.avatar = newState.avatar
+                            this.props.callBack('UPDATE_AVATAR', this.data.avatar)
+                          }
+                        })
+                        .catch(err => {
+                          console.log(err)
+                        })
+                    }}
+                 
+                  />
+                  <div className="w-100 m-auto text-center">
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger"
+                      onClick={() => {
+                        this.image.current.click()
+                      }}
+                    >
+                      Thay ảnh
+                    </button>
+                  </div>
+                </div>
+            </div>
+          </div>
+        
           <div className="row justify-content-center mb-4 pr-5">
             {this.data.id != undefined && this.data.id != '' ? (
               <button

@@ -51,10 +51,12 @@ export const getCustomerByEmail = email => {
       })
   })
 }
+
+
 export const queryUser = ({ page, limit, query }) => {
   return new Promise((resolve, reject) => {
     const url =
-      `${Config.api.host.base}${Config.api.path.base.customers}` +
+      `${Config.api.host.base}${Config.api.path.base.customers}${'/searchCustomer'}` +
       `${page ? '?page=' + page : ''}` +
       `${limit ? '&limit=' + limit : ''}` +
       `${query ? query : ''}`
@@ -83,7 +85,6 @@ export const queryUser = ({ page, limit, query }) => {
  */
 export const createCustomer = ({
   name,
-  useName,
   avatar,
   email,
   phone,
@@ -100,7 +101,6 @@ export const createCustomer = ({
       'POST',
       {
         name,
-        useName,
         avatar,
         email,
         phone,
@@ -126,7 +126,6 @@ export const createCustomer = ({
 export const updateCustomer = ({
   id,
   name,
-  useName,
   avatar,
   email,
   phone,
@@ -144,7 +143,6 @@ export const updateCustomer = ({
       'PUT',
       {
         name,
-        useName,
         avatar,
         email,
         phone,

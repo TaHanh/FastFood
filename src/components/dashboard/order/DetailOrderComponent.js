@@ -1,64 +1,64 @@
-import React from 'react';
-import { observable } from 'mobx';
-import { inject, observer } from 'mobx-react';
-import { Link, Router } from '../../../routes/routes';
+import React from 'react'
+import { observable } from 'mobx'
+import { inject, observer } from 'mobx-react'
+import { Link, Router } from '../../../routes/routes'
 import {
   getQuery,
   getPathName,
   intentPageString,
   getAllUrlParams
-} from '../../../utils/RouterUtils';
-import { getTimeNow, unixToTime, unitTimeNow } from '../../../utils/convertTime';
-import './order.scss';
+} from '../../../utils/RouterUtils'
+import { getTimeNow, unixToTime, unitTimeNow } from '../../../utils/convertTime'
+import './order.scss'
 @inject('store')
 @observer
 export default class DetailOrderComponent extends React.Component {
-  @observable isRender = false;
-  @observable imgProuct = [];
-  @observable typeProduct = [];
-  @observable getAllUrl = '';
-  @observable data = [];
+  @observable isRender = false
+  @observable imgProuct = []
+  @observable typeProduct = []
+  @observable getAllUrl = ''
+  @observable data = []
   @observable statusNowOrder = {
     name: '',
     status: 0,
     time: ''
-  };
+  }
   @observable statusNowShip = {
     name: '',
     status: 0,
     time: getTimeNow()
-  };
+  }
   constructor(props) {
-    super(props);
-    this.isRender = true;
-    this.data = this.props.data;
-    let medi = this.props.data.statusOrder[this.data.statusOrder.length - 1];
-    this.statusNowOrder = medi;
+    super(props)
+    this.isRender = true
+    this.data = this.props.data
+    let medi = this.props.data.statusOrder[this.data.statusOrder.length - 1]
+    this.statusNowOrder = medi
   }
   componentDidMount() {
-    this.getAllUrl = getAllUrlParams(window.location.href).id || '';
+    this.getAllUrl = getAllUrlParams(window.location.href).id || ''
     // console.log(this.getAllUrl);
     if (this.getAllUrl != undefined && this.getAllUrl != '') {
     }
   }
   totalPrice = () => {
-    let total = 0;
+    let total = 0
     this.data.products.map((item, index) => {
-      total += item.price * item.amount;
-    });
-    return total;
-  };
+      total += item.price * item.amount
+    })
+    return total
+  }
   callBack = (key, data) => {
     switch (key) {
       case 'ADD_IMG':
-        break;
+        break
 
       default:
-        break;
+        break
     }
-  };
+  }
   render() {
-    const { callBack } = this.props;
+    const { callBack } = this.props
     return (
       <div>
         {this.isRender ? (
@@ -71,7 +71,9 @@ export default class DetailOrderComponent extends React.Component {
                   </a>
                 </Link>
               </button> */}
-              <h5 className="text-center pb-3 colorDefault">Chi tiết đơn hàng</h5>
+              <h5 className="text-center pb-3 colorDefault">
+                Chi tiết đơn hàng
+              </h5>
               <div className="row align-items-center mb-3 ">
                 <div className="col-2">
                   <span className="font">Tên khách hàng</span>
@@ -81,9 +83,9 @@ export default class DetailOrderComponent extends React.Component {
                     type="text"
                     className="w-75 form-control font"
                     style={{}}
-                    value={this.data.customer.name}
+                    value={this.data.user.name}
                     onChange={e => {
-                      this.data.customer.name = e.target.value;
+                      this.data.user.name = e.target.value
                     }}
                   />
                 </div>
@@ -99,9 +101,9 @@ export default class DetailOrderComponent extends React.Component {
                         type="text"
                         className="w-75 form-control font"
                         style={{}}
-                        value={this.data.customer.phone}
+                        value={this.data.user.phone}
                         onChange={e => {
-                          this.data.customer.phone = e.target.value;
+                          this.data.user.phone = e.target.value
                         }}
                       />
                     </div>
@@ -115,9 +117,9 @@ export default class DetailOrderComponent extends React.Component {
                             type="text"
                             className="w-75 form-control font"
                             style={{}}
-                            value={this.data.customer.email}
+                            value={this.data.user.email}
                             onChange={e => {
-                              this.data.customer.email = e.target.value;
+                              this.data.user.email = e.target.value
                             }}
                           />
                         </div>
@@ -135,9 +137,9 @@ export default class DetailOrderComponent extends React.Component {
                     type="text"
                     className="w-100 form-control font"
                     style={{}}
-                    value={this.data.customer.address}
+                    value={this.data.user.address}
                     onChange={e => {
-                      this.data.customer.address = e.target.value;
+                      this.data.user.address = e.target.value
                     }}
                   />
                 </div>
@@ -156,7 +158,11 @@ export default class DetailOrderComponent extends React.Component {
                             <td style={{ maxWidth: 50 }}>
                               {item.typeSize ? (
                                 <span>
-                                  Phân loại: {item.typeSize.find(e => e.status == true).name}
+                                  Phân loại:{' '}
+                                  {
+                                    item.typeSize.find(e => e.status == true)
+                                      .name
+                                  }
                                 </span>
                               ) : (
                                 ''
@@ -188,13 +194,15 @@ export default class DetailOrderComponent extends React.Component {
                               />
                             </td> */}
                           </tr>
-                        );
+                        )
                       })}
                       <tr>
                         <td colspan="2">Tổng thành tiền</td>
 
                         <th style={{ maxWidth: 50 }}>
-                          <span style={{ color: 'red' }}>{this.totalPrice()}đ</span>
+                          <span style={{ color: 'red' }}>
+                            {this.totalPrice()}đ
+                          </span>
                         </th>
                       </tr>
                     </tbody>
@@ -212,17 +220,32 @@ export default class DetailOrderComponent extends React.Component {
                         type="text"
                         className="w-75 custom-select font"
                         onChange={e => {
-                          this.statusNowOrder.time = unitTimeNow();
-                          this.statusNowOrder.status = e.target.value;
+                          this.statusNowOrder.time = unitTimeNow()
+                          this.statusNowOrder.status = e.target.value
                         }}
                       >
-                        <option value="0" selected={this.statusNowOrder.status == 0 ? true : false}>
+                        <option
+                          value="0"
+                          selected={
+                            this.statusNowOrder.status == 0 ? true : false
+                          }
+                        >
                           Đang chờ xử lý
                         </option>
-                        <option value="1" selected={this.statusNowOrder.status == 1 ? true : false}>
+                        <option
+                          value="1"
+                          selected={
+                            this.statusNowOrder.status == 1 ? true : false
+                          }
+                        >
                           Xác nhận
                         </option>
-                        <option value="2" selected={this.statusNowOrder.status == 2 ? true : false}>
+                        <option
+                          value="2"
+                          selected={
+                            this.statusNowOrder.status == 2 ? true : false
+                          }
+                        >
                           Hủy đơn
                         </option>
                       </select>
@@ -230,8 +253,12 @@ export default class DetailOrderComponent extends React.Component {
                     <div className="col-9 px-0">
                       <div className="row  align-items-center">
                         <div className="col-6 px-0">
-                          <span className="font float-left mr-2">Thời gian</span>
-                          <span className="font">{unixToTime(this.statusNowOrder.time)}</span>
+                          <span className="font float-left mr-2">
+                            Thời gian
+                          </span>
+                          <span className="font">
+                            {unixToTime(this.statusNowOrder.time)}
+                          </span>
                         </div>
                         <div className="col-6 px-0">
                           <input
@@ -241,7 +268,7 @@ export default class DetailOrderComponent extends React.Component {
                             placeholder="ghi chú"
                             value={this.statusNowOrder.name}
                             onChange={e => {
-                              this.statusNowOrder.name = e.target.value;
+                              this.statusNowOrder.name = e.target.value
                             }}
                           />
                         </div>
@@ -253,7 +280,9 @@ export default class DetailOrderComponent extends React.Component {
               {this.statusNowOrder.status == 1 ? (
                 <div className="row  mb-3">
                   <div className="col-2">
-                    <span className="font  pt-2 d-block">Trạng thái giao hàng</span>
+                    <span className="font  pt-2 d-block">
+                      Trạng thái giao hàng
+                    </span>
                   </div>
                   <div className="col-10">
                     <table className="table table-bordered table-sm">
@@ -278,7 +307,7 @@ export default class DetailOrderComponent extends React.Component {
                                 <img
                                   onClick={() => {
                                     // callBack('DEL_ITEM', { index, item })
-                                    this.data.statusShip.splice(index, 1);
+                                    this.data.statusShip.splice(index, 1)
                                   }}
                                   className="cursor"
                                   style={{ width: 25 }}
@@ -286,7 +315,7 @@ export default class DetailOrderComponent extends React.Component {
                                 />
                               </td>
                             </tr>
-                          );
+                          )
                         })}
                       </tbody>
                     </table>
@@ -297,8 +326,8 @@ export default class DetailOrderComponent extends React.Component {
                           type="text"
                           className="w-75 custom-select font"
                           onChange={e => {
-                            this.statusNowShip.time = getTimeNow();
-                            this.statusNowShip.status = e.target.value;
+                            this.statusNowShip.time = getTimeNow()
+                            this.statusNowShip.status = e.target.value
                           }}
                         >
                           <option value="3">Đang chờ xử lý</option>
@@ -310,8 +339,12 @@ export default class DetailOrderComponent extends React.Component {
                       <div className="col-9 px-0">
                         <div className="row  align-items-center">
                           <div className="col-5 px-0">
-                            <span className="font float-left mr-2">Thời gian</span>
-                            <span className="font">{this.statusNowShip.time}</span>
+                            <span className="font float-left mr-2">
+                              Thời gian
+                            </span>
+                            <span className="font">
+                              {this.statusNowShip.time}
+                            </span>
                           </div>
                           <div className="col-5 px-0">
                             <input
@@ -321,7 +354,7 @@ export default class DetailOrderComponent extends React.Component {
                               placeholder="ghi chú"
                               value={this.statusNowShip.name}
                               onChange={e => {
-                                this.statusNowShip.name = e.target.value;
+                                this.statusNowShip.name = e.target.value
                               }}
                             />
                           </div>
@@ -332,7 +365,7 @@ export default class DetailOrderComponent extends React.Component {
                                   name: this.statusNowShip.name,
                                   time: unitTimeNow(),
                                   status: this.statusNowShip.status
-                                });
+                                })
                               }}
                               className="bgDefault colorWhite p-2 px-3 rounded cursor w-100"
                             >
@@ -356,7 +389,7 @@ export default class DetailOrderComponent extends React.Component {
                     style={{}}
                     value={this.data.message}
                     onChange={e => {
-                      this.data.message = e.target.value;
+                      this.data.message = e.target.value
                     }}
                   />
                 </div>
@@ -369,32 +402,37 @@ export default class DetailOrderComponent extends React.Component {
                       console.log(
                         this.statusNowOrder.status +
                           '-----' +
-                          this.props.data.statusOrder[this.data.statusOrder.length - 1].status
-                      );
+                          this.props.data.statusOrder[
+                            this.data.statusOrder.length - 1
+                          ].status
+                      )
                       if (
                         this.statusNowOrder.status !==
-                        this.data.statusOrder[this.data.statusOrder.length - 1].status
+                        this.data.statusOrder[this.data.statusOrder.length - 1]
+                          .status
                       ) {
                         this.data.statusOrder.push({
                           name: this.statusNowOrder.name,
                           time: unitTimeNow(),
                           status: this.statusNowOrder.status
-                        });
+                        })
                       }
 
-                     callBack('UPDATE', this.data);
+                      callBack('UPDATE', this.data)
                     }}
                   >
                     Chỉnh sửa
                   </button>
                 ) : (
-                  <button className="bgDefault colorWhite p-2 px-3 rounded cursor">Lưu</button>
+                  <button className="bgDefault colorWhite p-2 px-3 rounded cursor">
+                    Lưu
+                  </button>
                 )}
               </div>
             </div>
           </div>
         ) : null}
       </div>
-    );
+    )
   }
 }

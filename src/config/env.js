@@ -1,5 +1,5 @@
 // const myUrl = 'https://hrcvn.tk';
-const myUrl = 'http://localhost:3000';
+const myUrl = 'http://localhost:3000'
 export default {
   releaseVersion: false,
   secret: {
@@ -20,11 +20,9 @@ export default {
   api: {
     host: {
       myUrl: myUrl,
-      // base: 'https://aib.vn:280',
       base: 'http://localhost:9000',
-      upload: 'https://local.aib.vn:280',
+      upload: 'http://localhost:4000',
 
-      map: 'https://maps.googleapis.com',
       link: `${myUrl}/log-in`,
       link_forgotpassword: `${myUrl}/reset-password`
     },
@@ -35,6 +33,7 @@ export default {
       base: {
         categories: '/categories',
         products: '/products',
+        productsSearch: '/products/search',
         customers: '/customers',
         orders: '/orders'
       }
@@ -51,4 +50,4 @@ export default {
     loginOK: 'loginOk',
     user: 'user'
   }
-};
+}
