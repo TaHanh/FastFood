@@ -1,30 +1,30 @@
-import React from 'react'
+import React from "react";
 
 // import { initFB, loginFB } from '../utils/FBUtils';
-import { Link, Router } from '../routes/routes'
-import { validateEmail } from '../utils/EmailUtils'
+import { Link, Router } from "../routes/routes";
+import { validateEmail } from "../utils/EmailUtils";
 // import { createUser, login } from '../api/Auth';
-import { inject, observer } from 'mobx-react'
-import { observable } from 'mobx'
-import Config from '../config/env'
-import { setData } from '../utils/LocalStorageUtils'
-import HeaderComponent from '../components/header/HeaderComponent'
-import FooterComponent from '../components/general/FooterComponent'
-import SignUpComponent from '../components/login/SignUpComponent'
-import { getPathName } from '../utils/RouterUtils'
-import { getAllCustomers, createCustomer } from '../api/Customer'
-@inject('store')
+import { inject, observer } from "mobx-react";
+import { observable } from "mobx";
+import Config from "../config/env";
+import { setData } from "../utils/LocalStorageUtils";
+import HeaderComponent from "../components/header/HeaderComponent";
+import FooterComponent from "../components/general/FooterComponent";
+import SignUpComponent from "../components/login/SignUpComponent";
+import { getPathName } from "../utils/RouterUtils";
+import { getAllCustomers, createCustomer } from "../api/Customer";
+@inject("store")
 @observer
 export default class SignUp extends React.Component {
   @observable
-  path = ''
+  path = "";
   @observable
-  isEmailRegistered = false
+  isEmailRegistered = false;
   @observable
-  isRegistered = false
+  isRegistered = false;
   constructor(props) {
-    super(props)
-    this.store = this.props.store
+    super(props);
+    this.store = this.props.store;
   }
 
   componentDidMount() {
@@ -40,10 +40,10 @@ export default class SignUp extends React.Component {
   }
 
   callBack = (key, data) => {
-    this.isRegistered = true
+    this.isRegistered = true;
 
     switch (key) {
-      case 'signup':
+      case "signup":
         if (
           data.password.length > 0 &&
           data.password2.length > 0 &&
@@ -51,72 +51,52 @@ export default class SignUp extends React.Component {
           data.phone.length > 0
         ) {
           if (!validateEmail(data.email)) {
-            alert('Email không đúng :)')
-            return
+            alert("Email không đúng :)");
+            return;
           }
 
           if (data.password != data.password2) {
-            alert('Mật khẩu không trùng nhau')
-            return
+            alert("Mật khẩu không trùng nhau");
+            return;
           }
           if (data.password.length < 8) {
-            alert('Mật khẩu >= 8 kí tự')
-            return
+            alert("Mật khẩu >= 8 kí tự");
+            return;
           }
-          createCustomer({ ...data, type: 1, address: '', role: 'customer' })
+          createCustomer({ ...data, type: 0, address: "", role: "customer" })
             .then(res => {
-              console.log(res)
-              localStorage['userFF'] = res.id
-              this.props.store.user = res
+              console.log(res);
+              localStorage["userFF"] = res.id;
+              this.props.store.user = res;
 
-              Router.pushRoute('index')
+              Router.pushRoute("index");
               // this.isEmailRegistered = false;
               // document.getElementById('login-view').style.display = 'none';
               // document.getElementById('verify-mail').style.display = 'block';
 
-              this.isRegistered = false
+              this.isRegistered = false;
             })
             .catch(e => {
-              this.isRegistered = false
-              const res = e.response.data
+              this.isRegistered = false;
+              const res = e.response.data;
               // alert(res.message);
-              if (res.message === 'email already registered') {
-                this.isEmailRegistered = true
+              if (res.message === "email already registered") {
+                this.isEmailRegistered = true;
               } else {
-                alert(res.message)
+                alert(res.message);
               }
               ////console.log('signup ' + JSON.stringify(e));
-            })
+            });
         } else {
-          this.isRegistered = false
-          alert('Vui lòng điền đầy đủ thông tin trước khi tạo tài khoản')
+          this.isRegistered = false;
+          alert("Vui lòng điền đầy đủ thông tin trước khi tạo tài khoản");
         }
-        break
+        break;
 
-      case 'loginGHRC':
-        login(Config.api.path.base.loginG, data.tokenObj.access_token)
-          .then(res => {
-            this.store.setLogin(res, Config.role.user)
-          })
-          .catch(e => {
-            alert(JSON.stringify(e))
-          })
-        break
-      case 'loginFBHRC':
-        loginFB(res => {
-          login(Config.api.path.base.loginF, res.authResponse.accessToken)
-            .then(res => {
-              this.store.setLogin(res, Config.role.user)
-            })
-            .catch(e => {
-              alert(JSON.stringify(e))
-            })
-        })
-        break
       default:
-        break
+        break;
     }
-  }
+  };
   render() {
     return (
       <div className="signup font">
@@ -128,6 +108,6 @@ export default class SignUp extends React.Component {
         />
         <FooterComponent />
       </div>
-    )
+    );
   }
 }

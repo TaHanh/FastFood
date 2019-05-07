@@ -1,33 +1,34 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Document, { Head, Main, NextScript } from 'next/document'
-import flush from 'styled-jsx/server'
-import { ServerStyleSheet } from 'styled-components'
+import React from "react";
+import PropTypes from "prop-types";
+import Document, { Head, Main, NextScript } from "next/document";
+import flush from "styled-jsx/server";
+import { ServerStyleSheet } from "styled-components";
 class MyDocument extends Document {
   constructor(props) {
-    super(props)
+    super(props);
   }
   static getInitialProps({ renderPage }) {}
 
   render() {
     const cssFiles = [
-      '/_next/static/style.css',
-      '//use.fontawesome.com/releases/v5.2.0/css/all.css',
-      '//fonts.googleapis.com/css?family=Roboto:300,400,500',
+      "/_next/static/style.css",
+      "//use.fontawesome.com/releases/v5.2.0/css/all.css",
+      "//fonts.googleapis.com/css?family=Roboto:300,400,500",
       // '//stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css',
-      '../static/bootstrap.min.css'
-    ]
+      "../static/bootstrap.min.css",
+      "../components/general/style.scss"
+    ];
 
     const jsFiles = [
-      '//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js',
+      "//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js",
       // '//code.jquery.com/jquery-3.1.1.min.js',
-      '../static/jquery.min.js',
-      '/_next/static/commons/main.js',
-      '//stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js',
-      '//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js'
-    ]
+      "../static/jquery.min.js",
+      "/_next/static/commons/main.js",
+      "//stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js",
+      "//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    ];
 
-    const { pageContext } = this.props
+    const { pageContext } = this.props;
 
     return (
       <html lang="en" dir="ltr">
@@ -38,8 +39,8 @@ class MyDocument extends Document {
           <meta
             name="viewport"
             content={
-              'user-scalable=0, initial-scale=1, ' +
-              'minimum-scale=1, width=device-width, height=device-height'
+              "user-scalable=0, initial-scale=1, " +
+              "minimum-scale=1, width=device-width, height=device-height"
             }
           />
           {/* PWA primary color */}
@@ -91,7 +92,7 @@ class MyDocument extends Document {
           ))}
         </body>
       </html>
-    )
+    );
   }
 }
 
@@ -119,22 +120,22 @@ MyDocument.getInitialProps = ctx => {
   // 4. page.render
 
   // Render app and page and get the context of the page with collected side effects.
-  let pageContext
-  const sheet = new ServerStyleSheet()
+  let pageContext;
+  const sheet = new ServerStyleSheet();
   const page = ctx.renderPage(Component => {
     const WrappedComponent = props => {
-      pageContext = props.pageContext
-      return sheet.collectStyles(<Component {...props} />)
-    }
+      pageContext = props.pageContext;
+      return sheet.collectStyles(<Component {...props} />);
+    };
 
     WrappedComponent.propTypes = {
       pageContext: PropTypes.object.isRequired
-    }
+    };
 
-    return WrappedComponent
-  })
+    return WrappedComponent;
+  });
 
-  const styleTags = sheet.getStyleElement()
+  const styleTags = sheet.getStyleElement();
 
   return {
     ...page,
@@ -153,7 +154,7 @@ MyDocument.getInitialProps = ctx => {
         {flush() || null}
       </React.Fragment>
     )
-  }
-}
+  };
+};
 
-export default MyDocument
+export default MyDocument;

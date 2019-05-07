@@ -1,26 +1,26 @@
-import React from 'react';
+import React from "react";
 
-import { observable } from 'mobx';
+import { observable } from "mobx";
 
-import { inject, observer } from 'mobx-react';
-import { getPathName } from '../utils/RouterUtils';
-import { Link, Router } from '../routes/routes';
-import Config from '../config/env';
-import { queryOrder, deleteOrder } from '../api/Order';
-import { getCustomer } from '../api/Customer';
-import MenuLeftComponent from '../components/dashboard/MenuLeftComponent';
-import OrderProductComponent from '../components/dashboard/order/OrderProductComponent';
-import LoadComponent from '../components/general/LoadComponent';
-@inject('store')
+import { inject, observer } from "mobx-react";
+import { getPathName } from "../utils/RouterUtils";
+import { Link, Router } from "../routes/routes";
+import Config from "../config/env";
+import { queryOrder, deleteOrder } from "../api/Order";
+import { getCustomer } from "../api/Customer";
+import MenuLeftComponent from "../components/dashboard/MenuLeftComponent";
+import OrderProductComponent from "../components/dashboard/order/OrderProductComponent";
+import LoadComponent from "../components/general/LoadComponent";
+@inject("store")
 @observer
 export default class OrderMana extends React.Component {
   @observable data = [];
   @observable page = 1;
-  @observable limit = 5;
+  @observable limit = 10;
   @observable totalPage = 0;
   @observable isRender = false;
   @observable isSearch = false;
-  @observable query = '';
+  @observable query = "";
   @observable search = {};
 
   constructor(props) {
@@ -29,12 +29,12 @@ export default class OrderMana extends React.Component {
     // this.props.store.getOrdersAPI()
     this.getOrder(this.page, this.limit);
     this.search = {
-      name: '',
-      phone: '',
-      timeStart: '',
-      timeEnd: '',
-      statusOrder: '',
-      statusShip: ''
+      name: "",
+      phone: "",
+      timeStart: "",
+      timeEnd: "",
+      statusOrder: "",
+      statusShip: ""
     };
   }
   componentDidMount() {
@@ -59,23 +59,23 @@ export default class OrderMana extends React.Component {
   };
   callBack = (key, data) => {
     switch (key) {
-      case 'DEL_ITEM':
+      case "DEL_ITEM":
         deleteOrder(data.item.id).then(res => {
           this.data.splice(data.index, 1);
         });
         break;
-      case 'NEXT_PAGE':
+      case "NEXT_PAGE":
         this.page = data;
         this.isRender = false;
         this.getOrder(this.page, this.limit);
         break;
-      case 'SEARCH':
+      case "SEARCH":
         this.isSearch = true;
         this.page = 1;
         console.log(data);
         this.query =
-          `${data.statusShip ? '&statusShip=' + `${data.statusShip}` : ''}` +
-          `${data.statusOrder ? '&statusOrder=' + data.statusOrder : ''}`;
+          `${data.statusShip ? "&statusShip=" + `${data.statusShip}` : ""}` +
+          `${data.statusOrder ? "&statusOrder=" + data.statusOrder : ""}`;
         // if (data.name != '' || data.phone != '') {
         //   this.query =
         //     `${data.name ? '&name=' + `${data.name}` : ''}` +
@@ -86,16 +86,16 @@ export default class OrderMana extends React.Component {
         // }
         this.getOrder(this.page, this.limit, this.query);
         break;
-      case 'BACK_ALL':
+      case "BACK_ALL":
         this.page = 1;
         this.isSearch = false;
         this.search = {
-          name: '',
-          phone: '',
-          timeStart: '',
-          timeEnd: '',
-          statusOrder: '',
-          statusShip: ''
+          name: "",
+          phone: "",
+          timeStart: "",
+          timeEnd: "",
+          statusOrder: "",
+          statusShip: ""
         };
         this.getOrder(this.page, this.limit);
 
@@ -121,7 +121,7 @@ export default class OrderMana extends React.Component {
               callBack={this.callBack}
             />
           ) : (
-            <div style={{ minHeight: '100vh' }}>
+            <div style={{ minHeight: "100vh" }}>
               <LoadComponent />
             </div>
           )}

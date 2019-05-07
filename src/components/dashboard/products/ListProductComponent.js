@@ -1,17 +1,17 @@
-import React from 'react'
-import { observable } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import { Link, Router } from '../../../routes/routes'
-import ReactHtmlParser from 'react-html-parser'
-import './product.scss'
-@inject('store')
+import React from "react";
+import { observable } from "mobx";
+import { inject, observer } from "mobx-react";
+import { Link, Router } from "../../../routes/routes";
+import ReactHtmlParser from "react-html-parser";
+import "./product.scss";
+@inject("store")
 @observer
 class Item extends React.Component {
   render() {
-    const { index, item, callBack } = this.props
+    const { index, item, callBack } = this.props;
     return (
       <tr>
-        <td>
+        {/* <td>
           <span
             className="d-block"
             style={{
@@ -25,7 +25,7 @@ class Item extends React.Component {
           >
             {item.id || ''}
           </span>
-        </td>
+        </td> */}
         <td
           className=""
           // onClick={() => {
@@ -33,14 +33,14 @@ class Item extends React.Component {
           // }}
         >
           <a
-            href={'/admin/detail-product?id=' + item.id}
+            href={"/admin/detail-product?id=" + item.id}
             className="colorDefault cursor"
-            style={{ textDecoration: 'none' }}
+            style={{ textDecoration: "none" }}
           >
-            {item.name || ''}
+            {item.name || ""}
           </a>
         </td>
-        <td> {item.highlight == 0 ? 'true' : 'false'} </td>
+        <td> {item.highlight == 0 ? "true" : "false"} </td>
         <td style={{}}>
           {item.image.length} hình ảnh
           {/* {item.image.map(e => {
@@ -65,24 +65,24 @@ class Item extends React.Component {
           {item.type.map(e => {
             return (
               <p className="mb-1" style={{}}>
-                {' '}
-                {e}{' '}
+                {" "}
+                {e}{" "}
               </p>
-            )
+            );
           })}
         </td>
         <td>
           {item.status == 0 ? (
-            <span style={{ color: 'darkblue' }}>Còn hàng</span>
+            <span style={{ color: "darkblue" }}>Còn hàng</span>
           ) : (
-            <span style={{ color: 'red' }}>Hết hàng</span>
+            <span style={{ color: "red" }}>Hết hàng</span>
           )}
         </td>
         <td>
           <p
             className="mb-0 description"
             style={{
-              maxWidth: '200px'
+              maxWidth: "200px"
             }}
           >
             {ReactHtmlParser(item.description)}
@@ -90,7 +90,7 @@ class Item extends React.Component {
         </td>
         <td>
           {this.props.store.dataCategory.map((e, i) => {
-            if (e.key == item.category) return e.name
+            if (e.key == item.category) return e.name;
           })}
         </td>
         <td>
@@ -98,7 +98,7 @@ class Item extends React.Component {
             data-toggle="modal"
             data-target="#exampleModalCenter"
             onClick={() => {
-              this.props.clickItem({ item, index })
+              this.props.clickItem({ item, index });
             }}
             className="cursor"
             style={{ width: 25 }}
@@ -106,50 +106,50 @@ class Item extends React.Component {
           />
         </td>
       </tr>
-    )
+    );
   }
 }
 
-@inject('store')
+@inject("store")
 @observer
 export default class ListProductComponent extends React.Component {
-  @observable isRender = false
-  @observable data = []
-  @observable search = ''
+  @observable isRender = false;
+  @observable data = [];
+  @observable search = "";
   constructor(props) {
-    super(props)
-    this.data = this.props.data
-    this.search = this.props.search
-    console.log(JSON.stringify(this.search))
-    this.isRender = true
+    super(props);
+    this.data = this.props.data;
+    this.search = this.props.search;
+    console.log(JSON.stringify(this.search));
+    this.isRender = true;
   }
   componentDidMount() {}
   pagination = () => {
-    let pagi = []
+    let pagi = [];
     for (let index = 0; index < this.props.totalPage; index++) {
       if (this.props.page == index + 1) {
         pagi.push(
           <span className="border bgDefault colorWhite rounded py-1 px-2 mx-1">
             {index + 1}
           </span>
-        )
+        );
       } else {
         pagi.push(
           <span
             className="border border-dark rounded p-1 py-1 px-2 mx-1 cursor"
             onClick={() => {
-              this.props.callBack('NEXT_PAGE', index + 1)
+              this.props.callBack("NEXT_PAGE", index + 1);
             }}
           >
             {index + 1}
           </span>
-        )
+        );
       }
     }
-    return pagi
-  }
+    return pagi;
+  };
   render() {
-    const { callBack } = this.props
+    const { callBack } = this.props;
     return (
       <div>
         {this.isRender ? (
@@ -159,7 +159,7 @@ export default class ListProductComponent extends React.Component {
                 <a
                   href="/admin/detail-product"
                   className="colorWhite"
-                  style={{ textDecoration: 'none' }}
+                  style={{ textDecoration: "none" }}
                 >
                   Thêm món
                 </a>
@@ -177,11 +177,11 @@ export default class ListProductComponent extends React.Component {
                         style={{}}
                         value={this.search.name}
                         onChange={e => {
-                          this.search.name = e.target.value
+                          this.search.name = e.target.value;
                         }}
                         onKeyPress={({ charCode }) => {
                           if (charCode === 13) {
-                            callBack('SEARCH', this.search)
+                            callBack("SEARCH", this.search);
                           }
                         }}
                       />
@@ -196,24 +196,24 @@ export default class ListProductComponent extends React.Component {
                         type="text"
                         className="w-75 custom-select font"
                         onChange={e => {
-                          this.search.status = e.target.value
+                          this.search.status = e.target.value;
                         }}
                       >
                         <option
                           value=""
-                          selected={this.search.status == '' ? true : false}
+                          selected={this.search.status == "" ? true : false}
                         >
                           ----
                         </option>
                         <option
                           value="0"
-                          selected={this.search.status == '0' ? true : false}
+                          selected={this.search.status == "0" ? true : false}
                         >
                           Còn hàng
                         </option>
                         <option
                           value="1"
-                          selected={this.search.status == '1' ? true : false}
+                          selected={this.search.status == "1" ? true : false}
                         >
                           Hết hàng
                         </option>
@@ -231,12 +231,12 @@ export default class ListProductComponent extends React.Component {
                         type="text"
                         className="w-75 custom-select font"
                         onChange={e => {
-                          this.search.category = e.target.value
+                          this.search.category = e.target.value;
                         }}
                       >
                         <option
                           value=""
-                          selected={this.search.category == '' ? true : false}
+                          selected={this.search.category == "" ? true : false}
                         >
                           ----
                         </option>
@@ -250,7 +250,7 @@ export default class ListProductComponent extends React.Component {
                             >
                               {item.name}
                             </option>
-                          )
+                          );
                         })}
                       </select>
                     </div>
@@ -260,7 +260,7 @@ export default class ListProductComponent extends React.Component {
               <div className="row justify-content-end mb-4 pr-5">
                 <button
                   onClick={() => {
-                    callBack('SEARCH', this.search)
+                    callBack("SEARCH", this.search);
                   }}
                   className="bgDefault colorWhite p-2 px-3 mr-3 rounded cursor"
                 >
@@ -269,7 +269,7 @@ export default class ListProductComponent extends React.Component {
                 {this.props.isSearch ? (
                   <button
                     onClick={() => {
-                      callBack('BACK_ALL')
+                      callBack("BACK_ALL");
                     }}
                     className="bgDefault colorWhite p-2 px-3 rounded cursor"
                   >
@@ -281,7 +281,7 @@ export default class ListProductComponent extends React.Component {
             <table className="table table-bordered text-center font">
               <thead className="thead-light">
                 <tr>
-                  <th scope="col">id</th>
+                  {/* <th scope="col">id</th> */}
                   <th scope="col">Tên SP</th>
                   <th scope="col">Hot</th>
                   <th scope="col">Hình ảnh</th>
@@ -301,10 +301,10 @@ export default class ListProductComponent extends React.Component {
                       index={index}
                       callBack={callBack}
                       clickItem={({ item, index }) => {
-                        this.clickItem = { item: item, index: index }
+                        this.clickItem = { item: item, index: index };
                       }}
                     />
-                  )
+                  );
                 })}
 
                 {this.data.length == 0 ? (
@@ -335,7 +335,7 @@ export default class ListProductComponent extends React.Component {
                   <div className="modal-footer">
                     <button
                       onClick={() => {
-                        this.props.callBack('DEL_ITEM', this.clickItem)
+                        this.props.callBack("DEL_ITEM", this.clickItem);
                       }}
                       data-dismiss="modal"
                       type="button"
@@ -357,6 +357,6 @@ export default class ListProductComponent extends React.Component {
           </div>
         ) : null}
       </div>
-    )
+    );
   }
 }

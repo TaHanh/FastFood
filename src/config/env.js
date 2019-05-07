@@ -1,41 +1,33 @@
 // const myUrl = 'https://hrcvn.tk';
-const myUrl = 'http://localhost:3000'
+const myUrl = "http://localhost:3000";
 export default {
   releaseVersion: false,
   secret: {
-    username: 'wisami_base_1522119499',
-    password: 'wisami_base_secret_1522119999'
+    username: "wisami_base_1522119499",
+    password: "wisami_base_secret_1522119999"
   },
-  app: {
-    android: 'market://details?id=com.maps1',
-    ios: 'itms://itunes.apple.com/us/app/apple-store/myiosappid?mt=8',
-    fb: '463883330782143'
-  },
+
   role: {
-    user: 'user',
-    employ: 'employ',
-    admin: 'admin'
+    user: "user",
+    employ: "employ",
+    admin: "admin"
   },
 
   api: {
     host: {
-      myUrl: myUrl,
-      base: 'http://localhost:9000',
-      upload: 'http://localhost:4000',
-
-      link: `${myUrl}/log-in`,
-      link_forgotpassword: `${myUrl}/reset-password`
+      base: "http://localhost:9000",
+      upload: "http://localhost:4000"
     },
     path: {
       upload: {
-        upFile: '/upload'
+        upFile: "/upload"
       },
       base: {
-        categories: '/categories',
-        products: '/products',
-        productsSearch: '/products/search',
-        customers: '/customers',
-        orders: '/orders'
+        categories: "/categories",
+        products: "/products",
+        users: "/users",
+        usersSearch: "/users/queryUsers",
+        orders: "/orders"
       }
     }
   },
@@ -47,7 +39,7 @@ export default {
     }
   },
   asyncStorage: {
-    loginOK: 'loginOk',
-    user: 'user'
+    loginOK: "loginOk",
+    user: "user"
   }
-}
+};

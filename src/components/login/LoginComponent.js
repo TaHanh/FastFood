@@ -1,19 +1,19 @@
-import React from 'react'
-import { Link, Router } from '../../routes/routes'
-import './login.scss'
+import React from "react";
+import { Link, Router } from "../../routes/routes";
+import "./login.scss";
 
-import GoogleLogin from 'react-google-login'
-import { inject, observer } from 'mobx-react'
-import { observable } from 'mobx'
-import LoadCheckComponent from '../general/LoadCheckComponent'
+import GoogleLogin from "react-google-login";
+import { inject, observer } from "mobx-react";
+import { observable } from "mobx";
+import LoadCheckComponent from "../general/LoadCheckComponent";
 @observer
 export default class LoginComponent extends React.Component {
   @observable user = {
-    email: '',
-    password: ''
-  }
+    email: "",
+    password: ""
+  };
   constructor(props) {
-    super(props)
+    super(props);
     // this.state = {
     //   user: '',
     //   password: ''
@@ -22,21 +22,21 @@ export default class LoginComponent extends React.Component {
   componentDidMount() {}
 
   changeInput = event => {
-    const { value, name } = event.target
-    const newState = this.user
-    newState[name] = value
-    this.user = newState
+    const { value, name } = event.target;
+    const newState = this.user;
+    newState[name] = value;
+    this.user = newState;
     // this.setState(newState)
-  }
+  };
   loginFBHRC = () => {
-    this.props.callBack('loginFBHRC')
-  }
+    this.props.callBack("loginFBHRC");
+  };
   loginGHRC = response => {
-    this.props.callBack('loginGHRC', response)
-  }
+    this.props.callBack("loginGHRC", response);
+  };
 
   render() {
-    const { message } = this.props
+    const { message } = this.props;
     return (
       <div id="login">
         <div className="opa" />
@@ -75,8 +75,8 @@ export default class LoginComponent extends React.Component {
               <div className="another px-sm-5 px-3">
                 <input
                   style={
-                    message === 'Sai email/mật khẩu. Vui lòng kiểm tra lại'
-                      ? { color: '#fd7e14', border: '1px solid #fd7e14' }
+                    message === "Sai email/mật khẩu. Vui lòng kiểm tra lại"
+                      ? { color: "#fd7e14", border: "1px solid #fd7e14" }
                       : {}
                   }
                   name="email"
@@ -85,14 +85,14 @@ export default class LoginComponent extends React.Component {
                   onChange={this.changeInput}
                   onKeyPress={({ charCode }) => {
                     if (charCode === 13) {
-                      this.props.callBack('LogIn', this.user)
+                      this.props.callBack("LogIn", this.user);
                     }
                   }}
                 />
                 <input
                   style={
-                    message === 'Sai email/mật khẩu. Vui lòng kiểm tra lại'
-                      ? { color: '#fd7e14', border: '1px solid #fd7e14' }
+                    message === "Sai email/mật khẩu. Vui lòng kiểm tra lại"
+                      ? { color: "#fd7e14", border: "1px solid #fd7e14" }
                       : {}
                   }
                   name="password"
@@ -101,17 +101,16 @@ export default class LoginComponent extends React.Component {
                   onChange={this.changeInput}
                   onKeyPress={({ charCode }) => {
                     if (charCode === 13) {
-                      this.props.callBack('LogIn', this.user)
+                      this.props.callBack("LogIn", this.user);
                     }
                   }}
                 />
                 <p className="error font">{message}</p>
-                {this.props.load ? <LoadCheckComponent /> : null}
                 <button
                   className="btn-login btn-login-res"
-                  onClick={() => this.props.callBack('LogIn', this.user)}
+                  onClick={() => this.props.callBack("LogIn", this.user)}
                 >
-                  ĐĂng Nhập
+                  {this.props.load ? <LoadCheckComponent /> : "Đăng Nhập"}
                 </button>
               </div>
               <p>
@@ -131,6 +130,6 @@ export default class LoginComponent extends React.Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }

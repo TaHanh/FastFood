@@ -1,113 +1,113 @@
-import { action, observable, observe } from 'mobx'
-import Promise from 'bluebird'
+import { action, observable, observe } from "mobx";
+import Promise from "bluebird";
 // var join = Promise.join
 // var fs = Promise.promisifyAll(require('fs'))
 // import { fs } from 'fs'
 // const fs = require('fs')
-import Config from '../config/env'
-import { getPathName, getQuery } from '../utils/RouterUtils'
-import { Link, Router } from '../routes/routes'
-import { getCategories } from '../api/Category'
-import { getAllProducts } from '../api/Product'
-import { getAllCustomers, getCustomer, createCustomer } from '../api/Customer'
-import { getAllOrders } from '../api/Order'
-let store = null
+import Config from "../config/env";
+import { getPathName, getQuery } from "../utils/RouterUtils";
+import { Link, Router } from "../routes/routes";
+import { getCategories } from "../api/Category";
+import { getAllProducts, queryProduct } from "../api/Product";
+import { getAllCustomers, getCustomer, createCustomer } from "../api/Customer";
+import { getAllOrders } from "../api/Order";
+let store = null;
 
 class Store {
-  @observable isServer = false
-  @observable isRender = false
-  @observable token = ''
-  @observable user = ''
-  @observable dataProducts = []
-  @observable dataProductLimit = []
-  @observable productTopBuy = []
+  @observable isServer = false;
+  @observable isRender = false;
+  @observable token = "";
+  @observable user = "";
+  @observable dataProducts = [];
+  @observable dataProductLimit = [];
+  @observable productTopBuy = [];
   @observable dataMenu = [
     {
-      name: 'Trang chủ',
-      icon: '',
-      key: 'TrangChu',
+      name: "Trang chủ",
+      icon: "",
+      key: "TrangChu",
       active: false,
-      directional: '/'
+      directional: "/"
     },
     {
-      name: 'Sản phẩm',
-      icon: '',
-      key: 'SanPham',
+      name: "Sản phẩm",
+      icon: "",
+      key: "SanPham",
       active: false,
-      directional: '/products',
+      directional: "/products",
       children: this.dataCategory
     }
-  ]
-  @observable dataCategory = []
-  @observable myCart = []
+  ];
+  @observable dataCategory = [];
+  @observable myCart = [];
   @observable list = [
     {
-      name: 'Chờ lấy hàng',
-      key: 'waiting',
+      name: "Chờ lấy hàng",
+      key: "waiting",
       status: true
     },
     {
-      name: 'Đang giao',
-      key: 'ordering',
+      name: "Đang giao",
+      key: "ordering",
       status: false
     },
     {
-      name: 'Đã nhận',
-      key: 'receive',
+      name: "Đã nhận",
+      key: "receive",
       status: false
     },
     {
-      name: 'Đã hủy',
-      key: 'cancel',
+      name: "Đã hủy",
+      key: "cancel",
       status: false
     }
-  ]
+  ];
   // admin
-  @observable admin = ''
+  @observable admin = "";
   @observable dataMenuDashboard = [
     {
-      name: 'Dashboard',
-      icon: '',
-      key: 'Dashboard',
+      name: "Dashboard",
+      icon: "",
+      key: "Dashboard",
       active: false,
-      directional: '/admin/dashboard',
+      directional: "/admin/dashboard",
       children: []
     },
     {
-      name: 'Sản phẩm',
-      icon: '',
-      key: 'SanPham',
+      name: "Sản phẩm",
+      icon: "",
+      key: "SanPham",
       active: false,
-      directional: '/admin/products',
+      directional: "/admin/products",
       children: []
     },
     {
-      name: 'Đơn hàng',
-      icon: '',
-      key: 'DonHang',
+      name: "Đơn hàng",
+      icon: "",
+      key: "DonHang",
       active: false,
-      directional: '/admin/orders'
+      directional: "/admin/orders"
     },
     {
-      name: 'Người dùng',
-      icon: '',
-      key: 'User',
+      name: "Người dùng",
+      icon: "",
+      key: "User",
       active: false,
-      directional: '/admin/users'
+      directional: "/admin/users"
     },
     {
-      name: 'Tài khoản',
-      icon: '',
-      key: 'Profile',
+      name: "Tài khoản",
+      icon: "",
+      key: "Profile",
       active: false,
-      directional: '/admin/detail-user'
+      directional: "/admin/detail-user"
     }
-  ]
-  @observable dataOrdersDashboard = []
-  @observable dataOrderAll = []
-  @observable dataCustomersDashboard = []
+  ];
+  @observable dataOrdersDashboard = [];
+  @observable dataOrderAll = [];
+  @observable dataCustomersDashboard = [];
   constructor(obj) {
-    const self = this
+    const self = this;
   }
   // AsyncStorage
 
@@ -146,166 +146,170 @@ class Store {
   @action
   checkUser = (key, callBack) => {
     switch (key) {
-      case 'admin':
-        if (this.admin != '') {
+      case "admin":
+        if (this.admin != "" && this.admin.id) {
         } else {
-          if (localStorage.getItem('adminFF')) {
-            console.log(JSON.parse(localStorage.adminFF))
-            this.admin = JSON.parse(localStorage.adminFF)
+          if (localStorage.getItem("adminFF")) {
+            console.log(JSON.parse(localStorage.adminFF));
+            this.admin = JSON.parse(localStorage.adminFF);
           } else {
-            Router.pushRoute('/admin/login')
-            return
+            Router.pushRoute("/admin/login");
+            return;
           }
-        
         }
 
-        callBack()
+        callBack();
 
-        break
-      case 'customer':
-        if (this.user != '') {
-          callBack()
+        break;
+      case "customer":
+        if (this.user != "" && this.user.id) {
+          callBack();
         } else {
-          if (localStorage.getItem('userFF')) {
-            console.log(localStorage.userFF)
+          if (localStorage.getItem("userFF")) {
+            console.log(localStorage.userFF);
             getCustomer(localStorage.userFF)
               .then(res => {
-                this.user = res
-                callBack()
+                this.user = res;
+                console.log("this.user", JSON.stringify(this.user));
+                callBack();
               })
               .catch(err => {
-                console.log(err)
-                callBack()
-              })
+                this.user = {};
+                console.log(err);
+                callBack();
+              });
           } else {
-            callBack()
+            this.user = {};
+            callBack();
           }
         }
 
-        break
+        break;
       default:
-        break
+        break;
     }
-  }
+  };
 
   @action
   logout = (key, callBack) => {
     switch (key) {
-      case 'admin':
-        localStorage.removeItem('adminFF')
+      case "admin":
+        localStorage.removeItem("adminFF");
 
-        break
-      case 'customer':
-        localStorage.removeItem('userFF')
+        break;
+      case "customer":
+        localStorage.removeItem("userFF");
 
-        break
+        break;
       default:
-        break
+        break;
     }
-  }
+  };
   @action
   getCategoriesAPI(callBack) {
     getCategories().then(res => {
       if (res) {
         this.dataCategory = res.rows.map((item, index) => {
-          return { ...item, active: false }
-        })
-        this.dataMenu[1].children = this.dataCategory
-        callBack(this.dataCategory)
-        console.log('getCategories ' + JSON.stringify(this.dataCategory))
+          return { ...item, active: false };
+        });
+        this.dataMenu[1].children = this.dataCategory;
+        callBack(this.dataCategory);
+        console.log("getCategories " + JSON.stringify(this.dataCategory));
       } else {
-        console.log(res)
+        console.log(res);
       }
-    })
+    });
   }
 
   @action
   getAllProductsAPI(callBack) {
     if (this.dataProducts.length > 0) {
-      callBack(this.dataProducts)
+      callBack(this.dataProducts);
     } else {
-      getAllProducts().then(res => {
-        if (res) {
-          this.dataProducts = res.rows
-          this.productTopBuy = this.dataProducts.sort(function(a, b) {
-            return b.topBuy - a.topBuy;
-          });
-          callBack(this.dataProducts)
-        } else {
-          console.log(res)
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      getAllProducts()
+        .then(res => {
+          if (res) {
+            this.dataProducts = res.rows;
+            this.productTopBuy = this.dataProducts.sort(function(a, b) {
+              return b.topBuy - a.topBuy;
+            });
+            callBack(this.dataProducts);
+          } else {
+            console.log(res);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 
   @action
   getOrdersAPI = async () => {
-    const dataOrders = await getAllOrders()
+    const dataOrders = await getAllOrders();
     Promise.all(
       dataOrders.rows.map(async order => {
-        const user = await getCustomer(order.idUser)
-        order = { ...order, customer: user }
-        this.dataOrdersDashboard.push(order)
+        const user = await getCustomer(order.idUser);
+        order = { ...order, customer: user };
+        this.dataOrdersDashboard.push(order);
         // console.log('idUser' + JSON.stringify(order))
       })
     ).then(res => {
-      console.log('dataOrders' + JSON.stringify(this.dataOrdersDashboard))
-    })
-  }
+      console.log("dataOrders" + JSON.stringify(this.dataOrdersDashboard));
+    });
+  };
 
   @action
   getAllOrdersAPI = callBack => {
     if (this.dataOrderAll.length > 0) {
-      callBack(this.dataOrderAll)
+      callBack(this.dataOrderAll);
     } else {
       getAllOrders().then(res => {
-        this.dataOrderAll = res.rows
-        callBack(this.dataOrderAll)
-      })
+        this.dataOrderAll = res.rows;
+        callBack(this.dataOrderAll);
+      });
     }
-  }
+  };
   @action
   checkStatusMenu = () => {
-    let pathName = getPathName()
+    let pathName = getPathName();
 
     this.dataMenu.map((item, index) => {
-      if (pathName == '' || '/') {
-        this.dataMenu[0].active = true
-      } else if (pathName.slice(9) == '/products') {
-        this.dataMenu[1].active = true
+      if (pathName == "" || "/") {
+        this.dataMenu[0].active = true;
+      } else if (pathName.slice(9) == "/products") {
+        this.dataMenu[1].active = true;
       } else {
-        item.active = false
+        item.active = false;
       }
-    })
-  }
+    });
+  };
   @action
   getAllCustomerAPI = callBack => {
     if (this.dataCustomersDashboard.length > 0) {
-      callBack(this.dataCustomersDashboard)
+      callBack(this.dataCustomersDashboard);
     } else {
       getAllCustomers().then(res => {
-        this.dataCustomersDashboard = res.rows
-        callBack(this.dataCustomersDashboard)
-      })
+        this.dataCustomersDashboard = res.rows;
+        callBack(this.dataCustomersDashboard);
+      });
     }
-    getAllCustomers().then(res => {})
-  }
+    getAllCustomers().then(res => {});
+  };
   @action
   initApp = async () => {
     await getCategories().then(res => {
       if (res) {
         this.dataCategory = res.rows.map((item, index) => {
-          return { ...item, active: false }
-        })
-        this.dataMenu[1].children = this.dataCategory
+          return { ...item, active: false };
+        });
+        this.dataMenu[1].children = this.dataCategory;
         // this.isRender = true;
-        console.log('dataCategory ' + JSON.stringify(this.dataCategory))
+        console.log("dataCategory " + JSON.stringify(this.dataCategory));
       } else {
-        console.log(res)
+        console.log(res);
       }
-    })
+    });
     //   if (process.browser) {
     //     if (this.token) {
     //       const user = getData(Config.asyncStorage.user)
@@ -333,21 +337,21 @@ class Store {
     //   })
     await getAllProducts().then(res => {
       if (res) {
-        this.dataProducts = res.rows
+        this.dataProducts = res.rows;
       } else {
-        console.log(res)
+        console.log(res);
       }
-    })
-  }
+    });
+  };
 }
 
 export function initializeStore(obj) {
   if (obj.isServer) {
-    return new Store(obj)
+    return new Store(obj);
   } else {
     if (store === null) {
-      store = new Store(obj)
+      store = new Store(obj);
     }
-    return store
+    return store;
   }
 }

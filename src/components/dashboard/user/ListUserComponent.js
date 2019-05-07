@@ -1,10 +1,10 @@
-import React from 'react';
-import { observable } from 'mobx';
-import { inject, observer } from 'mobx-react';
-import { Link, Router } from '../../../routes/routes';
+import React from "react";
+import { observable } from "mobx";
+import { inject, observer } from "mobx-react";
+import { Link, Router } from "../../../routes/routes";
 
-import './user.scss';
-@inject('store')
+import "./user.scss";
+@inject("store")
 @observer
 class Item extends React.Component {
   render() {
@@ -15,26 +15,26 @@ class Item extends React.Component {
           <span
             className="d-block"
             style={{
-              maxWidth: '100px',
-              textOverflow: 'ellipsis',
-              overflow: 'hidden',
-              height: '16px',
-              lineHeight: '16px'
+              maxWidth: "100px",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              height: "16px",
+              lineHeight: "16px"
             }}
-            title={item.id || ''}
+            title={item.id || ""}
           >
-            {item.id || ''}
+            {item.id || ""}
           </span>
         </td>
         <td>
-          {' '}
-          <a href={'/admin/detail-user?id=' + item.id}>
+          {" "}
+          <a href={"/admin/detail-user?id=" + item.id}>
             <img
               className="cursor rounded-circle border border-secondary "
               style={{ width: 30, height: 30 }}
-              src={item.avatar || '../../../static/images/ava.jpg'}
+              src={item.avatar || "../../../static/images/ava.jpg"}
             />
-          </a>{' '}
+          </a>{" "}
         </td>
         <td
           className=""
@@ -43,15 +43,15 @@ class Item extends React.Component {
           // }}
         >
           <a
-            href={'/admin/detail-user?id=' + item.id}
+            href={"/admin/detail-user?id=" + item.id}
             className="colorDefault cursor"
-            style={{ textDecoration: 'none' }}
+            style={{ textDecoration: "none" }}
           >
             {item.name ? item.name : null}
           </a>
         </td>
-        <td>{item.phone || ''}</td>
-        <td>{item.email || ''}</td>
+        <td>{item.phone || ""}</td>
+        <td>{item.email || ""}</td>
         <td>
           <span
             className="colorDefault cursor"
@@ -61,16 +61,15 @@ class Item extends React.Component {
               this.props.clickRole({ item, index }, item.role);
             }}
           >
-            {item.role && item.role == 'customer'
-              ? 'Khách hàng'
-              : item.role == 'employee'
-              ? 'Nhân viên'
-              : item.role == 'admin'
-              ? 'Admin'
-              : ''}
+            {item.role && item.role == "customer"
+              ? "Khách hàng"
+              : item.role == "employee"
+              ? "Nhân viên"
+              : item.role == "admin"
+              ? "Admin"
+              : ""}
           </span>
         </td>
-
 
         <td>
           <img
@@ -89,13 +88,13 @@ class Item extends React.Component {
   }
 }
 
-@inject('store')
+@inject("store")
 @observer
 export default class ListUserComponent extends React.Component {
   @observable isRender = false;
   @observable data = [];
-  @observable search = '';
-  @observable role = '';
+  @observable search = "";
+  @observable role = "";
   constructor(props) {
     super(props);
     this.data = this.props.data;
@@ -109,14 +108,16 @@ export default class ListUserComponent extends React.Component {
     for (let index = 0; index < this.props.totalPage; index++) {
       if (this.props.page == index + 1) {
         pagi.push(
-          <span className="border bgDefault colorWhite rounded py-1 px-2 mx-1">{index + 1}</span>
+          <span className="border bgDefault colorWhite rounded py-1 px-2 mx-1">
+            {index + 1}
+          </span>
         );
       } else {
         pagi.push(
           <span
             className="border border-dark rounded p-1 py-1 px-2 mx-1 cursor"
             onClick={() => {
-              this.props.callBack('NEXT_PAGE', index + 1);
+              this.props.callBack("NEXT_PAGE", index + 1);
             }}
           >
             {index + 1}
@@ -137,7 +138,7 @@ export default class ListUserComponent extends React.Component {
                 <a
                   href="/admin/detail-user"
                   className="colorWhite"
-                  style={{ textDecoration: 'none' }}
+                  style={{ textDecoration: "none" }}
                 >
                   Thêm người dùng
                 </a>
@@ -159,7 +160,7 @@ export default class ListUserComponent extends React.Component {
                         }}
                         onKeyPress={({ charCode }) => {
                           if (charCode === 13) {
-                            callBack('SEARCH', this.search);
+                            callBack("SEARCH", this.search);
                           }
                         }}
                       />
@@ -180,7 +181,7 @@ export default class ListUserComponent extends React.Component {
                         }}
                         onKeyPress={({ charCode }) => {
                           if (charCode === 13) {
-                            callBack('SEARCH', this.search);
+                            callBack("SEARCH", this.search);
                           }
                         }}
                       />
@@ -203,7 +204,7 @@ export default class ListUserComponent extends React.Component {
                         }}
                         onKeyPress={({ charCode }) => {
                           if (charCode === 13) {
-                            callBack('SEARCH', this.search);
+                            callBack("SEARCH", this.search);
                           }
                         }}
                       />
@@ -222,22 +223,32 @@ export default class ListUserComponent extends React.Component {
                           this.search.role = e.target.value;
                         }}
                       >
-                        <option value="" selected={this.search.role == '' ? true : false}>
+                        <option
+                          value=""
+                          selected={this.search.role == "" ? true : false}
+                        >
                           ----
                         </option>
                         <option
                           value="customer"
-                          selected={this.search.role == 'customer' ? true : false}
+                          selected={
+                            this.search.role == "customer" ? true : false
+                          }
                         >
                           Khách hàng
                         </option>
                         <option
                           value="employee"
-                          selected={this.search.role == 'employee' ? true : false}
+                          selected={
+                            this.search.role == "employee" ? true : false
+                          }
                         >
-                          Nhân viên{' '}
+                          Nhân viên{" "}
                         </option>
-                        <option value="admin" selected={this.search.role == 'admin' ? true : false}>
+                        <option
+                          value="admin"
+                          selected={this.search.role == "admin" ? true : false}
+                        >
                           Admin
                         </option>
                       </select>
@@ -248,7 +259,7 @@ export default class ListUserComponent extends React.Component {
               <div className="row justify-content-end mb-4 pr-5">
                 <button
                   onClick={() => {
-                    callBack('SEARCH', this.search);
+                    callBack("SEARCH", this.search);
                   }}
                   className="bgDefault colorWhite p-2 px-3 mr-3 rounded cursor"
                 >
@@ -257,11 +268,11 @@ export default class ListUserComponent extends React.Component {
                 {this.props.isSearch ? (
                   <button
                     onClick={() => {
-                      callBack('BACK_ALL');
+                      callBack("BACK_ALL");
                     }}
                     className="bgDefault colorWhite p-2 px-3 rounded cursor"
                   >
-                    Tất cả sản phẩm
+                    Tất cả người dùng
                   </button>
                 ) : null}
               </div>
@@ -296,7 +307,9 @@ export default class ListUserComponent extends React.Component {
                   );
                 })}
 
-                {this.data.length == 0 ? <td colSpan="10">Không có người dùng nào</td> : null}
+                {this.data.length == 0 ? (
+                  <td colSpan="10">Không có người dùng nào</td>
+                ) : null}
               </tbody>
             </table>
             <div className="float-right mb-3 mr-3">{this.pagination()}</div>
@@ -311,7 +324,10 @@ export default class ListUserComponent extends React.Component {
               aria-labelledby="exampleModalCenterTitle"
               aria-hidden="true"
             >
-              <div className="modal-dialog modal-dialog-centered" role="document">
+              <div
+                className="modal-dialog modal-dialog-centered"
+                role="document"
+              >
                 <div className="modal-content">
                   <div className="modal-body pt-5 pb-4 text-center">
                     Bạn có chắc chắn muốn xóa tài khoản người dùng này !
@@ -319,7 +335,7 @@ export default class ListUserComponent extends React.Component {
                   <div className="modal-footer">
                     <button
                       onClick={() => {
-                        this.props.callBack('DEL_ITEM', this.clickItem);
+                        this.props.callBack("DEL_ITEM", this.clickItem);
                       }}
                       data-dismiss="modal"
                       type="button"
@@ -327,7 +343,11 @@ export default class ListUserComponent extends React.Component {
                     >
                       Xóa
                     </button>
-                    <button type="button" className="btn btn-secondary" data-dismiss="modal">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      data-dismiss="modal"
+                    >
                       Hủy
                     </button>
                   </div>
@@ -344,7 +364,10 @@ export default class ListUserComponent extends React.Component {
               aria-labelledby="exampleModalCenterTitle"
               aria-hidden="true"
             >
-              <div className="modal-dialog modal-dialog-centered" role="document">
+              <div
+                className="modal-dialog modal-dialog-centered"
+                role="document"
+              >
                 <div className="modal-content">
                   <div className="modal-body row pt-4 px-4">
                     <div className="col-6 mb-3">
@@ -353,7 +376,7 @@ export default class ListUserComponent extends React.Component {
                         value="customer"
                         name="role"
                         type="radio"
-                        checked={this.role == 'customer' ? true : false}
+                        checked={this.role == "customer" ? true : false}
                         onChange={e => {
                           this.role = e.target.value;
                         }}
@@ -368,7 +391,7 @@ export default class ListUserComponent extends React.Component {
                         value="employee"
                         name="role"
                         type="radio"
-                        checked={this.role == 'employee' ? true : false}
+                        checked={this.role == "employee" ? true : false}
                         onChange={e => {
                           this.role = e.target.value;
                         }}
@@ -383,7 +406,7 @@ export default class ListUserComponent extends React.Component {
                         value="admin"
                         name="role"
                         type="radio"
-                        checked={this.role == 'admin' ? true : false}
+                        checked={this.role == "admin" ? true : false}
                         onChange={e => {
                           this.role = e.target.value;
                         }}
@@ -397,7 +420,7 @@ export default class ListUserComponent extends React.Component {
                     <button
                       data-dismiss="modal"
                       onClick={() => {
-                        this.props.callBack('CHANGE_ROLE', {
+                        this.props.callBack("CHANGE_ROLE", {
                           role: this.role,
                           data: this.clickItem
                         });
@@ -408,7 +431,11 @@ export default class ListUserComponent extends React.Component {
                     >
                       Thay đổi
                     </button>
-                    <button type="button" className="btn btn-secondary" data-dismiss="modal">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      data-dismiss="modal"
+                    >
                       Hủy
                     </button>
                   </div>

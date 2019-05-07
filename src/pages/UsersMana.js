@@ -1,45 +1,51 @@
-import React from 'react';
+import React from "react";
 
-import { observable } from 'mobx';
-import { inject, observer } from 'mobx-react';
-import { getPathName } from '../utils/RouterUtils';
-import { Link, Router } from '../routes/routes';
-import Config from '../config/env';
-import { deleteCustomer, queryUser, updateCustomer, getAllCustomers } from '../api/Customer';
-import MenuLeftComponent from '../components/dashboard/MenuLeftComponent';
-import ListUserComponent from '../components/dashboard/user/ListUserComponent';
-import LoadComponent from '../components/general/LoadComponent';
-@inject('store')
+import { observable } from "mobx";
+import { inject, observer } from "mobx-react";
+import { getPathName } from "../utils/RouterUtils";
+import { Link, Router } from "../routes/routes";
+import Config from "../config/env";
+import {
+  deleteCustomer,
+  queryUser,
+  updateCustomer,
+  getAllCustomers
+} from "../api/Customer";
+import MenuLeftComponent from "../components/dashboard/MenuLeftComponent";
+import ListUserComponent from "../components/dashboard/user/ListUserComponent";
+import LoadComponent from "../components/general/LoadComponent";
+@inject("store")
 @observer
 export default class UsersMana extends React.Component {
   @observable data = [];
   @observable page = 1;
-  @observable limit = 5;
+  @observable limit = 15;
   @observable totalPage = 0;
   @observable isRender = false;
   @observable isSearch = false;
-  @observable query = '';
+  @observable query = "";
   @observable search = {};
   @observable statusNotify = false;
   @observable title = 0;
+  @observable queryUsers = false;
   constructor(props) {
     super(props);
 
     this.getUsers(this.page, this.limit);
     this.search = {
-      name: '',
-      phone: '',
-      email: '',
-      role: ''
+      name: "",
+      phone: "",
+      email: "",
+      role: ""
     };
   }
   componentDidMount() {
     let pathName = getPathName();
   }
-  getUsers = (p, l, q) => {
+  getUsers = (p, l, q, s) => {
     this.isRender = false;
     if (q) {
-      queryUser({ page: p, limit: l, query: q })
+      queryUser({ page: p, limit: l, query: q, queryUsers: s })
         .then(res => {
           if (res) {
             this.data = res;
@@ -52,7 +58,7 @@ export default class UsersMana extends React.Component {
           console.log(err);
         });
     } else {
-      getAllCustomers()
+      queryUser({ page: p, limit: l })
         .then(res => {
           if (res) {
             this.data = res;
@@ -79,7 +85,7 @@ export default class UsersMana extends React.Component {
   };
   callBack = (key, data) => {
     switch (key) {
-      case 'DEL_ITEM':
+      case "DEL_ITEM":
         deleteCustomer(data.item.id)
           .then(res => {
             this.data.rows.splice(data.index, 1);
@@ -98,25 +104,30 @@ export default class UsersMana extends React.Component {
           });
 
         break;
-      case 'NEXT_PAGE':
+      case "NEXT_PAGE":
         this.page = data;
         console.log(JSON.stringify(this.page));
         if (this.isSearch) {
-          this.getUsers(this.page, this.limit, this.query);
+          this.getUsers(this.page, this.limit, this.query, this.queryUsers);
         } else {
           this.getUsers(this.page, this.limit);
         }
-
         break;
-      case 'SEARCH':
+      case "SEARCH":
         this.isSearch = true;
         this.page = 1;
-        this.query =
-          `${data.name ? '&name=' + `${data.name}` : ''}` +
-          `${data.phone ? '&phone=' + `${data.phone}` : ''}` +
-          `${data.status ? '&email=' + data.email : ''}` +
-          `${data.category ? '&role=' + data.role : ''}`;
-        this.getUsers(this.page, this.limit, this.query);
+
+        if (data.name && data.name != "") {
+          this.queryUsers = false;
+          this.query = data.name;
+        } else {
+          this.queryUsers = true;
+          this.query =
+            `${data.phone ? "&phone=" + `${data.phone}` : ""}` +
+            `${data.email ? "&email=" + data.email : ""}` +
+            `${data.role ? "&role=" + data.role : ""}`;
+        }
+        this.getUsers(this.page, this.limit, this.query, this.queryUsers);
 
         // console.log(JSON.stringify(q))
         // if (data.name != '') {
@@ -125,19 +136,19 @@ export default class UsersMana extends React.Component {
 
         // console.log(JSON.stringify(this.data));
         break;
-      case 'BACK_ALL':
+      case "BACK_ALL":
         this.page = 1;
         this.isSearch = false;
         this.search = {
-          name: '',
-          phone: '',
-          email: '',
-          role: ''
+          name: "",
+          phone: "",
+          email: "",
+          role: ""
         };
         this.getUsers(this.page, this.limit);
 
         break;
-      case 'CHANGE_ROLE':
+      case "CHANGE_ROLE":
         this.data.rows[data.data.index].role = data.role;
         updateCustomer(this.data.rows[data.data.index])
           .then(res => {
@@ -179,17 +190,19 @@ export default class UsersMana extends React.Component {
               callBack={this.callBack}
             />
           ) : (
-            <div style={{ minHeight: '100vh' }}>
+            <div style={{ minHeight: "100vh" }}>
               <LoadComponent />
             </div>
           )}
           {this.statusNotify ? (
             <div
-              className={this.title == 0 ? 'alert alert-success' : 'alert alert-false'}
+              className={
+                this.title == 0 ? "alert alert-success" : "alert alert-false"
+              }
               role="alert"
-              style={{ position: 'fixed', top: 100, right: 20 }}
+              style={{ position: "fixed", top: 100, right: 20 }}
             >
-              {this.title == 0 ? 'Thành công !' : 'Không thành công !'}
+              {this.title == 0 ? "Thành công !" : "Không thành công !"}
             </div>
           ) : null}
         </div>
