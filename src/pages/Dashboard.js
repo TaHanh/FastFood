@@ -19,6 +19,7 @@ import DashboardComponent from "../components/dashboard/dashboardComponent/Dashb
 @observer
 export default class Dashboard extends React.Component {
   @observable isRender = false;
+  @observable isAdmin = false;
   @observable order = {
     statusOrder: {
       wait: 0,
@@ -44,6 +45,9 @@ export default class Dashboard extends React.Component {
     super(props);
   }
   componentDidMount() {
+    this.props.store.checkUser("admin", () => {
+      this.isAdmin = true;
+    });
     this.timeNow = unixToMonth(unitTimeNow());
     this.props.store.getAllProductsAPI(() => {});
     this.props.store.getAllCustomerAPI(res => {
@@ -140,7 +144,7 @@ export default class Dashboard extends React.Component {
     }
   };
   render() {
-    return (
+    return this.isAdmin ? (
       <div className="row">
         <div className="col-lg-2 px-0">
           <MenuLeftComponent />
@@ -162,6 +166,10 @@ export default class Dashboard extends React.Component {
             </div>
           )}
         </div>
+      </div>
+    ) : (
+      <div style={{ minHeight: "100vh" }}>
+        <LoadComponent />
       </div>
     );
   }

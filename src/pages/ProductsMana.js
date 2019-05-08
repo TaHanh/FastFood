@@ -17,6 +17,7 @@ export default class ProductsMana extends React.Component {
   @observable limit = 15;
   @observable totalPage = 0;
   @observable isRender = false;
+  @observable isAdmin = false;
   @observable isSearch = false;
   @observable query = "";
   @observable search = {};
@@ -33,6 +34,7 @@ export default class ProductsMana extends React.Component {
   componentDidMount() {
     let pathName = getPathName();
     this.props.store.checkUser("admin", () => {
+      this.isAdmin = true;
       this.props.store.getCategoriesAPI(res => {});
 
       this.getProduct(this.page, this.limit);
@@ -127,7 +129,7 @@ export default class ProductsMana extends React.Component {
     }
   };
   render() {
-    return (
+    return this.isAdmin ? (
       <div className="row">
         <div className="col-lg-2 px-0">
           <MenuLeftComponent />
@@ -148,6 +150,10 @@ export default class ProductsMana extends React.Component {
             </div>
           )}
         </div>
+      </div>
+    ) : (
+      <div style={{ minHeight: "100vh" }}>
+        <LoadComponent />
       </div>
     );
   }

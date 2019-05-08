@@ -20,6 +20,7 @@ export default class OrderMana extends React.Component {
   @observable totalPage = 0;
   @observable isRender = false;
   @observable isSearch = false;
+  @observable isAdmin = false;
   @observable query = "";
   @observable search = {};
 
@@ -38,7 +39,10 @@ export default class OrderMana extends React.Component {
     };
   }
   componentDidMount() {
-    let pathName = getPathName();
+    this.props.store.checkUser("admin", () => {
+      this.isAdmin = true;
+    });
+    // let pathName = getPathName();
   }
 
   getOrder = async (p, l, q) => {
@@ -105,7 +109,7 @@ export default class OrderMana extends React.Component {
     }
   };
   render() {
-    return (
+    return this.isAdmin ? (
       <div className="row">
         <div className="col-lg-2 px-0">
           <MenuLeftComponent />
@@ -126,6 +130,10 @@ export default class OrderMana extends React.Component {
             </div>
           )}
         </div>
+      </div>
+    ) : (
+      <div style={{ minHeight: "100vh" }}>
+        <LoadComponent />
       </div>
     );
   }

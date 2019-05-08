@@ -22,6 +22,7 @@ export default class UsersMana extends React.Component {
   @observable limit = 15;
   @observable totalPage = 0;
   @observable isRender = false;
+  @observable isAdmin = false;
   @observable isSearch = false;
   @observable query = "";
   @observable search = {};
@@ -31,7 +32,6 @@ export default class UsersMana extends React.Component {
   constructor(props) {
     super(props);
 
-    this.getUsers(this.page, this.limit);
     this.search = {
       name: "",
       phone: "",
@@ -40,6 +40,10 @@ export default class UsersMana extends React.Component {
     };
   }
   componentDidMount() {
+    this.props.store.checkUser("admin", () => {
+      this.isAdmin = true;
+      this.getUsers(this.page, this.limit);
+    });
     let pathName = getPathName();
   }
   getUsers = (p, l, q, s) => {
@@ -174,7 +178,7 @@ export default class UsersMana extends React.Component {
     }
   };
   render() {
-    return (
+    return this.isAdmin ? (
       <div className="row">
         <div className="col-lg-2 px-0">
           <MenuLeftComponent />
@@ -206,6 +210,10 @@ export default class UsersMana extends React.Component {
             </div>
           ) : null}
         </div>
+      </div>
+    ) : (
+      <div style={{ minHeight: "100vh" }}>
+        <LoadComponent />
       </div>
     );
   }

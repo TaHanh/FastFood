@@ -1,34 +1,50 @@
-import React from 'react';
-import { observable } from 'mobx';
-import { inject, observer } from 'mobx-react';
-import { Link, Router } from '../../../routes/routes';
-import './order.scss';
-import moment from 'moment';
-import { unixToTime } from '../../../utils/convertTime';
-@inject('store')
+import React from "react";
+import { observable } from "mobx";
+import { inject, observer } from "mobx-react";
+import { Link, Router } from "../../../routes/routes";
+import "./order.scss";
+import moment from "moment";
+import { unixToTime } from "../../../utils/convertTime";
+@inject("store")
 @observer
 class Item extends React.Component {
   render() {
     const { index, item, callBack } = this.props;
     return (
       <tr>
-        <td className="" style={{ maxWidth: 150, textOverflow: 'ellipsis', overflow: 'hidden' }}>
+        <td
+          className=""
+          style={{
+            maxWidth: 150,
+            textOverflow: "ellipsis",
+            overflow: "hidden"
+          }}
+        >
           <a
             title={item.id}
-            href={'/admin/detail-order?id=' + item.id}
+            href={"/admin/detail-order?id=" + item.id}
             className="colorDefault cursor"
-            style={{ textDecoration: 'none' }}
+            style={{ textDecoration: "none" }}
           >
             {item.id}
           </a>
         </td>
-        <td style={{ maxWidth: 150, textOverflow: 'ellipsis', overflow: 'hidden' }}>
+        <td
+          style={{
+            maxWidth: 150,
+            textOverflow: "ellipsis",
+            overflow: "hidden"
+          }}
+        >
           {item.idUser ? (
-            <a href={'/admin/detail-user?id=' + item.idUser} title={item.idUser ? item.idUser : ''}>
-              {item.idUser}{' '}
+            <a
+              href={"/admin/detail-user?id=" + item.idUser}
+              title={item.idUser ? item.idUser : ""}
+            >
+              {item.idUser}{" "}
             </a>
           ) : (
-            'Khách hàng chưa có tài khoản'
+            "Khách hàng chưa có tài khoản"
           )}
         </td>
         <td>{item.user.name ? item.user.name : null}</td>
@@ -40,8 +56,10 @@ class Item extends React.Component {
             return (
               <p className="mb-0">
                 {e.name} - {e.amount}
-                {e.typeSize ? ' - ' : null}
-                {e.typeSize ? e.typeSize.find(e => e.status == true).name : null}
+                {e.typeSize ? " - " : null}
+                {e.typeSize
+                  ? e.typeSize.find(e => e.status == true).name
+                  : null}
                 {/* {e.size.map(size => {
                   return { size };
                 })} */}
@@ -55,20 +73,23 @@ class Item extends React.Component {
           {item.statusOrder.map(e => {
             if (e.status == 0) {
               return (
-                <p className="mb-0">
-                  Đang chờ xử lý - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
+                <p className="mb-0" style={{ color: "red" }}>
+                  Đang chờ xử lý - {unixToTime(e.time)}{" "}
+                  {e.name != "" ? " - " + e.name : null}
                 </p>
               );
             } else if (e.status == 1) {
               return (
-                <p className="mb-0">
-                  Xác nhận - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
+                <p className="mb-0" style={{ color: "green" }}>
+                  Xác nhận - {unixToTime(e.time)}{" "}
+                  {e.name != "" ? " - " + e.name : null}
                 </p>
               );
             } else {
               return (
-                <p className="mb-0">
-                  Hủy đơn - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
+                <p className="mb-0" style={{ color: "#ff8c00" }}>
+                  Hủy đơn - {unixToTime(e.time)}{" "}
+                  {e.name != "" ? " - " + e.name : null}
                 </p>
               );
             }
@@ -79,35 +100,39 @@ class Item extends React.Component {
             if (e.status == 0) {
               return (
                 <p className="mb-0">
-                  Đang giao - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
+                  Đang giao - {unixToTime(e.time)}{" "}
+                  {e.name != "" ? " - " + e.name : null}
                 </p>
               );
             } else if (e.status == 1) {
               return (
                 <p className="mb-0">
-                  Đã nhận -{unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
+                  Đã nhận -{unixToTime(e.time)}{" "}
+                  {e.name != "" ? " - " + e.name : null}
                 </p>
               );
             } else if (e.status == 2) {
               return (
                 <p className="mb-0">
-                  Hủy đơn - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
+                  Hủy đơn - {unixToTime(e.time)}{" "}
+                  {e.name != "" ? " - " + e.name : null}
                 </p>
               );
             } else {
               return (
                 <p className="mb-0">
-                  Đang chờ xử lý - {unixToTime(e.time)} {e.name != '' ? ' - ' + e.name : null}
+                  Đang chờ xử lý - {unixToTime(e.time)}{" "}
+                  {e.name != "" ? " - " + e.name : null}
                 </p>
               );
             }
           })}
         </td>
-        <td>{moment(item.createdAt).format('DD-MM-YYYY HH:mm:ss')}</td>
+        <td>{moment(item.createdAt).format("DD-MM-YYYY HH:mm:ss")}</td>
         <td>
           <img
             onClick={() => {
-              callBack('DEL_ITEM', { index, item });
+              callBack("DEL_ITEM", { index, item });
             }}
             className="cursor"
             style={{ width: 25 }}
@@ -119,7 +144,7 @@ class Item extends React.Component {
   }
 }
 
-@inject('store')
+@inject("store")
 @observer
 export default class OrderProductComponent extends React.Component {
   @observable isRender = false;
@@ -138,14 +163,16 @@ export default class OrderProductComponent extends React.Component {
     for (let index = 0; index < this.props.totalPage; index++) {
       if (this.props.page == index + 1) {
         pagi.push(
-          <span className="border bgDefault colorWhite rounded py-1 px-2 mx-1">{index + 1}</span>
+          <span className="border bgDefault colorWhite rounded py-1 px-2 mx-1">
+            {index + 1}
+          </span>
         );
       } else {
         pagi.push(
           <span
             className="border border-dark rounded p-1 py-1 px-2 mx-1 cursor"
             onClick={() => {
-              this.props.callBack('NEXT_PAGE', index + 1);
+              this.props.callBack("NEXT_PAGE", index + 1);
             }}
           >
             {index + 1}
@@ -287,8 +314,11 @@ export default class OrderProductComponent extends React.Component {
                 ) : null}
               </div>
             </div> */}
-            <div className="w-100" style={{ overflowX: 'scroll' }}>
-              <table className="table table-bordered text-center font" style={{ minWidth: 1200 }}>
+            <div className="w-100" style={{ overflowX: "scroll" }}>
+              <table
+                className="table table-bordered text-center font"
+                style={{ minWidth: 1200 }}
+              >
                 <thead className="thead-light">
                   <tr>
                     <th scope="col">Mã đơn hàng</th>
@@ -306,12 +336,16 @@ export default class OrderProductComponent extends React.Component {
                 </thead>
                 <tbody>
                   {this.data.map((item, index) => {
-                    return <Item item={item} index={index} callBack={callBack} />;
+                    return (
+                      <Item item={item} index={index} callBack={callBack} />
+                    );
                   })}
-                  {this.data.length == 0 ? <td colSpan="10">Không có sản phẩm nào</td> : null}
+                  {this.data.length == 0 ? (
+                    <td colSpan="10">Không có sản phẩm nào</td>
+                  ) : null}
                 </tbody>
               </table>
-            </div>{' '}
+            </div>{" "}
             <div className="float-right my-3 mr-3">{this.pagination()}</div>
           </div>
         ) : null}
