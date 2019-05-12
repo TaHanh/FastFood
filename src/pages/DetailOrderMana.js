@@ -10,6 +10,7 @@ import Config from "../config/env";
 import { unixToTime, unitTimeNow, getTimeNow } from "../utils/convertTime";
 import MenuLeftComponent from "../components/dashboard/MenuLeftComponent";
 import DetailOrderComponent from "../components/dashboard/order/DetailOrderComponent";
+import LoadComponent from "../components/general/LoadComponent";
 @inject("store")
 @observer
 export default class DetailOrderMana extends React.Component {
@@ -55,7 +56,7 @@ export default class DetailOrderMana extends React.Component {
           });
         });
         break;
-
+    
       default:
         break;
     }
@@ -81,11 +82,14 @@ export default class DetailOrderMana extends React.Component {
                 : "alert alert-false"
             }
             role="alert"
-            style={{ position: "fixed", top: 100, right: 20 }}
+            style={{ position: "fixed", top: 100, right: 20, padding: '30px 50px'  }}
           >
             {this.titleAddCart == 0 ? "Sửa thành công !" : "Không thành công !"}
           </div>
         ) : null}
+
+
+
       </div>
     ) : (
       <div style={{ minHeight: "100vh" }}>

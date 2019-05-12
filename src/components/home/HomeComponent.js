@@ -98,8 +98,8 @@ export default class HomeComponent extends React.Component {
               {this.props.dataFavourite.length > 4 ? (
                 <a
                   href="/products/highlight"
-                  className="text-right w-100 d-inline-block px-3"
-                  style={{ color: 'gray' }}
+                  className="text-right w-100 d-inline-block px-3 view-more colorDefault"
+                  style={{ }}
                 >
                   Xem thêm
                 </a>
@@ -119,7 +119,7 @@ export default class HomeComponent extends React.Component {
               {this.props.store.productTopBuy.length > 4 ? (
                 <a
                   href="/products/topbuy"
-                  className="text-right w-100 d-inline-block px-3"
+                  className="text-right w-100 d-inline-block px-3 view-more colorDefault"
                   style={{ color: 'gray' }}
                 >
                   Xem thêm
@@ -157,8 +157,8 @@ export default class HomeComponent extends React.Component {
                           </div>
                           {item.data.length > 10 ? (
                             <div className="view-more mr-5 mb-4 text-right">
-                              <a href={'/products/' + item.query}>
-                                <i className="colorDefault">Xem thêm</i>
+                              <a className="colorDefault" href={'/products/' + item.query}>
+Xem thêm
                               </a>
                             </div>
                           ) : null}

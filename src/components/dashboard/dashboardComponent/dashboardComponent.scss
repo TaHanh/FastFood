@@ -44,13 +44,16 @@
     color: #fff;
   }
   .right {
-    margin-top: 16px;
+    margin-top:30px;
     background: #fff;
   }
   .left {
-    margin-top: 16px;
-    background: #fff;
+    margin-top: 30px;
+    
+    .list {
+      background: #fff;
     padding: 16px;
+    }
     a {
       text-decoration: none;
       color: #000;

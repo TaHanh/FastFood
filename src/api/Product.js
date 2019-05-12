@@ -9,7 +9,9 @@ import Config from "../config/env";
  */
 export const getAllProducts = () => {
   return new Promise((resolve, reject) => {
-    const url = `${Config.api.host.base}${Config.api.path.base.products}`;
+    const url = `${Config.api.host.base}${Config.api.path.base.products}` +
+ 
+    `${"?limit=100"}`;
 
     return Alamofire.request(url, "GET", {}, {})
       .then(response => {

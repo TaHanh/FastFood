@@ -34,6 +34,14 @@ body {
       border: none;
     }
   }
+  .view-more{
+    a:hover{
+      text-decoration: none;
+    }
+    &:hover{
+      text-decoration: none;
+    }
+  }
 }
 
 .loading {

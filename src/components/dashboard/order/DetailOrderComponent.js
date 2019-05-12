@@ -62,7 +62,7 @@ export default class DetailOrderComponent extends React.Component {
     return (
       <div>
         {this.isRender ? (
-          <div className="py-4 detail-product font">
+          <div className="py-4 detail-order font">
             <div className="px-4 font">
               {/* <button className="bgDefault  p-2 px-3 rounded cursor">
                 <Link route="/admin/detail-product">
@@ -71,12 +71,14 @@ export default class DetailOrderComponent extends React.Component {
                   </a>
                 </Link>
               </button> */}
-              <h5 className="text-center pb-3 colorDefault">
+              <h4 className="text-center pb-3 colorDefault">
                 Chi tiết đơn hàng
-              </h5>
-              <div className="row align-items-center mb-3 ">
+              </h4>
+              <div style={{boxShadow: 'rgb(199, 199, 199) 0px 0px 5px', background: '#fff'}}>
+                <h5 className="bgDefault colorWhite p-3">Thông tin khách hàng</h5>
+                <div className="row align-items-center my-3 ">
                 <div className="col-2">
-                  <span className="font">Tên khách hàng</span>
+                  <span className="font">Người nhận hàng</span>
                 </div>
                 <div className="col-6">
                   <input
@@ -89,15 +91,25 @@ export default class DetailOrderComponent extends React.Component {
                     }}
                   />
                 </div>
+                <div className="col-4">
+                 {this.data.user.id ? (
+                  <a
+                    href={"/admin/detail-user?id=" + this.data.user.id}
+                    title={this.data.user.id ? this.data.user.id : ""}
+                  >
+                    Khách hàng đã có tài khoản
+                  </a>
+                ) : (
+                  "Khách hàng chưa có tài khoản"
+                )}
+                </div>
               </div>
               <div className="row  align-items-center mb-3">
                 <div className="col-2">
                   <span className="font">Số điện thoại</span>
                 </div>
-                <div className="col-10">
-                  <div className="row align-items-center">
-                    <div className="col-5 px-0">
-                      <input
+                <div className="col-6">
+                <input
                         type="text"
                         className="w-75 form-control font"
                         style={{}}
@@ -106,13 +118,16 @@ export default class DetailOrderComponent extends React.Component {
                           this.data.user.phone = e.target.value
                         }}
                       />
-                    </div>
-                    <div className="col-7">
-                      <div className="row align-items-center mb-3 ">
-                        <div className="col-3">
+                
+                     
+                
+                </div>
+              </div>
+              <div className="row align-items-center mb-3 ">
+                        <div className="col-2">
                           <span className="font">Email</span>
                         </div>
-                        <div className="col-9">
+                        <div className="col-6">
                           <input
                             type="text"
                             className="w-75 form-control font"
@@ -124,11 +139,7 @@ export default class DetailOrderComponent extends React.Component {
                           />
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="row align-items-center mb-3 ">
+              <div className="row align-items-center pb-3 ">
                 <div className="col-2">
                   <span className="font">Địa chỉ</span>
                 </div>
@@ -144,18 +155,20 @@ export default class DetailOrderComponent extends React.Component {
                   />
                 </div>
               </div>
-              <div className="row">
-                <div className="col-2">
-                  <span className="font pt-2 d-block">Sản phẩm</span>
-                </div>
-                <div className="col-10 py-2">
-                  <table className="table table-bordered table-sm">
+              
+              </div>
+              <div style={{boxShadow: 'rgb(199, 199, 199) 0px 0px 5px', background: '#fff'}}>
+                <h5 className="bgDefault colorWhite p-3 mb-0">Thông tin Sản phẩm</h5>
+ {/* <div className="row"> */}
+
+                {/* <div className="col-12 px-0 py-2"> */}
+                  <table className="table table-bordered table-sm mb-0">
                     <tbody>
                       {this.data.products.map((item, index) => {
                         return (
-                          <tr>
+                          <tr className="py-2" style={{lineHeight: "35px"}}>
                             <th scope="row">{item.name}</th>
-                            <td style={{ maxWidth: 50 }}>
+                            <td style={{ maxWidth: 100,  }}>
                               {item.typeSize ? (
                                 <span>
                                   Phân loại:{' '}
@@ -168,7 +181,7 @@ export default class DetailOrderComponent extends React.Component {
                                 ''
                               )}
                             </td>
-                            <td style={{ maxWidth: 50 }}>
+                            <td style={{ maxWidth: 100 }}>
                               {item.amount} x {item.price}đ
                             </td>
                             {/* <td style={{ maxWidth: 30 }}>
@@ -196,29 +209,33 @@ export default class DetailOrderComponent extends React.Component {
                           </tr>
                         )
                       })}
-                      <tr>
+                      <tr  style={{lineHeight: "35px"}}>
                         <td colspan="2">Tổng thành tiền</td>
 
                         <th style={{ maxWidth: 50 }}>
-                          <span style={{ color: 'red' }}>
+                          <h5 style={{ color: 'red', lineHeight: "35px" }} className="mb-0">
                             {this.totalPrice()}đ
-                          </span>
+                          </h5>
                         </th>
                       </tr>
                     </tbody>
                   </table>
-                </div>
+                {/* </div> */}
+              {/* </div> */}
               </div>
-              <div className="row  align-items-center mb-3">
-                <div className="col-2">
+
+              <div style={{boxShadow: 'rgb(199, 199, 199) 0px 0px 5px', background: '#fff'}}>
+                <h5 className="bgDefault colorWhite p-3 mb-0">Trạng thái đơn hàng</h5>
+              <div className="row justify-content-between align-items-center mb-3 p-2">
+                {/* <div className="col-2">
                   <span className="font">Trạng thái</span>
-                </div>
-                <div className="col-10">
-                  <div className="row align-items-center">
-                    <div className="col-3 px-0">
+                </div> */}
+                {/* <div className="col-10"> */}
+                  {/* <div className="row align-items-center"> */}
+                    <div className="col-4 px-0">
                       <select
                         type="text"
-                        className="w-75 custom-select font"
+                        className="w-75 custom-select font  border-success"
                         onChange={e => {
                           this.statusNowOrder.time = unitTimeNow()
                           this.statusNowOrder.status = e.target.value
@@ -230,7 +247,7 @@ export default class DetailOrderComponent extends React.Component {
                             this.statusNowOrder.status == 0 ? true : false
                           }
                         >
-                          Đang chờ xử lý
+                          Đơn đang chờ xử lý
                         </option>
                         <option
                           value="1"
@@ -238,7 +255,7 @@ export default class DetailOrderComponent extends React.Component {
                             this.statusNowOrder.status == 1 ? true : false
                           }
                         >
-                          Xác nhận
+                          Xác nhận đơn
                         </option>
                         <option
                           value="2"
@@ -250,8 +267,14 @@ export default class DetailOrderComponent extends React.Component {
                         </option>
                       </select>
                     </div>
-                    <div className="col-9 px-0">
-                      <div className="row  align-items-center">
+                    <div className="col-4 px-0">
+                    <span className="font float-left mr-2">
+                            Thời gian
+                          </span>
+                          <span className="font">
+                            {unixToTime(this.statusNowOrder.time)}
+                          </span>
+                     {/*  <div className="row  align-items-center">
                         <div className="col-6 px-0">
                           <span className="font float-left mr-2">
                             Thời gian
@@ -271,17 +294,17 @@ export default class DetailOrderComponent extends React.Component {
                               this.statusNowOrder.name = e.target.value
                             }}
                           />
-                        </div>
+                        </div> 
                       </div>
-                    </div>
-                  </div>
+                   </div> 
+                  </div>*/}
                 </div>
               </div>
               {this.statusNowOrder.status == 1 ? (
-                <div className="row  mb-3">
+                <div className="row  pb-3">
                   <div className="col-2">
                     <span className="font  pt-2 d-block">
-                      Trạng thái giao hàng
+                      Giao hàng
                     </span>
                   </div>
                   <div className="col-10">
@@ -289,7 +312,7 @@ export default class DetailOrderComponent extends React.Component {
                       <tbody>
                         {this.data.statusShip.map((item, index) => {
                           return (
-                            <tr>
+                            <tr style={{lineHeight: "35px"}}>
                               <th scope="row">
                                 {item.status == 0
                                   ? 'Đang giao hàng'
@@ -378,26 +401,26 @@ export default class DetailOrderComponent extends React.Component {
                   </div>
                 </div>
               ) : null}
-              <div className="row mb-3">
-                <div className="col-2">
-                  <span className="font">Ghi chú của khách hàng</span>
-                </div>
-                <div className="col-10">
+               </div>
+               {this.data.message && this.data.message !== '' ? (
+               <div style={{boxShadow: 'rgb(199, 199, 199) 0px 0px 5px', background: '#fff'}}>
+                <h5 className="bgDefault colorWhite p-3 mb-0">Ghi chú của khách hàng</h5>
                   <input
                     type="text"
                     className="w-100 form-control font"
-                    style={{}}
+                    style={{height: 50}}
                     value={this.data.message}
                     onChange={e => {
                       this.data.message = e.target.value
                     }}
                   />
-                </div>
-              </div>
-              <div className="row justify-content-center mb-4 pr-5">
+               
+              </div>)
+              : null}
+              <div className="row justify-content-center my-4">
                 {this.getAllUrl != undefined && this.getAllUrl != '' ? (
                   <button
-                    className="bgDefault colorWhite p-2 px-3 rounded cursor"
+                    className="bgDefault colorWhite py-3 px-4 rounded cursor"
                     onClick={() => {
                       console.log(
                         this.statusNowOrder.status +
@@ -424,7 +447,7 @@ export default class DetailOrderComponent extends React.Component {
                     Chỉnh sửa
                   </button>
                 ) : (
-                  <button className="bgDefault colorWhite p-2 px-3 rounded cursor">
+                  <button className="bgDefault colorWhite py-3 px-4 rounded cursor">
                     Lưu
                   </button>
                 )}

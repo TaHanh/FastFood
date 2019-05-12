@@ -4,6 +4,7 @@ import { inject, observer } from "mobx-react";
 import { Link, Router } from "../../../routes/routes";
 import "./user.scss";
 import { upLoad } from "../../../api/upLoad";
+import { unixToTime, unitTime } from "../../../utils/convertTime";
 @inject("store")
 @observer
 export default class DetailUserComponent extends React.Component {
@@ -205,7 +206,7 @@ export default class DetailUserComponent extends React.Component {
                       <span className="font">Ngày tạo tài khoản</span>
                     </div>
                     <div className="col-9">
-                      <span>{this.data.createdAt}</span>
+                      <span>{unixToTime(unitTime(this.data.createdAt))}</span>
                     </div>
                   </div>{" "}
                 </div>
@@ -227,7 +228,7 @@ export default class DetailUserComponent extends React.Component {
                   }}
                 />
 
-                <div className="w-100 m-auto text-center">
+                <div className="w-100 m-auto text-center pt-3">
                   <button
                     type="button"
                     class="btn btn-outline-danger"
@@ -274,7 +275,7 @@ export default class DetailUserComponent extends React.Component {
                 onClick={() => {
                   callBack("UPDATE_USER", this.data);
                 }}
-                className="bgDefault colorWhite p-2 px-3 rounded cursor"
+                className="bgDefault colorWhite py-3 px-4  rounded cursor"
               >
                 Chỉnh sửa
               </button>
@@ -283,7 +284,7 @@ export default class DetailUserComponent extends React.Component {
                 onClick={() => {
                   callBack("CREATE_USER", this.data);
                 }}
-                className="bgDefault colorWhite p-2 px-3 rounded cursor"
+                className="bgDefault colorWhite py-3 px-4  rounded cursor"
               >
                 Lưu
               </button>

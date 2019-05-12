@@ -20,6 +20,8 @@ export default class MenuLeftComponent extends React.Component {
     super(props);
   }
   componentDidMount() {
+    this.props.store.checkUser("admin", () => {
+    });
     // unixToMonth(unitTime('2019-03-07T09:16:47.737+0000'))
 
     // $("#leftside-navigation .sub-menu > a").click(function(e) {

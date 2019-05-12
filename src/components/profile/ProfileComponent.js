@@ -64,7 +64,7 @@ export default class ProfileComponent extends React.Component {
   }
   render() {
     return (
-      <div className="profile w-100 p-4">
+      <div className="profile w-100 p-4" >
         <div className="">
           <div className="py-3 px-3">
             <h5>Hồ sơ của tôi</h5>
@@ -169,7 +169,7 @@ export default class ProfileComponent extends React.Component {
 
                     // }}
                   />
-                  <div className="w-100 m-auto text-center">
+                  <div className="w-100 m-auto text-center pt-3">
                     <button
                       type="button"
                       class="btn btn-outline-danger"

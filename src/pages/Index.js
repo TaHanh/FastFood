@@ -125,7 +125,7 @@ export default class Index extends React.Component {
                     : "alert alert-false"
                 }
                 role="alert"
-                style={{ position: "fixed", top: 100, right: 20 }}
+                style={{ position: "fixed", top: 100, right: 20, padding: '30px 50px' , padding: '30px 50px' }}
               >
                 {this.titleAddCart == 0
                   ? "Thêm thành công !"

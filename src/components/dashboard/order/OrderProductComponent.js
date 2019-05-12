@@ -31,26 +31,37 @@ class Item extends React.Component {
         </td>
         <td
           style={{
-            maxWidth: 150,
-            textOverflow: "ellipsis",
-            overflow: "hidden"
+            // maxWidth: 150,
+            // textOverflow: "ellipsis",
+            // overflow: "hidden"
           }}
         >
           {item.idUser ? (
-            <a
-              href={"/admin/detail-user?id=" + item.idUser}
-              title={item.idUser ? item.idUser : ""}
-            >
-              {item.idUser}{" "}
-            </a>
+            <div>
+            <span style={{cursor: 'pointer'}} onClick={()=>{
+              callBack('VIEW_USER',item.idUser)
+            }}>
+
+<i class="far fa-eye fa-lg"></i>
+            
+            </span>
+            {/* <a
+               href={"/admin/detail-user?id=" + item.idUser}
+               title={item.idUser ? item.idUser : ""}
+             >
+              Tài khoản khách hàng
+             </a> */}
+            </div>
           ) : (
-            "Khách hàng chưa có tài khoản"
+            <span>Chưa có<br/>tài khoản</span>
           )}
         </td>
-        <td>{item.user.name ? item.user.name : null}</td>
-        <td>{item.user.phone ? item.user.phone : null}</td>
-        <td>{item.user.address ? item.user.address : null}</td>
-
+        <td>{item.user.name ? item.user.name : null}<br/>
+        <p className="my-1">
+        {item.user.phone ? item.user.phone : null}</p>
+        {item.user.address ? item.user.address : null}
+        </td>
+      
         <td>
           {item.products.map((e, i) => {
             return (
@@ -322,10 +333,9 @@ export default class OrderProductComponent extends React.Component {
                 <thead className="thead-light">
                   <tr>
                     <th scope="col">Mã đơn hàng</th>
-                    <th scope="col">Mã tài khoản</th>
-                    <th scope="col">Tên người nhận</th>
-                    <th scope="col">SĐT</th>
-                    <th scope="col">Địa chỉ</th>
+                    <th scope="col">Tài khoản</th>
+                    <th scope="col">Thông tin người nhạn</th>
+                
                     <th scope="col">Sản phẩm</th>
                     <th scope="col">Lời nhắn</th>
                     <th scope="col">Trạng thái</th>
@@ -334,7 +344,7 @@ export default class OrderProductComponent extends React.Component {
                     <th scope="col">Xóa</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody >
                   {this.data.map((item, index) => {
                     return (
                       <Item item={item} index={index} callBack={callBack} />

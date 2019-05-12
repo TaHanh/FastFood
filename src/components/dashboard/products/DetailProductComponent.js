@@ -325,6 +325,12 @@ export default class DetailProductComponent extends React.Component {
                     onChange={e => {
                       this.changeInput(e)
                     }}
+                    onKeyPress={({ charCode }) => {
+                      if (charCode === 13) {
+                        this.data.type.push(this.size)
+                      this.size = ''
+                      }
+                    }}
                   />
                   <button
                     onClick={() => {
@@ -453,6 +459,14 @@ export default class DetailProductComponent extends React.Component {
                     onChange={e => {
                       this.image = e.target.value
                     }}
+                    onKeyPress={({ charCode }) => {
+                      if (charCode === 13) {
+                        if(this.image != '') {
+                          this.data.image.push(this.image)
+                           this.image = ''
+                        }
+                      }
+                    }}
                   />
                   <button
                     onClick={() => {
@@ -499,7 +513,7 @@ export default class DetailProductComponent extends React.Component {
                     // console.log(JSON.stringify(this.data))
                     callBack('UPDATE_PRODUCT', this.data)
                   }}
-                  className="bgDefault colorWhite p-2 px-3 rounded cursor"
+                  className="bgDefault colorWhite py-3 px-4  rounded cursor"
                 >
                   Chỉnh sửa
                 </button>
@@ -508,7 +522,7 @@ export default class DetailProductComponent extends React.Component {
                   onClick={() => {
                     callBack('CREATE_PRODUCT', this.data)
                   }}
-                  className="bgDefault colorWhite p-2 px-3 rounded cursor"
+                  className="bgDefault colorWhite py-3 px-4  rounded cursor"
                 >
                   Lưu
                 </button>

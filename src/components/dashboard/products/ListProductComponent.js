@@ -40,7 +40,7 @@ class Item extends React.Component {
             {item.name || ""}
           </a>
         </td>
-        <td> {item.highlight == 0 ? "true" : "false"} </td>
+        <td> {item.highlight == 0 ? "yes" : "no"} </td>
         <td style={{}}>
           {item.image.length} hình ảnh
           {/* {item.image.map(e => {
@@ -118,12 +118,12 @@ export default class ListProductComponent extends React.Component {
   @observable search = "";
   constructor(props) {
     super(props);
-    this.data = this.props.data;
+    
+  }
+  componentDidMount() {this.data = this.props.data;
     this.search = this.props.search;
     console.log(JSON.stringify(this.search));
-    this.isRender = true;
-  }
-  componentDidMount() {}
+    this.isRender = true;}
   pagination = () => {
     let pagi = [];
     for (let index = 0; index < this.props.totalPage; index++) {
@@ -283,7 +283,7 @@ export default class ListProductComponent extends React.Component {
                 <tr>
                   {/* <th scope="col">id</th> */}
                   <th scope="col">Tên SP</th>
-                  <th scope="col">Hot</th>
+                  <th scope="col">Nổi bật</th>
                   <th scope="col">Hình ảnh</th>
                   <th scope="col">Giá</th>
                   <th scope="col">Phân loại hàng</th>

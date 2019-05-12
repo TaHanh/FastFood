@@ -3,7 +3,7 @@ import React from "react";
 import { observable } from "mobx";
 
 import { inject, observer } from "mobx-react";
-import { getPathName } from "../utils/RouterUtils";
+import { getPathName, intentPageString } from "../utils/RouterUtils";
 import { Link, Router } from "../routes/routes";
 import Config from "../config/env";
 import { queryOrder, deleteOrder } from "../api/Order";
@@ -11,18 +11,22 @@ import { getCustomer } from "../api/Customer";
 import MenuLeftComponent from "../components/dashboard/MenuLeftComponent";
 import OrderProductComponent from "../components/dashboard/order/OrderProductComponent";
 import LoadComponent from "../components/general/LoadComponent";
+import { unixToTime, unitTime} from "../utils/convertTime";
+
 @inject("store")
 @observer
 export default class OrderMana extends React.Component {
   @observable data = [];
   @observable page = 1;
-  @observable limit = 10;
+  @observable limit = 5;
   @observable totalPage = 0;
   @observable isRender = false;
   @observable isSearch = false;
   @observable isAdmin = false;
   @observable query = "";
   @observable search = {};
+  @observable user = {};
+  @observable orderItem = {};
 
   constructor(props) {
     super(props);
@@ -63,11 +67,18 @@ export default class OrderMana extends React.Component {
   };
   callBack = (key, data) => {
     switch (key) {
-      case "DEL_ITEM":
-        deleteOrder(data.item.id).then(res => {
-          this.data.splice(data.index, 1);
-        });
+      case "DEL_ITEM": 
+      this.orderItem = data;
+      $('#myModal').modal('show')
+        
         break;
+      case 'DEL' :
+      console.log(JSON.stringify(this.orderItem))
+      $('#myModal').modal('hide')
+      deleteOrder(this.orderItem.item.id).then(res => {
+          this.data.splice(this.orderItem.index, 1);
+        });
+      break
       case "NEXT_PAGE":
         this.page = data;
         this.isRender = false;
@@ -104,12 +115,30 @@ export default class OrderMana extends React.Component {
         this.getOrder(this.page, this.limit);
 
         break;
+        case 'VIEW_USER':
+    getCustomer(data)
+        .then(res => {
+          this.user = res;
+          $('#exampleModalCenter').modal('show')
+        })
+        .catch(err => {
+          alert("Người dùng không tồn tại. Có thể tài khoản đã bị xóa !");
+        });
+    
+    break
+    case 'EDIT_USER' :
+      $('#exampleModalCenter').modal('hide')
+      intentPageString('/admin/detail-user?id=' + data)
+    break
       default:
         break;
     }
   };
   render() {
     return this.isAdmin ? (
+      <div>
+
+     
       <div className="row">
         <div className="col-lg-2 px-0">
           <MenuLeftComponent />
@@ -130,6 +159,107 @@ export default class OrderMana extends React.Component {
             </div>
           )}
         </div>
+        </div>
+        <div class="modal fade modal-lg m-auto" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">{this.user.name || ''}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div className="row ">
+      <div className="col-4">
+              <div className="text-center">
+                <img
+                  src={
+                    this.user.avatar
+                      ? this.user.avatar
+                      : "../../static/images/ava.jpg"
+                  }
+                  className="rounded-circle"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    objectFit: "cover"
+                  }}
+                />
+
+               
+              </div>
+            </div>
+            <div className="col-8">
+              
+              <div className="row align-items-center mb-3 ">
+                {/* <div className="col-3 px-0">
+                  <span className="font">Email</span>
+                </div> */}
+                <div className="col-8">
+                <p>{this.user.email || ''}</p>
+                <p>{this.user.phone || ''}</p>
+                <p>{this.user.role == "customer" ? 'Khách hàng' : this.user.role == "employee" ? 'Nhân viên' : this.user.role == "admin" ? 'Quản trị' : ''}</p>
+                <p>{this.user.address || ''}</p>
+                  {/* <input
+                    name="email"
+                    type="text"
+                    value={this.user.email}
+                    className="w-75 form-control font"
+                    style={{}}
+                  
+                  /> */}
+                </div>
+              </div>
+
+            
+            
+              
+            </div>
+            
+          </div>
+          <div>
+                    <div className="row align-items-center my-4">
+                      <div className="col-4 px-0">
+                        <span className="font">Số lần mua hàng</span>
+                      </div>
+                      <div className="col-8">
+                        <span>{this.user.type}</span>
+                      </div>
+                    </div>
+                    <div className="row align-items-center mb-3">
+                      <div className="col-4 px-0">
+                        <span className="font">Ngày tạo tài khoản</span>
+                      </div>
+                      <div className="col-8">
+                        <span>{unixToTime(unitTime(this.user.createdAt))}</span>
+                      </div>
+                    </div>{" "}
+                  </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-primary" onClick={()=>this.callBack('EDIT_USER', this.user.id)}>Chỉnh sửa</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+     
+      <div class="modal-body">
+        <p className="my-4 text-center">Bạn có chắc chắn muốn xóa không ?</p>
+      </div>
+      <div class="modal-footer">  
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" onClick={()=>{this.callBack('DEL')}}>Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
       </div>
     ) : (
       <div style={{ minHeight: "100vh" }}>

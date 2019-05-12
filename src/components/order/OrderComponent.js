@@ -47,14 +47,15 @@ export default class OrderComponent extends React.Component {
   };
   render() {
     return (
-      <div className="product w-100">
+      <div className="order w-100">
         {this.isRender ? (
           <div className="limit px-lg-5">
             <div className="py-3">
-              <h5>Thông tin sản phẩm</h5>
+              <h4>Thông tin sản phẩm giỏ hàng</h4>
               <hr className="my-1" />
             </div>
-            <table className="table table-bordered">
+            <div style={{background: '#fff', boxShadow: '0px 0px 5px rgb(222, 226, 230)'}}>
+            <table className="table table-bordered mb-0">
               <thead className="text-center">
                 <tr>
                   <th scope="col">Sản phẩm</th>
@@ -109,7 +110,7 @@ export default class OrderComponent extends React.Component {
                               {item.name}
                             </a>
                             <br />
-                            <small>Đơn gía : {item.price}đ</small>
+                            <small>Đơn giá : {item.price}đ</small>
                           </div>
                         </div>
                       </th>
@@ -117,7 +118,7 @@ export default class OrderComponent extends React.Component {
                         {item.typeSize ? (
                           <select
                             type="text"
-                            className="w-75  font"
+                            className="w-75  font p-1"
                             name="status"
                             onChange={e => {
                               const { value, name } = e.target;
@@ -146,7 +147,7 @@ export default class OrderComponent extends React.Component {
                       <td className="text-center">
                         <input
                           type="number"
-                          min={0}
+                          min={1}
                           value={item.amount}
                           className="p-1"
                           onChange={data => {
@@ -168,7 +169,7 @@ export default class OrderComponent extends React.Component {
                       </td>
                       <td className="text-center">
                         <button
-                          className="cursor colorWhite mt-1"
+                          className="cursor colorWhite mt-1 rounded"
                           style={{ backgroundColor: "red" }}
                           onClick={() => {
                             this.props.callBack("DEL_CART", { item, index });
@@ -182,12 +183,13 @@ export default class OrderComponent extends React.Component {
                 })}
               </tbody>
             </table>
-            <h5>
+            <h5 className="py-4 pl-3">
               <b>
                 Tổng thành tiền:{" "}
                 <span style={{ color: "red" }}>{this.totalPrice()}đ</span>
               </b>
             </h5>
+            </div>
             <div className=" pt-5">
               <div>
                 <h4>Thông tin thanh toán</h4>
@@ -202,11 +204,11 @@ export default class OrderComponent extends React.Component {
                 )}
                 <hr className="my-1" />
               </div>
-              <div className="row py-3">
+              <div className="row justify-content-between mx-0 py-3">
                 <div className="col-7 px-0">
-                  <div className="row align-items-center mb-2">
-                    <div className="col-lg-3 px-0">Người nhận hàng</div>
-                    <div className="col-lg-9">
+                  <div className="row align-items-center mb-3">
+                    <div className="col-lg-4 pl-0">Tên người nhận hàng</div>
+                    <div className="col-lg-8">
                       <input
                         name="name"
                         value={this.user.name}
@@ -223,9 +225,9 @@ export default class OrderComponent extends React.Component {
                       />
                     </div>
                   </div>
-                  <div className="row align-items-center mb-2">
-                    <div className="col-lg-3 px-0">Số điện thoại</div>
-                    <div className="col-lg-9">
+                  <div className="row align-items-center mb-3">
+                    <div className="col-lg-4 pl-0">Số điện thoại</div>
+                    <div className="col-lg-8">
                       <input
                         name="phone"
                         value={this.user.phone}
@@ -241,10 +243,10 @@ export default class OrderComponent extends React.Component {
                       />
                     </div>
                   </div>{" "}
-                  <div className="row align-items-center mb-2">
-                    <div className="col-lg-3 px-0">Địa chỉ</div>
-                    <div className="col-lg-9">
-                      <input
+                  <div className="row align-items-center mb-3">
+                    <div className="col-lg-4 pl-0">Địa chỉ</div>
+                    <div className="col-lg-8">
+                      <textarea
                         name="address"
                         value={this.user.address}
                         onChange={e => {
@@ -252,6 +254,7 @@ export default class OrderComponent extends React.Component {
                         }}
                         type="text"
                         className="w-100 form-control"
+                        row={2}
                         style={{
                           borderRadius: 5,
                           border: "1px solid rgb(180, 180, 180)"
@@ -259,9 +262,9 @@ export default class OrderComponent extends React.Component {
                       />
                     </div>
                   </div>{" "}
-                  <div className="row align-items-center mb-2">
-                    <div className="col-lg-3 px-0">Email</div>
-                    <div className="col-lg-9">
+                  <div className="row align-items-center mb-3">
+                    <div className="col-lg-4 pl-0">Email</div>
+                    <div className="col-lg-8">
                       <input
                         name="email"
                         value={this.user.email}
@@ -278,9 +281,9 @@ export default class OrderComponent extends React.Component {
                     </div>
                   </div>
                   <div className="row align-items-center">
-                    <div className="col-lg-3 px-0">Lời nhắn</div>
-                    <div className="col-lg-9">
-                      <input
+                    <div className="col-lg-4 pl-0">Lời nhắn</div>
+                    <div className="col-lg-8">
+                      <textarea
                         type="text"
                         name="message"
                         value={this.user.message}
@@ -288,6 +291,7 @@ export default class OrderComponent extends React.Component {
                           this.changeInput(e);
                         }}
                         className="w-100 form-control"
+                        row={3}
                         style={{
                           borderRadius: 5,
                           border: "1px solid rgb(180, 180, 180)"
@@ -296,12 +300,15 @@ export default class OrderComponent extends React.Component {
                     </div>
                   </div>
                 </div>
-              </div>
+                <div  className="col-4">
+           <img src="../../static/images/shin.gif" className="w-100"  />
+            </div></div>
             </div>
-            <div className="row mb-5">
+            <div className="row pb-5 mt-3">
+            <div className="col-7">
               {/* <Link route="/order"> */}
               <button
-                className="cursor py-2 px-4 bgDefault rounded"
+                className="cursor py-3 px-5 bgDefault rounded float-right"
                 onClick={() => {
                   console.log("this.user", this.user);
                   this.props.callBack("BUY_PRODUCTS", {
@@ -313,6 +320,8 @@ export default class OrderComponent extends React.Component {
                 <span className="colorWhite">Mua ngay</span>
               </button>
               {/* </Link> */}
+            </div>
+         
             </div>
           </div>
         ) : (

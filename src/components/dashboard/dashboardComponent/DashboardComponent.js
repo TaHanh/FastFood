@@ -175,7 +175,10 @@ export default class DashboardComponent extends React.Component {
             <div className="row">
               <div className="col-lg-6 col-12 pl-0">
                 <div className="left">
-                  <h5>Top sản phẩm mua nhiều</h5>
+                  <h5 className="bgDefault colorWhite mb-0 p-3">
+                   Top sản phẩm mua nhiều
+                  </h5>
+                  <div className="list">
                   {this.props.store.productTopBuy.map(e => {
                     if (e.topBuy > 0)
                       return (
@@ -185,12 +188,15 @@ export default class DashboardComponent extends React.Component {
                           </a>
                         </p>
                       );
-                  })}
+                  })}</div>
                 </div>
               </div>
               <div className="col-lg-6 col-12 pr-0">
                 <div className="left">
-                  <h5>Khách hàng thân thiết</h5>
+                  <h5 className="bgDefault colorWhite mb-0 p-3">
+                    <b>Khách hàng thân thiết</b>
+                  </h5>
+                  <div className="list">
                   {usersFriendly.map(user => {
                     return (
                       <p>
@@ -202,9 +208,12 @@ export default class DashboardComponent extends React.Component {
                       </p>
                     );
                   })}
-                </div>
+                </div></div>
                 <div className="left">
-                  <h5>Người dùng mới</h5>
+                  <h5 className="bgDefault colorWhite mb-0 p-3">
+                    <b>Người dùng mới</b>
+                  </h5>
+                  <div className="list">
                   {usersNew.map(user => {
                     return (
                       <p>
@@ -214,6 +223,7 @@ export default class DashboardComponent extends React.Component {
                       </p>
                     );
                   })}
+                </div>
                 </div>
               </div>
             </div>
