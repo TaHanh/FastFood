@@ -1,17 +1,19 @@
-import { Router } from 'express'
-import product from './product'
-import category from './category'
+import { Router } from "express";
+import product from "./product";
+import category from "./category";
 
-import order from './order'
-import customer from './customer'
+import order from "./order";
+import customer from "./customer";
+import user from "./user";
 // import product from './product'
 
-const router = new Router()
+const router = new Router();
 
-router.use('/products', product)
-router.use('/categories', category)
-router.use('/orders', order)
-router.use('/customers', customer)
+router.use("/products", product);
+router.use("/categories", category);
+router.use("/orders", order);
+router.use("/customers", customer);
+router.use("/users", user);
 // router.use('/products', product)
 
 /**
@@ -38,4 +40,4 @@ router.use('/customers', customer)
  * @apiParam {String[]} [fields] Fields to be returned.
  */
 
-export default router
+export default router;

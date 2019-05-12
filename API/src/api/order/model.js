@@ -1,4 +1,5 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { Schema } from "mongoose";
+import mongooseKeywords from "mongoose-keywords-vi";
 
 const orderSchema = new Schema(
   {
@@ -8,53 +9,27 @@ const orderSchema = new Schema(
     description: {
       type: String
     },
-    statusOrder: {
-      type: [
-        {
-          name: { type: String },
-          status: { type: Number },
-          time: { type: String }
-        }
-      ],
-      text: true
-    },
-    statusShip: {
-      type: [
-        {
-          name: { type: String },
-          status: { type: Number },
-          time: { type: String }
-        }
-      ],
-      text: true
-    },
+    statusOrder: [Object],
+    statusShip: [Object],
     message: {
       type: String
     },
-    products: {
-      type: [
-        {
-          type: Object
-        }
-      ]
-    },
+    products: [Object],
     idUser: {
       type: String
     },
-    user: {
-      text: true
-    }
+    user: Object
   },
   {
     timestamps: true,
     toJSON: {
       virtuals: true,
       transform: (obj, ret) => {
-        delete ret._id
+        delete ret._id;
       }
     }
   }
-)
+);
 
 orderSchema.methods = {
   view(full) {
@@ -71,22 +46,22 @@ orderSchema.methods = {
       user: this.user,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
-    }
+    };
 
     return full
       ? {
           ...view
           // add properties for a full view
         }
-      : view
+      : view;
   }
-}
+};
 
-orderSchema.plugin(require('mongoose-keywords'), {
-  paths: ['statusShip', 'statusOrder', 'idUser']
-})
+orderSchema.plugin(mongooseKeywords, {
+  paths: ["idUser"]
+});
 
-const model = mongoose.model('Order', orderSchema)
+const model = mongoose.model("Order", orderSchema);
 
-export const schema = model.schema
-export default model
+export const schema = model.schema;
+export default model;

@@ -1,37 +1,31 @@
 import mongoose, { Schema } from "mongoose";
 import mongooseKeywords from "mongoose-keywords-vi";
 
-const productSchema = new Schema(
+const userSchema = new Schema(
   {
     name: {
       type: String
     },
+    avatar: {
+      type: String
+    },
+    phone: {
+      type: String
+    },
+    email: {
+      type: String
+    },
     type: {
-      type: []
-    },
-    image: {
-      type: []
-    },
-    price: {
       type: String
     },
-    status: {
-      type: Number
-      // default: 0 có hàng / 1 hết hàng
-    },
-    description: {
+    role: {
       type: String
     },
-    category: {
+    address: {
       type: String
     },
-    highlight: {
-      type: Number
-      // default: 1  nổi bật/ 0 không trong list nổi bật
-    },
-    topBuy: {
-      type: Number,
-      default: 0
+    password: {
+      type: String
     }
   },
   {
@@ -45,20 +39,19 @@ const productSchema = new Schema(
   }
 );
 
-productSchema.methods = {
+userSchema.methods = {
   view(full) {
     const view = {
       // simple view
       id: this.id,
       name: this.name,
+      avatar: this.avatar,
+      phone: this.phone,
+      email: this.email,
       type: this.type,
-      image: this.image,
-      price: this.price,
-      status: this.status,
-      description: this.description,
-      category: this.category,
-      highlight: this.highlight,
-      topBuy: this.topBuy,
+      role: this.role,
+      address: this.address,
+      password: this.password,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
     };
@@ -72,11 +65,11 @@ productSchema.methods = {
   }
 };
 
-productSchema.plugin(mongooseKeywords, {
-  paths: ["category", "description", "name"]
+userSchema.plugin(mongooseKeywords, {
+  paths: ["name", "phone", "email", "role", "address"]
 });
 
-const model = mongoose.model("Product", productSchema);
+const model = mongoose.model("User", userSchema);
 
 export const schema = model.schema;
 export default model;

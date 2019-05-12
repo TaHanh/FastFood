@@ -1,11 +1,11 @@
-import { Router } from 'express'
-import { middleware as query } from 'querymen'
-import { middleware as body } from 'bodymen'
-import { create, index, show, update, destroy } from './controller'
-import { schema } from './model'
-export Order, { schema } from './model'
+import { Router } from "express";
+import { middleware as query } from "querymen";
+import { middleware as body } from "bodymen";
+import { create, index, show, update, destroy } from "./controller";
+import { schema } from "./model";
+export Order, { schema } from "./model";
 
-const router = new Router()
+const router = new Router();
 const {
   name,
   description,
@@ -15,7 +15,7 @@ const {
   products,
   idUser,
   user
-} = schema.tree
+} = schema.tree;
 
 /**
  * @api {post} /orders Create order
@@ -34,7 +34,7 @@ const {
  * @apiError 404 Order not found.
  */
 router.post(
-  '/',
+  "/",
   body({
     name,
     description,
@@ -46,7 +46,7 @@ router.post(
     user
   }),
   create
-)
+);
 
 /**
  * @api {get} /orders Retrieve orders
@@ -58,14 +58,15 @@ router.post(
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get(
-  '/',
+  "/",
   query({
+    idUser,
     user,
     statusOrder,
     statusShip
   }),
   index
-)
+);
 
 /**
  * @api {get} /orders/:id Retrieve order
@@ -76,7 +77,7 @@ router.get(
  * @apiError 404 Order not found.
  */
 
-router.get('/:id', show)
+router.get("/:id", show);
 
 /**
  * @api {put} /orders/:id Update order
@@ -95,7 +96,7 @@ router.get('/:id', show)
  * @apiError 404 Order not found.
  */
 router.put(
-  '/:id',
+  "/:id",
   body({
     name,
     description,
@@ -107,7 +108,7 @@ router.put(
     user
   }),
   update
-)
+);
 
 /**
  * @api {delete} /orders/:id Delete order
@@ -116,6 +117,6 @@ router.put(
  * @apiSuccess (Success 204) 204 No Content.
  * @apiError 404 Order not found.
  */
-router.delete('/:id', destroy)
+router.delete("/:id", destroy);
 
-export default router
+export default router;

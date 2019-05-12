@@ -1,32 +1,28 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { Schema } from "mongoose";
+import mongooseKeywords from "mongoose-keywords-vi";
 
 const customerSchema = new Schema(
   {
     name: {
-      type: String,
-      text: true
+      type: String
     },
     avatar: {
       type: String
     },
     phone: {
-      type: String,
-      text: true
+      type: String
     },
     email: {
-      type: String,
-      text: true
+      type: String
     },
     type: {
       type: String
     },
     role: {
-      type: String,
-      text: true
+      type: String
     },
     address: {
-      type: String,
-      text: true
+      type: String
     },
     password: {
       type: String
@@ -37,11 +33,11 @@ const customerSchema = new Schema(
     toJSON: {
       virtuals: true,
       transform: (obj, ret) => {
-        delete ret._id
+        delete ret._id;
       }
     }
   }
-)
+);
 
 customerSchema.methods = {
   view(full) {
@@ -59,20 +55,22 @@ customerSchema.methods = {
       password: this.password,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
-    }
+    };
 
     return full
       ? {
           ...view
           // add properties for a full view
         }
-      : view
+      : view;
   }
-}
+};
 
-const model = mongoose.model('Customer', customerSchema)
-customerSchema.plugin(require('mongoose-keywords'), {
-  paths: ['name', 'phone', 'email', 'role', 'address']
-})
-export const schema = model.schema
-export default model
+customerSchema.plugin(mongooseKeywords, {
+  paths: ["name", "phone", "email", "role", "address"]
+});
+
+const model = mongoose.model("Customer", customerSchema);
+
+export const schema = model.schema;
+export default model;

@@ -1,5 +1,5 @@
-import { success, notFound } from '../../services/response/';
-import { Product } from '.';
+import { success, notFound } from "../../services/response/";
+import { Product } from ".";
 
 export const create = ({ bodymen: { body } }, res, next) =>
   Product.create(body)
@@ -7,25 +7,34 @@ export const create = ({ bodymen: { body } }, res, next) =>
     .then(success(res, 201))
     .catch(next);
 
-export const index = ({ querymen: { query, select, cursor } }, res, next) =>
+export const index = ({ querymen: { query, select, cursor } }, res, next) => {
   Product.count(query)
     .then(count =>
-      Product.find(query, select, cursor).then(products => ({
+      Product.find(query, select, {
+        limit: 500,
+        skip: 0,
+        sort: { createdAt: -1 }
+      }).then(products => ({
         count,
         rows: products.map(product => product.view())
       }))
     )
     .then(success(res))
     .catch(next);
+};
 
-export const indexTopBuy = ({ querymen: { query, select, cursor } }, res, next) =>
-  Customer.count(query)
+export const indexTopBuy = (
+  { querymen: { query, select, cursor } },
+  res,
+  next
+) =>
+  Product.count(query)
     .then(count =>
-      Customer.find(query, select, cursor)
-        .sort('desc')
-        .then(customers => ({
+      Product.find(query, select, cursor)
+        .sort("desc")
+        .then(products => ({
           count,
-          rows: customers.map(customer => customer.view())
+          rows: products.map(product => product.view())
         }))
     )
     .then(success(res))
@@ -38,23 +47,6 @@ export const show = ({ params }, res, next) =>
     .then(success(res))
     .catch(next);
 
-export const searchProduct = ({ querymen: { query, select, cursor } }, res, next) => {
-  let name = query.name ? query.name + ' ' : '';
-  let category = query.category ? query.category + ' ' : '';
-  let description = query.description ? query.description + ' ' : '';
-  Product.count(query)
-    .then(count =>
-      Product.find({ $text: { $search: name } }, select, cursor).then(
-        products => ({
-          count,
-          query,
-          rows: products.map(product => product.view())
-        })
-      )
-    )
-    .then(success(res))
-    .catch(next);
-};
 export const update = ({ bodymen: { body }, params }, res, next) =>
   Product.findById(params.id)
     .then(notFound(res))
